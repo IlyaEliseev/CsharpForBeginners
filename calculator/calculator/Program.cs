@@ -50,10 +50,10 @@ namespace calculator
             } while (stop==false);                                                               
         }
 
-        static decimal Sum(decimal firstNumbera, decimal secondNumber) => firstNumbera + secondNumber;
-        static decimal Sub(decimal firstNumbera, decimal secondNumber) => firstNumbera - secondNumber;
-        static decimal Mult(decimal firstNumbera, decimal secondNumber) => firstNumbera * secondNumber;
-        static decimal Div(decimal firstNumbera, decimal secondNumber) => firstNumbera / secondNumber;
+        static decimal Sum(decimal firstNumber, decimal secondNumber) => firstNumber + secondNumber;
+        static decimal Sub(decimal firstNumber, decimal secondNumber) => firstNumber - secondNumber;
+        static decimal Mult(decimal firstNumber, decimal secondNumber) => firstNumber * secondNumber;
+        static decimal Div(decimal firstNumber, decimal secondNumber) => firstNumber / secondNumber;
 
     }
 }
