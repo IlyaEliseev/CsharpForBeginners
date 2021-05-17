@@ -5,8 +5,7 @@ namespace calculator
 {
     class Program
     {
-        private static Encoding en;
-
+        
         static void Main(string[] args)
         {
             
