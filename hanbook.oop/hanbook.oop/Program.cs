@@ -11,9 +11,8 @@ namespace hanbook.oop
             Person[] persons = new Person[lengthHandbook];
 
             for (int i = 0; i < lengthHandbook; i++)
-            {
+            {      
                 
-
                 Console.WriteLine("input name");
                 string _name = Console.ReadLine();
                 
@@ -29,7 +28,9 @@ namespace hanbook.oop
             
             for (int i = 0; i < lengthHandbook; i++)
             {
+
                 persons[i].DisplayPersonInformation();
+
             }
         }
     }

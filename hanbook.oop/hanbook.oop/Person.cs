@@ -10,14 +10,18 @@ namespace hanbook.oop
 
         public Person(string name, string telephoneNumber, byte age)
         {
+
             Name = name;
             TelephoneNumber = telephoneNumber;
             Age = age;
+
         }
 
         public void DisplayPersonInformation()
         {
+
             Console.WriteLine($"Name: {Name} Telephone Number: {TelephoneNumber} Age: {Age}");
+
         }
 
     }
