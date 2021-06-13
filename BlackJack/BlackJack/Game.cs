@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlackJack
 {
@@ -13,33 +9,31 @@ namespace BlackJack
 
             Deck deck = new Deck();
             User player = new Player("Player");
-            User computer = new Computer("Computer");            
+            User computer = new Computer("Computer");
             int[] SuffleDeck = deck.SuffleCards();
-            
+                                    
             int _сardNumber = 0;
             bool isPlayerContinue = true;
             bool isComputerContinue = true;
             bool isGameContinue = true;
-            
 
             do
             {
                 Console.WriteLine("Do you want get to card?: y/n");
                 string _playerDecision = Console.ReadLine();
 
-               
                 if (_playerDecision == "y" && _playerDecision != "n")
                 {
                     player.GetToCard(SuffleDeck, _сardNumber);
-                    player.GetToScore();                    
+                    player.GetToScore();
                 }
 
-                if (_playerDecision == "n" )
+                if (_playerDecision == "n")
                 {
-                    isPlayerContinue = player.Pass();                    
+                    isPlayerContinue = player.Pass();
                 }
 
-                if (computer.UserScore<=15)
+                if (computer.UserScore <= 15)
                 {
                     computer.GetToCard(SuffleDeck, _сardNumber);
                     computer.GetToScore();
@@ -59,13 +53,20 @@ namespace BlackJack
                 {
                     isGameContinue = false;
                 }
+
                 Console.WriteLine($"User: {player.UserName} Score: {player.UserScore}");
                 Console.WriteLine($"User: {computer.UserName} Score: {computer.UserScore} ");
 
                 _сardNumber++;
             }
-            while (isGameContinue==true);
+            while (isGameContinue == true);
 
+            DetermineTheWinner(player, computer);
+
+        }
+
+        protected void DetermineTheWinner(User player, User computer)
+        {
             if (player.UserScore >= 21 && computer.UserScore <= 21)
             {
                 Console.WriteLine($"User: {computer.UserName} win!");
@@ -76,7 +77,7 @@ namespace BlackJack
                 Console.WriteLine($"User: {player.UserName} win!");
             }
 
-            if (player.UserScore == computer.UserScore && player.UserScore >= 21 && computer.UserScore >=21)
+            if (player.UserScore == computer.UserScore && player.UserScore >= 21 && computer.UserScore >= 21)
             {
                 Console.WriteLine("Next raund!");
             }
@@ -85,11 +86,7 @@ namespace BlackJack
             {
                 Console.WriteLine($"User: {player.UserName} win!");
             }
-
-            
-
-
-
         }
     }
+
 }

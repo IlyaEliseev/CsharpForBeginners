@@ -21,6 +21,7 @@ namespace BlackJack
                     deck[j] = temp;
                 }
             }
+
             for (int i = 0; i < deck.Length / 2; i++)
             {
                 for (int j = i + random.Next(1, deck.Length); j < deck.Length; j++)
