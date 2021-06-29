@@ -23,12 +23,12 @@ namespace HuntTheWumpus
             }
         }
 
-        internal void AddGameEntityAtTheMap(GameEntity gameEntity)
+        internal void AddGameEntity(GameEntity gameEntity)
         {
             _map[gameEntity.Coordinates.X, gameEntity.Coordinates.Y] = gameEntity.GameEntityModel;
         }
 
-        internal void DeliteEntityAtTheMap(GameEntity gameEntity)
+        internal void DeliteEntity(GameEntity gameEntity)
         {
             _map[gameEntity.Coordinates.X, gameEntity.Coordinates.Y] = "[ ]";
         }
@@ -90,7 +90,7 @@ namespace HuntTheWumpus
 
         internal void InteractionPlayerWithBut(Player player, Bat bat)
         {
-            AddGameEntityAtTheMap(bat);
+            AddGameEntity(bat);
 
             if (player.Coordinates.Y + PlayerRangeVision < _map.GetLength(1) && 
                 _map[player.Coordinates.X, player.Coordinates.Y + PlayerRangeVision] == GetEntityCoordinate(bat))
