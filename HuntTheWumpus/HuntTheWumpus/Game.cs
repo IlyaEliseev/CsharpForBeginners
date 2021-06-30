@@ -9,14 +9,16 @@ namespace HuntTheWumpus
         {         
             Random random = new Random();
             Map map = new Map(GameSettings.MAP_SIZE_COORDINATE_X, GameSettings.MAP_SIZE_COORDINATE_Y, GameSettings.MAP_PLAEYER_RANGE_VISION);
-            Player player = new Player(random);
-            Wumpus wumpus = new Wumpus(random);
+            Player player = new Player(new Coordinates(random.Next(0, GameSettings.MAP_SIZE_COORDINATE_X), random.Next(0, GameSettings.MAP_SIZE_COORDINATE_Y)));
+           
+            //Wumpus wumpus = new Wumpus(new Coordinates(random.Next(0, GameSettings.MAP_SIZE_COORDINATE_X), random.Next(0, GameSettings.MAP_SIZE_COORDINATE_Y)));
             Bat firstBat = new Bat(new Coordinates(random.Next(0, 6), random.Next(0, 6)));
             Bat secondBat = new Bat(new Coordinates(random.Next(0, 6), random.Next(0, 6)));
-            Pit firstPit = new Pit(new Coordinates(random.Next(0, 6), random.Next(0, 6)));
-            Pit secondPit = new Pit(new Coordinates(random.Next(0, 6), random.Next(0, 6)));
+            
+            map.AddGameEntity(new Pit(new Coordinates(random.Next(0, 6), random.Next(0, 6))));
+            map.AddGameEntity(new Pit(new Coordinates(random.Next(0, 6), random.Next(0, 6))));
             map.AddGameEntity(player);
-            map.CheckMapUniqCoordinateGameEntity(player, firstBat, secondBat, firstPit, secondPit);            
+            //map.CheckMapUniqCoordinateGameEntity(player, firstBat, secondBat, firstPit, secondPit);            
 
             bool _playerIsAlive = true;
             bool _wumpusISAlive = true;
@@ -25,63 +27,56 @@ namespace HuntTheWumpus
             {                
                 Console.Clear();
                 PrintGameRules();
+                Wumpus wumpus = new Wumpus(new Coordinates(random.Next(0, GameSettings.MAP_SIZE_COORDINATE_X), random.Next(0, GameSettings.MAP_SIZE_COORDINATE_Y)));
+                //map.AddGameEntity(new Wumpus(new Coordinates(random.Next(0, GameSettings.MAP_SIZE_COORDINATE_X), random.Next(0, GameSettings.MAP_SIZE_COORDINATE_Y))));
+                // Wumpus newWumpus = new Wumpus(random);                
 
-                Wumpus newWumpus = new Wumpus(random);
-                
-                //map.AddGameEntityAtTheMap(secondBat);
-                //map.AddGameEntityAtTheMap(firstBat);
-                map.AddGameEntity(firstPit);
-                map.AddGameEntity(secondPit);                
-                map.AddGameEntity(newWumpus);
-                
+                //map.AddGameEntity(firstPit);
+                //map.AddGameEntity(secondPit);                
+                map.AddGameEntity(wumpus);
+
                 PrintMap(map.GetMap());                
                 PrintGameMessage();
 
                 map.InteractionPlayerWithBut(player, firstBat);                
-                _playerIsAlive = map.InteractionPlayerWithPit(player, secondPit);
-                map.DeliteEntity(player);
-                //map.DeliteEntityAtTheMap(firstBat);
+                //_playerIsAlive = player.InteractionPlayerWithPit(pit, map.GetMap());
+                map.DeliteEntity(player);               
 
-                ConsoleKeyInfo InputKeyInfo = Console.ReadKey(true);                
+                ConsoleKeyInfo userInput = Console.ReadKey(true);                
                  
-                switch (InputKeyInfo.Key)
+                switch (userInput.Key)
                 {
-                    case ConsoleKey.UpArrow:
-                        map.MoveEntityUp(player);
+                    case ConsoleKey.UpArrow:                        
+                        player.MoveUp();
                         map.AddGameEntity(player);
-                        map.DeliteEntity(newWumpus);
-                        
-
+                        map.DeliteEntity(wumpus);                 
                         break;
 
-                    case ConsoleKey.DownArrow:
-                        map.MoveEntityDown(player);
-                        map.DeliteEntity(newWumpus);
+                    case ConsoleKey.DownArrow:                        
+                        player.MoveDown(map.GetMap());
+                        map.DeliteEntity(wumpus);
                         map.AddGameEntity(player);
                         break;
 
-                    case ConsoleKey.LeftArrow:
-                       
-                        map.MoveEntityLeft(player);
-                        map.DeliteEntity(newWumpus);
+                    case ConsoleKey.LeftArrow:                        
+                        player.MoveLeft();
+                        map.DeliteEntity(wumpus);
                         map.AddGameEntity(player);
                         break;
 
-                    case ConsoleKey.RightArrow:
-                        map.MoveEntityRight(player);
-                        map.DeliteEntity(newWumpus);
+                    case ConsoleKey.RightArrow:                        
+                        player.MoveRight(map.GetMap());
+                        map.DeliteEntity(wumpus);
                         map.AddGameEntity(player);
                         break;
 
                     case ConsoleKey.W:
                         
                         map.TakeAShot(player, wumpus);
-                        map.DeliteEntity(newWumpus);
+                        map.DeliteEntity(wumpus);
                         map.AddGameEntity(player);
                         break;
-                }
-
-                
+                }                
             }
         }            
 

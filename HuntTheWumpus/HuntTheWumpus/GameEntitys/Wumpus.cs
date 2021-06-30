@@ -9,8 +9,7 @@ namespace HuntTheWumpus.GameEntitys
             return isAliveWumpus;
         }
 
-        public Wumpus(Random random) : base(new Coordinates(random.Next(0, GameSettings.MAP_SIZE_COORDINATE_X), 
-                                                            random.Next(0, GameSettings.MAP_SIZE_COORDINATE_Y)), "[W]")
+        public Wumpus(Coordinates coordinates) : base(coordinates, "[W]")
         {
 
         }
