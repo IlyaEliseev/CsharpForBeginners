@@ -2,9 +2,9 @@
 
 namespace HuntTheWumpus.GameEntitys
 {
+    
     class Player : GameEntity
-    {
-        
+    {       
         private int _playerCoordinateX = 0;
         private int _pLayerCoordinateY = 0;
 
@@ -16,8 +16,9 @@ namespace HuntTheWumpus.GameEntitys
         public Player(Coordinates coordinates) : base(coordinates, "[@]")
         {            
 
-        }    
+        }
         
+
         internal void MoveUp()
         {            
             if (Coordinates.Y >= 0)
@@ -77,15 +78,62 @@ namespace HuntTheWumpus.GameEntitys
                 Coordinates = new Coordinates(map.GetLength(0) - GameSettings.PLAEYER_RANGE_MOVE, Coordinates.Y);
             }
         }
-
-        internal bool InteractionPlayerWithPit(Pit pit, string[,] _map)
+        internal void InteractionWithGameEntitys1(GameEntity gameEntity, Coordinates[] _coordinates)
         {
-            if (_map[Coordinates.X, Coordinates.Y] == _map[pit.Coordinates.X, pit.Coordinates.Y])
+            gameEntity.Coordinates = _coordinates[0];
+            if (_coordinates[0] == _coordinates[1])
             {
-                Console.WriteLine("You fell into a pit. You lose");
-                return false;
+                gameEntity.GetVoice();
             }
-            return true;
+        }
+        internal void InteractionWithGameEntitys(GameEntity gameEntity, string[,] map)
+        {            
+            int _entityCoordinateX = gameEntity.Coordinates.X;
+            int _entityCoordinateY = gameEntity.Coordinates.Y;
+
+            if (Coordinates.Y + GameSettings.PLAEYER_RANGE_VISION < map.GetLength(1) &&
+                map[Coordinates.X, Coordinates.Y + GameSettings.PLAEYER_RANGE_VISION] == map[_entityCoordinateX, _entityCoordinateY])
+            {
+                gameEntity.GetVoice();                
+            }
+
+            if (Coordinates.Y + GameSettings.PLAEYER_RANGE_VISION == map.GetLength(1))
+            {
+                Coordinates = new Coordinates(Coordinates.X, map.GetLength(1) - GameSettings.PLAEYER_RANGE_VISION);
+            }
+
+            if (Coordinates.Y - GameSettings.PLAEYER_RANGE_VISION >= 0 &&
+                map[Coordinates.X, Coordinates.Y - GameSettings.PLAEYER_RANGE_VISION] == map[_entityCoordinateX, _entityCoordinateY])
+            {
+                gameEntity.GetVoice();
+            }
+
+            if (Coordinates.Y == -1)
+            {
+                Coordinates = new Coordinates(Coordinates.X, 0);
+            }
+
+            if (Coordinates.X - GameSettings.PLAEYER_RANGE_VISION >= 0 &&
+                map[Coordinates.X - GameSettings.PLAEYER_RANGE_VISION, Coordinates.Y] == map[_entityCoordinateX, _entityCoordinateY])
+            {
+                gameEntity.GetVoice();
+            }
+
+            if (Coordinates.X == -1)
+            {
+                Coordinates = new Coordinates(0, Coordinates.Y);
+            }
+
+            if (Coordinates.X + GameSettings.PLAEYER_RANGE_VISION < map.GetLength(0) &&
+                map[Coordinates.X + GameSettings.PLAEYER_RANGE_VISION, Coordinates.Y] == map[_entityCoordinateX, _entityCoordinateY])
+            {
+                gameEntity.GetVoice();
+            }
+
+            if (Coordinates.X == map.GetLength(0))
+            {
+                Coordinates = new Coordinates(map.GetLength(0) - GameSettings.PLAEYER_RANGE_VISION, Coordinates.Y);
+            }
         }
 
 

@@ -7,13 +7,16 @@ namespace HuntTheWumpus
     class Map
     {
         Random random = new Random();
-        public int PlayerRangeVision { get; set; }
+        private byte _mapSizeX;
+        private byte _mapSizeY;
+        Coordinates [] _coordinates = new Coordinates[100];
+        private int _gameEntitysCount;
         private string[,] _map;
-        public Map(byte mapSizeX, byte mapSizeY, int playerRangeVision)
-        {
-            PlayerRangeVision = playerRangeVision;
+        public Map(byte mapSizeX, byte mapSizeY)
+        {                      
             _map = new string[mapSizeX, mapSizeY];
-
+            _mapSizeX = mapSizeX;
+            _mapSizeY = mapSizeY;
             for (int y = 0; y < mapSizeY; y++)
             {
                 for (int x = 0; x < mapSizeX; x++)
@@ -23,71 +26,33 @@ namespace HuntTheWumpus
             }
         }
 
+        public string[,] ViewMap()
+        {
+            for(int y = 0; y < _mapSizeY; y++)
+            {
+                for (int x = 0; x < _mapSizeX; x++)
+                {
+                    _map[x, y] = "[ ]";
+                }
+            }
+
+            return _map;
+        }
+
         internal void AddGameEntity(GameEntity gameEntity)
         {
-            _map[gameEntity.Coordinates.X, gameEntity.Coordinates.Y] = gameEntity.GameEntityModel;
+            _map[gameEntity.Coordinates.X, gameEntity.Coordinates.Y] = gameEntity.GameEntityModel;            
         }
 
         internal void DeliteEntity(GameEntity gameEntity)
         {
             _map[gameEntity.Coordinates.X, gameEntity.Coordinates.Y] = "[ ]";
-        }
+        }        
 
         internal string GetEntityCoordinate(GameEntity gameEntity)
         {
             return _map[gameEntity.Coordinates.X, gameEntity.Coordinates.Y];
         }                                    
-
-        internal void InteractionPlayerWithBut(Player player, Bat bat)
-        {
-            AddGameEntity(bat);
-
-            if (player.Coordinates.Y + PlayerRangeVision < _map.GetLength(1) && 
-                _map[player.Coordinates.X, player.Coordinates.Y + PlayerRangeVision] == GetEntityCoordinate(bat))
-            {
-                bat.GetVoiceBat();
-            }
-
-            if (player.Coordinates.Y + PlayerRangeVision == _map.GetLength(1))
-            {
-                player.Coordinates = new Coordinates(player.Coordinates.X, _map.GetLength(1) - PlayerRangeVision);
-            }
-
-            if (player.Coordinates.Y - PlayerRangeVision >= 0 &&
-                _map[player.Coordinates.X, player.Coordinates.Y - PlayerRangeVision] == GetEntityCoordinate(bat))
-            {
-                bat.GetVoiceBat();
-            }
-
-            if (player.Coordinates.Y == -1)
-            {
-                player.Coordinates = new Coordinates(player.Coordinates.X, 0);
-            }
-
-            if (GetEntityCoordinate(player) == GetEntityCoordinate(bat))
-            {
-                player.Coordinates = new Coordinates(random.Next(0, GameSettings.MAP_SIZE_COORDINATE_X), 
-                                                     random.Next(0, GameSettings.MAP_SIZE_COORDINATE_Y));
-            }
-        }
-
-        internal void TakeAShot(Player player, Wumpus wumpus)
-        {
-            
-            if (player.Coordinates.Y + PlayerRangeVision < _map.GetLength(1) && 
-                _map[player.Coordinates.X, player.Coordinates.Y + PlayerRangeVision] == GetEntityCoordinate(wumpus))
-            {
-                
-                Console.WriteLine("You hit wumpus!");
-                
-            }
-            else
-            {
-                Console.WriteLine("You missed");
-                
-            }
-            
-        }
 
         internal bool InteractionPlayerWithPit(Player player, Pit pit)
         {
@@ -98,14 +63,7 @@ namespace HuntTheWumpus
             }
             return true;
         }
-
-        internal void CheckMapOutOFRange(Player player)
-        {
-            if (player.Coordinates.Y == _map.GetLength(1))
-            {
-                player.Coordinates = new Coordinates(player.Coordinates.X, _map.GetLength(1) - PlayerRangeVision);
-            }
-        }
+        
         internal void CheckMapUniqCoordinateGameEntity(Player player, Bat firstBat, Bat secondBat, Pit firstPit, Pit secondPit)
         {
             if (GetEntityCoordinate(firstBat) == GetEntityCoordinate(secondBat))
@@ -125,12 +83,7 @@ namespace HuntTheWumpus
                 firstBat.Coordinates = new Coordinates(random.Next(0, GameSettings.MAP_SIZE_COORDINATE_X),
                                                        random.Next(0, GameSettings.MAP_SIZE_COORDINATE_Y));
             }
-        }
-
-        internal int GetLengthY()
-        {
-            return _map.GetLength(1);
-        }
+        }        
 
         internal string[,] GetMap()
         {

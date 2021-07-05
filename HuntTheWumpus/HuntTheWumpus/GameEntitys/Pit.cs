@@ -2,14 +2,14 @@
 
 namespace HuntTheWumpus.GameEntitys
 {
-    class Pit : GameEntity
+    class Pit : GameEntity, IGameEntitysAction
     {
         public Pit(Coordinates coordinates) : base(coordinates,"[O]")
         {
 
         }
 
-        public void GetFeelPit()
+        public override void GetVoice()
         {
             Console.WriteLine("You feel a draft");
         }

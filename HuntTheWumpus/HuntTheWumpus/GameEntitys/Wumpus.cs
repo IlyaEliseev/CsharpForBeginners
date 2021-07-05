@@ -2,7 +2,7 @@
 
 namespace HuntTheWumpus.GameEntitys
 {
-    class Wumpus : GameEntity
+    class Wumpus : GameEntity, IGameEntitysAction
     {                
         public bool IsAlive(bool isAliveWumpus)
         {
@@ -14,7 +14,7 @@ namespace HuntTheWumpus.GameEntitys
 
         }
 
-        public void GetFeelWumpus()
+        public override void GetVoice()
         {
             Console.WriteLine("You have a stench and a thirst for blood");
         }       

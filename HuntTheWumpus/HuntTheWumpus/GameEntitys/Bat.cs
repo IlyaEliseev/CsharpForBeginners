@@ -2,14 +2,14 @@
 
 namespace HuntTheWumpus.GameEntitys
 {
-    public class Bat : GameEntity 
+    public class Bat : GameEntity, IGameEntitysAction
     {
-        public Bat(Coordinates coordinates):base(coordinates, "[B]")
+        public Bat(Coordinates coordinates):base(coordinates, "[ ]")
         {
 
         }
 
-        public void GetVoiceBat()
+        public override void GetVoice()
         {
             Console.WriteLine("You hear a bat squeak");
         }
