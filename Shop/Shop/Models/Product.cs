@@ -7,15 +7,16 @@ using Shop.Interfaces;
 
 namespace Shop.Models
 {
-    public class Product : IGetInformation, ICreateAction
+    public class Product : IGetInformation, ICreateProduct, IRemoveProduct
     {
-        public int ProductId { get; set; }
+        public int ProductIdInProductList { get; set; }
+
         public string ProductName { get; set; }
         public double Volume { get; set; }
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
-        List<Product> productList = new List<Product>;   
-        //ICreateAction<string, double, Product> createProduct;
+        List<Product> productList = new List<Product>();   
+        
         public Product() : base ()
         {
 
@@ -30,13 +31,32 @@ namespace Shop.Models
 
         public void GetInformation()
         {
-            Console.WriteLine($"Name product: {ProductName} Volume product: {Volume} Time to create: {TimeToCreate}");
+            foreach (var product in productList)
+            {
+                Console.WriteLine($"Id: {product.ProductIdInProductList} | Name product: {product.ProductName} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate}");
+            }
         }
 
         public void Create(string productName, double volume)
         {
             Product product = new Product(productName, volume);
             productList.Add(product);
+            product.ProductIdInProductList = productList.Count();
         }
+
+        public void RemoveProduct(int index)
+        {
+            productList.RemoveAt(index - 1);
+        }
+
+        public void CheckNullProductLIstCount()
+        {
+            if (productList.Count == 0)
+            {
+                Console.WriteLine("You no create a product");
+                return;
+            }
+        }
+
     }
 }

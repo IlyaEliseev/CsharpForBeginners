@@ -7,7 +7,7 @@ using Shop.Interfaces;
 
 namespace Shop.Models
 {
-    class ShowCase : ICreateAction, IPlaceProduct, IGetInformation
+    class ShowCase : IPlaceProduct, IGetInformation
     {
         public int ShowCaseId { get; set; }
         public string ShowCaseName { get; set; }
@@ -15,35 +15,26 @@ namespace Shop.Models
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
 
-        List<Product> ProductList = new List<Product>();
+        List<Product> ShowCaseList = new List<Product>();
         public ShowCase()
         {
-                
-        }
 
-        public void Create()
-        {
-            //Console.WriteLine("Input ShowCase name: ");
-            //string _showCaseName = Console.ReadLine();
-            //Console.WriteLine("Input ShowCase volume: ");
-            //double _showCaseVolume = double.Parse(Console.ReadLine());
         }
 
         public void PlaceProduct(Product product)
         {
-            ProductList.Add(product);
-            product.ProductId = ProductList.Count();
+            ShowCaseList.Add(product);
+            product.ProductIdInProductList = ShowCaseList.Count();
         }
 
         public void GetInformation()
-        {            
+        {
             Console.WriteLine("Products:");
 
-            foreach (var product in ProductList)
+            foreach (var product in ShowCaseList)
             {
-                Console.WriteLine($"Id: {product.ProductId} Name: {product.ProductName} Volume: {product.Volume} Time to Create: {product.TimeToCreate}");
+                Console.WriteLine($"Id: {product.ProductIdInProductList} Name: {product.ProductName} Volume: {product.Volume} Time to Create: {product.TimeToCreate}");
             }
         }
-
-    }
+    }   
 }

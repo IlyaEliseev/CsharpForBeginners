@@ -7,34 +7,43 @@ using System.Threading.Tasks;
 
 namespace Shop
 {
-    public class Shop
+    public class Shop 
     {
         public void CreateShop()
         {
             Shop.ShowUserMenu();
+            Console.WriteLine();
 
-            var ShowCaseList = new List<ShowCase>(); 
-            var showcase = new ShowCase();
-
-            var product1 = new Product("GTX2080", 12.3);
-            var product2 = new Product("GTX3080", 12.6);
-
-            showcase.PlaceProduct(product1);
-            showcase.PlaceProduct(product2);
-
-            //showcase.GetInformation();
-            ShowCaseList.Add(showcase);
-
-            foreach (var item in ShowCaseList)
-            {
-                item.GetInformation();
-            }
-
+            Product product = new Product();
             bool IsContinue = true;
 
             do
             {
+                Console.WriteLine("Input command: ");
+                string command = Console.ReadLine();
 
+                if (command == "1")
+                {
+                    Console.WriteLine("Input name of product: ");
+                    string _nameProduct = Console.ReadLine();
+                    Console.WriteLine("Input volume of product: ");
+                    double _volumeProduct = double.Parse(Console.ReadLine());
+                    product.Create(_nameProduct, _volumeProduct);
+                }
+
+                if (command == "2")
+                {
+                    product.CheckNullProductLIstCount();
+                    product.GetInformation();
+                }
+
+                if (command == "7")
+                {
+                    product.CheckNullProductLIstCount();
+                    Console.WriteLine("Input index of product: ");
+                    int _indexProduct = Int32.Parse(Console.ReadLine());
+                    product.RemoveProduct(_indexProduct);
+                }
             } while (IsContinue);
 
         }
