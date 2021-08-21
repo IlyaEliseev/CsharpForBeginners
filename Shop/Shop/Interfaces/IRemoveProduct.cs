@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Shop.Interfaces
 {
-    interface ICreateAction
+    interface IRemoveProduct
     {
-        void Create();
+        void RemoveProduct(int index);
     }
 }
