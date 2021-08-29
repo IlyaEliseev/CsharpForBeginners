@@ -9,6 +9,9 @@ namespace Shop.Models
 {
     public class Product : IGetInformation, ICreateProduct, IRemoveProduct
     {
+        public delegate void Cheker();
+        public event Cheker ErrorMessage;
+
         public int ProductIdInProductList { get; set; }
 
         public string ProductName { get; set; }
@@ -49,12 +52,16 @@ namespace Shop.Models
             productList.RemoveAt(index - 1);
         }
 
-        public void CheckNullProductLIstCount()
+        public bool Chek()
         {
             if (productList.Count == 0)
             {
-                Console.WriteLine("You no create a product");
-                return;
+                ErrorMessage?.Invoke();
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
 
