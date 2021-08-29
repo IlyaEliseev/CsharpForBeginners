@@ -24,9 +24,9 @@ namespace Shop
             do
             {
                 Console.WriteLine("Input command: ");
-                string command = Console.ReadLine();
+                int command = Int32.Parse(Console.ReadLine());
 
-                if (command == "1")
+                if (command == (int)InputCommands.CreateProduct)
                 {
                     Console.WriteLine("Input name of product: ");
                     string _nameProduct = Console.ReadLine();
@@ -35,7 +35,7 @@ namespace Shop
                     product.Create(_nameProduct, _volumeProduct);
                 }
 
-                if (command == "2")
+                if (command == 2)
                 {
                     if (product.Chek())
                     {
@@ -43,7 +43,7 @@ namespace Shop
                     }
                 }
 
-                if (command == "7")
+                if (command == (int)InputCommands.DeliteProduct)
                 {
                     if (product.Chek())
                     {
@@ -68,18 +68,18 @@ namespace Shop
             Console.WriteLine("Welcom to our shop !");
             Console.WriteLine();
             Console.WriteLine("Showcase command: ");
-            Console.WriteLine("Press 1 to create showcase");
-            Console.WriteLine("Press 2 to show all showcases");
-            Console.WriteLine("Press 3 to edit showcase");
-            Console.WriteLine("Press 4 to delite showcase");
+            Console.WriteLine($"Press [{(int)InputCommands.CreateShowcase}] to create showcase");
+            Console.WriteLine($"Press [{(int)InputCommands.ShowAllShowcases}] to show all showcases");
+            Console.WriteLine($"Press [{(int)InputCommands.EditShowcase}] to edit showcase");
+            Console.WriteLine($"Press [{(int)InputCommands.DeliteShowcase}] to delite showcase");
             Console.WriteLine();
             Console.WriteLine("Product command: ");
-            Console.WriteLine("Press 5 to create product");
-            Console.WriteLine("Press 6 to edite product");
-            Console.WriteLine("Press 7 to delite product");
+            Console.WriteLine($"Press [{(int)InputCommands.CreateProduct}] to create product");
+            Console.WriteLine($"Press [{(int)InputCommands.EditeProduct}] to edite product");
+            Console.WriteLine($"Press [{(int)InputCommands.DeliteProduct}] to delite product");
             Console.WriteLine();
             Console.WriteLine("Utility command: ");
-            Console.WriteLine("Press 8 to place the product on the showcase");
+            Console.WriteLine($"Press [{(int)InputCommands.PlaceProductOnShowcase}] to place the product on the showcase");
             Console.WriteLine();
 
         }
