@@ -9,12 +9,16 @@ namespace Shop
 {
     public class Shop 
     {
+        
         public void CreateShop()
         {
+            
             Shop.ShowUserMenu();
             Console.WriteLine();
 
             Product product = new Product();
+            product.ErrorMessage += DisplayMessage;
+
             bool IsContinue = true;
 
             do
@@ -33,19 +37,30 @@ namespace Shop
 
                 if (command == "2")
                 {
-                    product.CheckNullProductLIstCount();
-                    product.GetInformation();
+                    if (product.Chek())
+                    {
+                        product.GetInformation();
+                    }
                 }
 
                 if (command == "7")
                 {
-                    product.CheckNullProductLIstCount();
-                    Console.WriteLine("Input index of product: ");
-                    int _indexProduct = Int32.Parse(Console.ReadLine());
-                    product.RemoveProduct(_indexProduct);
+                    if (product.Chek())
+                    {
+                        Console.WriteLine("Input index of product: ");
+                        int _indexProduct = Int32.Parse(Console.ReadLine());
+                        product.RemoveProduct(_indexProduct);
+                    }
                 }
             } while (IsContinue);
 
+        }
+
+        public static void DisplayMessage()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("You no create a product!");
+            Console.ResetColor();
         }
 
         public static void ShowUserMenu()
