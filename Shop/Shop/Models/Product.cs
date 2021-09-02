@@ -11,10 +11,11 @@ namespace Shop.Models
     {
         public delegate void Cheker();
         public event Cheker ErrorMessage;
+        public event Cheker IndexOutRange;
 
-        public int ProductIdInProductList { get; set; }
-
-        public string ProductName { get; set; }
+        public int IdInProductList { get; set; }
+        public int IdInShowcase { get; set; }
+        public string Name { get; set; }
         public double Volume { get; set; }
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
@@ -27,7 +28,7 @@ namespace Shop.Models
 
         public Product(string productName, double volume)
         {
-            ProductName = productName;
+            Name = productName;
             Volume = volume;
             TimeToCreate = DateTime.Now;            
         }
@@ -36,7 +37,7 @@ namespace Shop.Models
         {
             foreach (var product in productList)
             {
-                Console.WriteLine($"Id: {product.ProductIdInProductList} | Name product: {product.ProductName} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate}");
+                Console.WriteLine($"Id: {product.IdInProductList} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate}");
             }
         }
 
@@ -44,12 +45,19 @@ namespace Shop.Models
         {
             Product product = new Product(productName, volume);
             productList.Add(product);
-            product.ProductIdInProductList = productList.Count();
+            product.IdInProductList = productList.Count();
         }
 
         public void RemoveProduct(int index)
         {
-            productList.RemoveAt(index - 1);
+            if (productList.Count>=index)
+            {
+                productList.RemoveAt(index - 1);
+            }
+            else
+            {
+                IndexOutRange?.Invoke();
+            }
         }
 
         public bool Chek()
