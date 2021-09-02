@@ -15,6 +15,7 @@ namespace Shop.Models
         CreateProduct,
         EditeProduct,
         DeliteProduct,
+        GetProductInformation,
         PlaceProductOnShowcase
     }
 }

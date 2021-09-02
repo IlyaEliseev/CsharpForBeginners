@@ -17,15 +17,15 @@ namespace Shop
             Console.WriteLine();
 
             Product product = new Product();
-            product.ErrorMessage += DisplayMessage;
-
+            product.ErrorMessage += ErrorCountMessage;
+            product.IndexOutRange += OutOfRangeIndex;
             bool IsContinue = true;
 
-            do
+            while (IsContinue) 
             {
                 Console.WriteLine("Input command: ");
                 int command = Int32.Parse(Console.ReadLine());
-
+                
                 if (command == (int)InputCommands.CreateProduct)
                 {
                     Console.WriteLine("Input name of product: ");
@@ -35,7 +35,7 @@ namespace Shop
                     product.Create(_nameProduct, _volumeProduct);
                 }
 
-                if (command == 2)
+                if (command == (int)InputCommands.GetProductInformation)
                 {
                     if (product.Chek())
                     {
@@ -51,15 +51,23 @@ namespace Shop
                         int _indexProduct = Int32.Parse(Console.ReadLine());
                         product.RemoveProduct(_indexProduct);
                     }
+                
                 }
-            } while (IsContinue);
+            }
 
         }
 
-        public static void DisplayMessage()
+        public static void ErrorCountMessage()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("You no create a product!");
+            Console.WriteLine("Empty!");
+            Console.ResetColor();
+        }
+
+        public static void OutOfRangeIndex()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Product whith this index not exsist!");
             Console.ResetColor();
         }
 
@@ -77,6 +85,7 @@ namespace Shop
             Console.WriteLine($"Press [{(int)InputCommands.CreateProduct}] to create product");
             Console.WriteLine($"Press [{(int)InputCommands.EditeProduct}] to edite product");
             Console.WriteLine($"Press [{(int)InputCommands.DeliteProduct}] to delite product");
+            Console.WriteLine($"Press [{(int)InputCommands.GetProductInformation}] to get product information");
             Console.WriteLine();
             Console.WriteLine("Utility command: ");
             Console.WriteLine($"Press [{(int)InputCommands.PlaceProductOnShowcase}] to place the product on the showcase");
