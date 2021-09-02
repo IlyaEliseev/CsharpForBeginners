@@ -9,31 +9,59 @@ namespace Shop.Models
 {
     class ShowCase : IPlaceProduct, IGetInformation
     {
-        public int ShowCaseId { get; set; }
-        public string ShowCaseName { get; set; }
+        
+        public int Id { get; set; }
+        public string Name { get; set; }
         public double Volume { get; set; }
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
-
-        List<Product> ShowCaseList = new List<Product>();
+        List<ShowCase> showCasesList = new List<ShowCase>();
+        List<Product> ProductsInSwocase = new List<Product>();
         public ShowCase()
         {
 
         }
 
+        public ShowCase(string name, int volume)
+        {
+            Name = name;
+            Volume = volume;
+            TimeToCreate = DateTime.Now;
+        }
+
+        public void Create(string name, int volume)
+        {
+            ShowCase showCase = new ShowCase(name, volume);
+            showCasesList.Add(showCase);
+            showCase.Id = showCasesList.Count();
+        }
+
         public void PlaceProduct(Product product)
         {
-            ShowCaseList.Add(product);
-            product.ProductIdInProductList = ShowCaseList.Count();
+            ProductsInSwocase.Add(product);
+            product.IdInProductList = ProductsInSwocase.Count();
         }
 
         public void GetInformation()
         {
             Console.WriteLine("Products:");
 
-            foreach (var product in ShowCaseList)
+            foreach (var product in ProductsInSwocase)
             {
-                Console.WriteLine($"Id: {product.ProductIdInProductList} Name: {product.ProductName} Volume: {product.Volume} Time to Create: {product.TimeToCreate}");
+                Console.WriteLine($"Id: {product.IdInProductList} Name: {product.Name} Volume: {product.Volume} Time to Create: {product.TimeToCreate}");
+            }
+        }
+
+        public bool Chek()
+        {
+            if (showCasesList.Count == 0)
+            {
+                ErrorMessage?.Invoke();
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }   
