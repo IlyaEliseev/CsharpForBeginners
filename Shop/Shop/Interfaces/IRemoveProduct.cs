@@ -8,6 +8,6 @@ namespace Shop.Interfaces
 {
     interface IRemoveProduct
     {
-        void RemoveProduct(int index);
+        void Remove(int index);
     }
 }
