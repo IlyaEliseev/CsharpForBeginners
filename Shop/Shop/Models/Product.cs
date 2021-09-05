@@ -9,9 +9,9 @@ namespace Shop.Models
 {
     public class Product : IGetInformation, ICreateProduct, IRemoveProduct
     {
-        public delegate void Cheker();
-        public event Cheker ErrorMessage;
-        public event Cheker IndexOutRange;
+        public delegate void ProductCheker();
+        public event ProductCheker ErrorMessage;
+        public event ProductCheker IndexOutRange;
 
         public int IdInProductList { get; set; }
         public int IdInShowcase { get; set; }
@@ -48,7 +48,7 @@ namespace Shop.Models
             product.IdInProductList = productList.Count();
         }
 
-        public void RemoveProduct(int index)
+        public void Remove(int index)
         {
             if (productList.Count>=index)
             {
