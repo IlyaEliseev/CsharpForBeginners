@@ -12,13 +12,17 @@ namespace Shop
         
         public void CreateShop()
         {
-            
             Shop.ShowUserMenu();
             Console.WriteLine();
 
             Product product = new Product();
+            ShowCase showCase = new ShowCase();
+
             product.ErrorMessage += ErrorCountMessage;
             product.IndexOutRange += OutOfRangeIndex;
+            showCase.ErrorMessage += ErrorCountMessage;
+            showCase.CountChek += OutOfRangeIndex;
+
             bool IsContinue = true;
 
             while (IsContinue) 
@@ -43,18 +47,43 @@ namespace Shop
                     }
                 }
 
+                if (command == (int)InputCommands.ShowAllShowcases)
+                {
+                    if (showCase.Chek())
+                    {
+                        showCase.GetInformation();
+                    }
+                }
+
                 if (command == (int)InputCommands.DeliteProduct)
                 {
                     if (product.Chek())
                     {
                         Console.WriteLine("Input index of product: ");
                         int _indexProduct = Int32.Parse(Console.ReadLine());
-                        product.RemoveProduct(_indexProduct);
+                        product.Remove(_indexProduct);
                     }
-                
+                }
+
+                if (command == (int)InputCommands.CreateShowcase)
+                {
+                    Console.WriteLine("Input name of showcase: ");
+                    string _nameShowcase = Console.ReadLine();
+                    Console.WriteLine("Input volume of showcase: ");
+                    double _volumeShowcase = double.Parse(Console.ReadLine());
+                    showCase.Create(_nameShowcase, _volumeShowcase);
+                }
+
+                if (command == (int)InputCommands.DeliteShowcase)
+                {
+                    if (showCase.Chek())
+                    {
+                        Console.WriteLine("Input index of showcase: ");
+                        int _indexShowcae = Int32.Parse(Console.ReadLine());
+                        showCase.Remove(_indexShowcae);
+                    }
                 }
             }
-
         }
 
         public static void ErrorCountMessage()
@@ -67,9 +96,11 @@ namespace Shop
         public static void OutOfRangeIndex()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Product whith this index not exsist!");
+            Console.WriteLine("Index not found!");
             Console.ResetColor();
         }
+
+        
 
         public static void ShowUserMenu()
         {
