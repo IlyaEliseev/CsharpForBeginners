@@ -9,52 +9,63 @@ namespace Shop.Models
 {
     class ShowCase : IPlaceProduct, IGetInformation
     {
-        
+        public delegate void ShowcaseCheker();
+        public event ShowcaseCheker ErrorMessage;
+        public event ShowcaseCheker CountChek;
         public int Id { get; set; }
         public string Name { get; set; }
         public double Volume { get; set; }
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
-        List<ShowCase> showCasesList = new List<ShowCase>();
+        List<ShowCase> ShowCasesList = new List<ShowCase>();
         List<Product> ProductsInSwocase = new List<Product>();
         public ShowCase()
         {
 
         }
 
-        public ShowCase(string name, int volume)
+        public ShowCase(string name, double volume)
         {
             Name = name;
             Volume = volume;
             TimeToCreate = DateTime.Now;
         }
 
-        public void Create(string name, int volume)
+        public void Create(string name, double volume)
         {
             ShowCase showCase = new ShowCase(name, volume);
-            showCasesList.Add(showCase);
-            showCase.Id = showCasesList.Count();
+            ShowCasesList.Add(showCase);
+            showCase.Id = ShowCasesList.Count();
         }
 
-        public void PlaceProduct(Product product)
+        public void PlaceProduct(Product product, int productId)
         {
-            ProductsInSwocase.Add(product);
-            product.IdInProductList = ProductsInSwocase.Count();
+            if (product.Chek() && product.IdInProductList == productId)
+            {
+                ProductsInSwocase.Add(product);
+                product.IdInShowcase = ProductsInSwocase.Count();
+            }
+            else
+            {
+                CountChek?.Invoke();
+            }
+            
         }
 
         public void GetInformation()
         {
-            Console.WriteLine("Products:");
+            Console.WriteLine("Showcases:");
 
-            foreach (var product in ProductsInSwocase)
+            foreach (var showcase in ShowCasesList)
             {
-                Console.WriteLine($"Id: {product.IdInProductList} Name: {product.Name} Volume: {product.Volume} Time to Create: {product.TimeToCreate}");
+                Console.WriteLine($"Id: {showcase.Id} Name: {showcase.Name} Volume: {showcase.Volume} Time to Create: {showcase.TimeToCreate}");
             }
+            
         }
 
         public bool Chek()
         {
-            if (showCasesList.Count == 0)
+            if (ShowCasesList.Count == 0)
             {
                 ErrorMessage?.Invoke();
                 return false;
@@ -62,6 +73,18 @@ namespace Shop.Models
             else
             {
                 return true;
+            }
+        }
+
+        internal void Remove(int indexShowcase)
+        {
+            if (ShowCasesList.Count >= indexShowcase)
+            {
+                ShowCasesList.RemoveAt(indexShowcase - 1);
+            }
+            else
+            {
+                CountChek?.Invoke();
             }
         }
     }   
