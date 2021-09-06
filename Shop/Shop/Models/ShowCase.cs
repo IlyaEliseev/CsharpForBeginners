@@ -7,7 +7,7 @@ using Shop.Interfaces;
 
 namespace Shop.Models
 {
-    class ShowCase : IPlaceProduct, IGetInformation
+    class ShowCase 
     {
         public delegate void ShowcaseCheker();
         public event ShowcaseCheker ErrorMessage;
@@ -17,6 +17,9 @@ namespace Shop.Models
         public double Volume { get; set; }
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
+        
+
+
         List<ShowCase> ShowCasesList = new List<ShowCase>();
         List<Product> ProductsInSwocase = new List<Product>();
         public ShowCase()
@@ -40,16 +43,18 @@ namespace Shop.Models
 
         public void PlaceProduct(Product product, int productId)
         {
-            if (product.Chek() && product.IdInProductList == productId)
+            var newProduct = product.GetProduct(productId);
+            //var findShowcase = ShowCasesList.ElementAtOrDefault(showcaseId);
+
+            if (product.Chek())
             {
-                ProductsInSwocase.Add(product);
-                product.IdInShowcase = ProductsInSwocase.Count();
+                ProductsInSwocase.Add(newProduct);
+                newProduct.IdInShowcase = ProductsInSwocase.Count();
             }
             else
             {
                 CountChek?.Invoke();
             }
-            
         }
 
         public void GetInformation()
@@ -59,6 +64,10 @@ namespace Shop.Models
             foreach (var showcase in ShowCasesList)
             {
                 Console.WriteLine($"Id: {showcase.Id} Name: {showcase.Name} Volume: {showcase.Volume} Time to Create: {showcase.TimeToCreate}");
+            }
+            foreach (var product in ProductsInSwocase)
+            {
+                Console.WriteLine($"ProductId: {product.IdInShowcase} ProductName: {product.Name} ProductVolume: {product.Volume}");
             }
             
         }
