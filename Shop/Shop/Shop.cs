@@ -83,6 +83,13 @@ namespace Shop
                         showCase.Remove(_indexShowcae);
                     }
                 }
+
+                if (command == (int)InputCommands.PlaceProductOnShowcase)
+                {
+                    Console.WriteLine("Input product id: ");
+                    int productId = int.Parse(Console.ReadLine());
+                    showCase.PlaceProduct(product, productId);
+                }
             }
         }
 
@@ -100,8 +107,6 @@ namespace Shop
             Console.ResetColor();
         }
 
-        
-
         public static void ShowUserMenu()
         {
             Console.WriteLine("Welcom to our shop !");
@@ -109,6 +114,7 @@ namespace Shop
             Console.WriteLine("Showcase command: ");
             Console.WriteLine($"Press [{(int)InputCommands.CreateShowcase}] to create showcase");
             Console.WriteLine($"Press [{(int)InputCommands.ShowAllShowcases}] to show all showcases");
+            Console.WriteLine($"Press [{(int)InputCommands.PlaceProductOnShowcase}] to place product");
             Console.WriteLine($"Press [{(int)InputCommands.EditShowcase}] to edit showcase");
             Console.WriteLine($"Press [{(int)InputCommands.DeliteShowcase}] to delite showcase");
             Console.WriteLine();

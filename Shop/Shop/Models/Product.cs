@@ -73,5 +73,11 @@ namespace Shop.Models
             }
         }
 
+        public Product GetProduct(int index)
+        {
+            var findItem = productList.ElementAtOrDefault(index-1);
+            return findItem;
+        }
+
     }
 }
