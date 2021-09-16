@@ -9,19 +9,19 @@ namespace Shop
 {
     public class Shop 
     {
-        
         public void CreateShop()
         {
             Shop.ShowUserMenu();
             Console.WriteLine();
 
             Product product = new Product();
+            
             ShowCase showCase = new ShowCase();
-
-            product.ErrorMessage += ErrorCountMessage;
-            product.IndexOutRange += OutOfRangeIndex;
-            showCase.ErrorMessage += ErrorCountMessage;
-            showCase.CountChek += OutOfRangeIndex;
+            product.ErrorMessage += Messeges.ErrorCountMessage;
+            product.IndexOutRange += Messeges.OutOfRangeIndex;
+            showCase.ErrorMessage += Messeges.ErrorCountMessage;
+            showCase.CountChek += Messeges.OutOfRangeIndex;
+            showCase.DeleteError += Messeges.DeliteShowcaseMessage;
 
             bool IsContinue = true;
 
@@ -80,7 +80,7 @@ namespace Shop
                     {
                         Console.WriteLine("Input index of showcase: ");
                         int _indexShowcae = Int32.Parse(Console.ReadLine());
-                        showCase.Remove(_indexShowcae);
+                        showCase.Remove(_indexShowcae, showCase);
                     }
                 }
 
@@ -88,23 +88,11 @@ namespace Shop
                 {
                     Console.WriteLine("Input product id: ");
                     int productId = int.Parse(Console.ReadLine());
-                    showCase.PlaceProduct(product, productId);
+                    Console.WriteLine("Input showcase id: ");
+                    int showcaseId = int.Parse(Console.ReadLine());
+                    showCase.PlaceProduct(product, productId, showcaseId);
                 }
             }
-        }
-
-        public static void ErrorCountMessage()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Empty!");
-            Console.ResetColor();
-        }
-
-        public static void OutOfRangeIndex()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Index not found!");
-            Console.ResetColor();
         }
 
         public static void ShowUserMenu()
@@ -127,7 +115,6 @@ namespace Shop
             Console.WriteLine("Utility command: ");
             Console.WriteLine($"Press [{(int)InputCommands.PlaceProductOnShowcase}] to place the product on the showcase");
             Console.WriteLine();
-
         }
 
     }   
