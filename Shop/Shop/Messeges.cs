@@ -18,7 +18,7 @@ namespace Shop
         public static void OutOfRangeIndex()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Index not found!");
+            Console.WriteLine("Id not found!");
             Console.ResetColor();
         }
 
@@ -26,6 +26,20 @@ namespace Shop
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Showcase is not empty!");
+            Console.ResetColor();
+        }
+
+        public static void VolumeErrorMessage()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Showcase not enoph space!");
+            Console.ResetColor();
+        }
+
+        public static void ShowNotProductOnShowcase()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("No product on Showcase!");
             Console.ResetColor();
         }
     }
