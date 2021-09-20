@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Shop.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Shop.Interfaces;
 
 namespace Shop.Models
 {
@@ -19,9 +17,9 @@ namespace Shop.Models
         public double Volume { get; set; }
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
-        List<Product> productList = new List<Product>();   
-        
-        public Product() : base ()
+        List<Product> productList = new List<Product>();
+
+        public Product() : base()
         {
 
         }
@@ -30,7 +28,7 @@ namespace Shop.Models
         {
             Name = productName;
             Volume = volume;
-            TimeToCreate = DateTime.Now;            
+            TimeToCreate = DateTime.Now;
         }
 
         public void GetInformation()
@@ -48,9 +46,9 @@ namespace Shop.Models
             product.IdInProductList = productList.Count();
         }
 
-        public void Remove(int index)
+        public void Delete(int index)
         {
-            if (productList.Count>=index)
+            if (productList.Count >= index)
             {
                 productList.RemoveAt(index - 1);
             }
@@ -73,10 +71,17 @@ namespace Shop.Models
             }
         }
 
-        public Product GetProduct(int index)
+        public Product GetProduct(int productId)
         {
-            var findItem = productList.ElementAtOrDefault(index-1);
+            var findItem = productList.ElementAtOrDefault(productId - 1);
             return findItem;
+        }
+
+        public void Edit(int productId, string newName, double newVolume)
+        {
+            var editProduct = GetProduct(productId);
+            editProduct.Name = newName;
+            editProduct.Volume = newVolume;
         }
 
     }

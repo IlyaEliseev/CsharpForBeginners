@@ -11,12 +11,12 @@ namespace Shop.Models
         CreateShowcase = 1,
         ShowAllShowcases,
         PlaceProductOnShowcase,
+        DeleteProductOnShowcase,
         EditShowcase,
-        DeliteShowcase,
+        DeleteShowcase,
         CreateProduct,
         EditeProduct,
-        DeliteProduct,
+        DeleteProduct,
         GetProductInformation,
-        
     }
 }
