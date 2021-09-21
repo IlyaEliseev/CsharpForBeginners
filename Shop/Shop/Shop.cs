@@ -1,9 +1,5 @@
 ﻿using System;
 using Shop.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Shop
 {
@@ -15,12 +11,12 @@ namespace Shop
             Console.WriteLine();
 
             Product product = new Product();
+            Showcase showCase = new Showcase();
             
-            ShowCase showCase = new ShowCase();
             product.ErrorMessage += Messeges.ErrorCountMessage;
             product.IndexOutRange += Messeges.OutOfRangeIndex;
             showCase.ErrorMessage += Messeges.ErrorCountMessage;
-            showCase.CountChek += Messeges.OutOfRangeIndex;
+            showCase.CountCheck += Messeges.OutOfRangeIndex;
             showCase.DeleteError += Messeges.DeliteShowcaseMessage;
             showCase.VolumeError += Messeges.VolumeErrorMessage;
             showCase.ChekProductOnShowacse += Messeges.ShowNotProductOnShowcase;
@@ -30,8 +26,17 @@ namespace Shop
             while (IsContinue) 
             {
                 Console.WriteLine("Input command: ");
-                int command = Int32.Parse(Console.ReadLine());
-                
+                int command;
+                string input = Console.ReadLine();
+                bool succses = int.TryParse(input, out command);
+
+                if (succses == false || command > (int)InputCommands.GetProductInformation)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Wrong command!");
+                    Console.ResetColor();
+                }
+
                 if (command == (int)InputCommands.CreateProduct)
                 {
                     Console.WriteLine("Input name of product: ");
@@ -75,7 +80,7 @@ namespace Shop
 
                 if (command == (int)InputCommands.ShowAllShowcases)
                 {
-                    if (showCase.Chek())
+                    if (showCase.Check())
                     {
                         showCase.GetInformation();
                     }
@@ -92,11 +97,11 @@ namespace Shop
 
                 if (command == (int)InputCommands.DeleteShowcase)
                 {
-                    if (showCase.Chek())
+                    if (showCase.Check())
                     {
                         Console.WriteLine("Input index of showcase: ");
                         int _indexShowcae = Int32.Parse(Console.ReadLine());
-                        showCase.Delete(_indexShowcae, showCase);
+                        showCase.Delete(_indexShowcae);
                     }
                 }
 
@@ -111,7 +116,7 @@ namespace Shop
 
                 if (command == (int)InputCommands.DeleteProductOnShowcase)
                 {
-                    if (showCase.Chek() && showCase.ChekProduct())
+                    if (showCase.Check() && showCase.CheckProduct())
                     {
                         Console.WriteLine("Input product id: ");
                         int productId = int.Parse(Console.ReadLine());
@@ -119,12 +124,11 @@ namespace Shop
                         int showcaseId = int.Parse(Console.ReadLine());
                         showCase.DeleteProduct(product, productId, showcaseId);
                     }
-                    
                 }
 
                 if (command == (int)InputCommands.EditShowcase)
                 {
-                    if (showCase.Chek())
+                    if (showCase.Check())
                     {
                         Console.WriteLine("Input showcase Id: ");
                         int _showcaseId = int.Parse(Console.ReadLine());
