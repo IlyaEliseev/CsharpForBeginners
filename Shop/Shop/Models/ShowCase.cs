@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Shop.Interfaces;
 
 namespace Shop.Models
 {
-    class ShowCase 
+    class Showcase : ICreateShowcase, IGetShowcase, IGetInformationShowcase, IPlaceProduct, 
+        IChekShowcase, ICheckProductInShowcase, IDeleteProductInShowcase, IEditShowcase
     {
         public delegate void ShowcaseCheker();
         public event ShowcaseCheker ErrorMessage;
-        public event ShowcaseCheker CountChek;
+        public event ShowcaseCheker CountCheck;
         public event ShowcaseCheker DeleteError;
         public event ShowcaseCheker VolumeError;
         public event ShowcaseCheker ChekProductOnShowacse;
@@ -22,28 +21,28 @@ namespace Shop.Models
         public DateTime TimeToDelite { get; set; }
         
         List<Product> ProductsInSwocase = new List<Product>();
-        List<ShowCase> ShowCasesList = new List<ShowCase>();
+        List<Showcase> ShowcasesList = new List<Showcase>();
         
-        public ShowCase()
+        public Showcase()
         {
 
         }
 
-        public ShowCase(string name, double volume)
+        public Showcase(string name, double volume)
         {
             Name = name;
             Volume = volume;
             TimeToCreate = DateTime.Now;
         }
 
-        public void Create(string name, double volume)
+        public void Create(string showcaseName, double showcaseVolume)
         {
-            ShowCase showCase = new ShowCase(name, volume);
-            ShowCasesList.Add(showCase);
-            showCase.Id = ShowCasesList.Count();
+            Showcase showcase = new Showcase(showcaseName, showcaseVolume);
+            ShowcasesList.Add(showcase);
+            showcase.Id = ShowcasesList.Count();
         }
 
-        public ShowCase Get(int showcaseId) => ShowCasesList[showcaseId - 1];
+        public Showcase Get(int showcaseId) => ShowcasesList[showcaseId - 1];
 
         public void PlaceProduct(Product product, int productId, int showcaseId)
         {
@@ -63,14 +62,14 @@ namespace Shop.Models
             }
             else
             {
-                CountChek?.Invoke();
+                CountCheck?.Invoke();
             }
         }
         public void GetInformation()
         {
             Console.WriteLine("Showcases:");
 
-            foreach (var showcase in ShowCasesList)
+            foreach (var showcase in ShowcasesList)
             {
                 Console.WriteLine($"Id: {showcase.Id} Name: {showcase.Name} Volume: {showcase.Volume} Time to Create: {showcase.TimeToCreate} Count Products: {showcase.ProductsInSwocase.Count()}");
                 var product = showcase.ProductsInSwocase;
@@ -81,9 +80,9 @@ namespace Shop.Models
             }
         }
 
-        public bool Chek()
+        public bool Check()
         {
-            if (ShowCasesList.Count == 0)
+            if (ShowcasesList.Count == 0)
             {
                 ErrorMessage?.Invoke();
                 return false;
@@ -94,7 +93,7 @@ namespace Shop.Models
             }
         }
         
-        public bool ChekProduct()
+        public bool CheckProduct()
         {
             if (ProductsInSwocase.Count == 0)
             {
@@ -107,9 +106,9 @@ namespace Shop.Models
             }
         }
 
-        internal void DeleteProduct(Product product, int productId, int showcaseId)
+        public void DeleteProduct(Product product, int productId, int showcaseId)
         {
-            if (Chek() && ChekProduct() && ShowCasesList.Count > showcaseId) 
+            if (Check() && CheckProduct() && ShowcasesList.Count > showcaseId) 
             {
                 var selectProduct = product.GetProduct(productId);
                 var selectShowcase = Get(showcaseId);
@@ -122,31 +121,30 @@ namespace Shop.Models
             }
             else
             {
-                CountChek?.Invoke();
+                CountCheck?.Invoke();
             }
         }
 
-        internal void Delete(int showcaseId, ShowCase showcase)
+        internal void Delete(int showcaseId)
         {
             var findShowcase = Get(showcaseId);
 
-            if (findShowcase.ProductsInSwocase.Count != 0 && ShowCasesList.Count >= showcaseId)
+            if (findShowcase.ProductsInSwocase.Count != 0 && ShowcasesList.Count >= showcaseId)
             {
                 DeleteError?.Invoke();
             }
 
-            if (ShowCasesList.Count >= showcaseId && findShowcase.ProductsInSwocase.Count == 0)
+            if (ShowcasesList.Count >= showcaseId && findShowcase.ProductsInSwocase.Count == 0)
             {
-                ShowCasesList.RemoveAt(showcaseId - 1);
-                for (int i = 0; i < ShowCasesList.Count; i++)
+                ShowcasesList.RemoveAt(showcaseId - 1);
+                for (int i = 0; i < ShowcasesList.Count; i++)
                 {
                     findShowcase.Id = i + 1;
                 }
             }
-
             else
             {
-                CountChek?.Invoke();
+                CountCheck?.Invoke();
             }
         }
 
@@ -159,7 +157,6 @@ namespace Shop.Models
                 findShowcase.Name = showcaseName;
                 findShowcase.Volume = showcaseVolume;
             }
-
             else
             {
                 DeleteError?.Invoke();

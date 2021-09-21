@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Shop.Models
 {
-    public class Product : IGetInformation, ICreateProduct, IRemoveProduct
+    public class Product : IGetInformation, ICreateProduct, IDeleteProduct, IGetProduct, IEditProduct, IChekProduct
     {
         public delegate void ProductCheker();
         public event ProductCheker ErrorMessage;
@@ -39,18 +39,18 @@ namespace Shop.Models
             }
         }
 
-        public void Create(string productName, double volume)
+        public void Create(string productName, double productVolume)
         {
-            Product product = new Product(productName, volume);
+            Product product = new Product(productName, productVolume);
             productList.Add(product);
             product.IdInProductList = productList.Count();
         }
 
-        public void Delete(int index)
+        public void Delete(int productId)
         {
-            if (productList.Count >= index)
+            if (productList.Count >= productId)
             {
-                productList.RemoveAt(index - 1);
+                productList.RemoveAt(productId - 1);
             }
             else
             {
@@ -71,17 +71,13 @@ namespace Shop.Models
             }
         }
 
-        public Product GetProduct(int productId)
-        {
-            var findItem = productList.ElementAtOrDefault(productId - 1);
-            return findItem;
-        }
+        public Product GetProduct(int productId) => productList.ElementAtOrDefault(productId - 1);
 
-        public void Edit(int productId, string newName, double newVolume)
+        public void Edit(int productId, string newProductName, double newProductVolume)
         {
-            var editProduct = GetProduct(productId);
-            editProduct.Name = newName;
-            editProduct.Volume = newVolume;
+            var selectProduct = GetProduct(productId);
+            selectProduct.Name = newProductName;
+            selectProduct.Volume = newProductVolume;
         }
 
     }

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Shop.Interfaces
 {
-    interface ICreateShowCase
+    interface ICreateShowcase
     {
-        void CreateShoeCase(string shocaseName, double volume);
+        void Create(string showcaseName, double showcaseVolume);
     }
 }
