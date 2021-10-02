@@ -1,8 +1,8 @@
-﻿
+﻿using Shop.Models;
 namespace Shop.Interfaces
 {
     interface ICreateShowcase
     {
-        void Create(string showcaseName, double showcaseVolume);
+        Showcase Create(string showcaseName, double showcaseVolume);
     }
 }

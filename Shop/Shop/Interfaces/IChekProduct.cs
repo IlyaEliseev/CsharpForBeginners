@@ -3,6 +3,6 @@ namespace Shop.Interfaces
 {
     interface IChekProduct
     {
-        bool Chek();
+        bool ChekCount();
     }
 }

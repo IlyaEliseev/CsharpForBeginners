@@ -6,7 +6,7 @@ namespace Shop
     {
         static void Main(string[] args)
         {
-            var shop = new Shop();
+            var shop = new ShopInterface();
             shop.CreateShop();
         }
     }

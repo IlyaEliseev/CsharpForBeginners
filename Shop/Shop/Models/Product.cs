@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Shop.Models
 {
-    public class Product : IGetInformation, ICreateProduct, IDeleteProduct, IGetProduct, IEditProduct, IChekProduct
+    public class Product : IGetInformation, ICreateProduct, IDeleteProduct, IGetProduct, IEditProduct
     {
         public delegate void ProductCheker();
         public event ProductCheker ErrorMessage;
@@ -17,6 +17,7 @@ namespace Shop.Models
         public double Volume { get; set; }
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
+
         List<Product> productList = new List<Product>();
 
         public Product() : base()
@@ -50,7 +51,7 @@ namespace Shop.Models
         {
             if (productList.Count >= productId)
             {
-                productList.RemoveAt(productId - 1);
+                productList.RemoveAll(x => x.IdInProductList == productId);
             }
             else
             {
@@ -58,7 +59,7 @@ namespace Shop.Models
             }
         }
 
-        public bool Chek()
+        public bool CheckProductAvailability()
         {
             if (productList.Count == 0)
             {
@@ -71,13 +72,19 @@ namespace Shop.Models
             }
         }
 
-        public Product GetProduct(int productId) => productList.ElementAtOrDefault(productId - 1);
-
+        public Product GetProduct(int productId) => productList.SingleOrDefault(x => x.IdInProductList == productId);
+            
+        public int GetProductsCount() => productList.Count;
         public void Edit(int productId, string newProductName, double newProductVolume)
         {
             var selectProduct = GetProduct(productId);
             selectProduct.Name = newProductName;
             selectProduct.Volume = newProductVolume;
+        }
+
+        public Product Copy()
+        {
+            return (Product) this.MemberwiseClone();
         }
 
     }

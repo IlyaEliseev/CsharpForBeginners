@@ -2,8 +2,8 @@
 
 namespace Shop.Interfaces
 {
-    interface IDeleteShowcase
+    public interface IDeleteShowcase
     {
-        void Delete(int showcaseId);
+        void DeleteShowcase(int showcaseId);
     }
 }
