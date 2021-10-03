@@ -7,9 +7,9 @@ namespace Shop.Models
 {
     public class Product : IGetInformation, ICreateProduct, IDeleteProduct, IGetProduct, IEditProduct
     {
-        public delegate void ProductCheker();
-        public event ProductCheker ErrorMessage;
-        public event ProductCheker IndexOutRange;
+        public event EventHandler ProductIsNotfound;
+        public event EventHandler SearchProductIdIsNotSuccessful;
+        public event EventHandler CreateProductIsDone;
 
         public int IdInProductList { get; set; }
         public int IdInShowcase { get; set; }
@@ -44,26 +44,27 @@ namespace Shop.Models
         {
             Product product = new Product(productName, productVolume);
             productList.Add(product);
-            product.IdInProductList = productList.Count();
+            product.IdInProductList = GetProductsCount();
+            CreateProductIsDone?.Invoke();
         }
 
         public void Delete(int productId)
         {
-            if (productList.Count >= productId)
+            if (GetProductsCount() >= productId)
             {
                 productList.RemoveAll(x => x.IdInProductList == productId);
             }
             else
             {
-                IndexOutRange?.Invoke();
+                SearchProductIdIsNotSuccessful?.Invoke();
             }
         }
 
         public bool CheckProductAvailability()
         {
-            if (productList.Count == 0)
+            if (GetProductsCount() == 0)
             {
-                ErrorMessage?.Invoke();
+                ProductIsNotfound?.Invoke();
                 return false;
             }
             else

@@ -10,10 +10,10 @@ namespace Shop.Models
         
     {
         
-        public event ShowcaseCheker ErrorMessage;
-        public event ShowcaseCheker CountCheck;
-        public event ShowcaseCheker DeleteError;
-        public event ShowcaseCheker VolumeError;
+        public event EventHandler ErrorMessage;
+        public event EventHandler SearchShowcaseIdIsNotSuccessful;
+        public event EventHandler DeleteError;
+        public event EventHandler VolumeError;
         
 
         public int Id { get; set; }
@@ -44,7 +44,7 @@ namespace Shop.Models
         }
 
         public Product GetProduct(int productId) => ProductsInShowcase.SingleOrDefault(x => x.IdInShowcase == productId);
-        public int GetProductCount() => ProductsInShowcase.Count();
+        public int GetProductCount() => ProductsInShowcase.Count;
         public void PlaceProduct(Product product, ShopHall shop, int productId, int showcaseId)
         {
             var findProduct = product.GetProduct(productId);
@@ -64,7 +64,7 @@ namespace Shop.Models
             }
             else
             {
-                CountCheck?.Invoke();
+                SearchShowcaseIdIsNotSuccessful?.Invoke();
             }
         }
 

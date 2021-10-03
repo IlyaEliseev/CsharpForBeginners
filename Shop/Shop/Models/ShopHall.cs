@@ -5,14 +5,16 @@ using Shop.Interfaces;
 
 namespace Shop.Models
 {
+    public delegate void EventHandler();  
+
     public class ShopHall : IDeleteShowcase, IGetShowcase, IChekShowcase, IGetInformationShowcase, IEditShowcase, 
         ICheckProductInShowcase, IDeleteProductInShowcase
     {
         
-        public event ShowcaseCheker CountCheck;
-        public event ShowcaseCheker DeleteError;
-        public event ShowcaseCheker ErrorMessage;
-        public event ShowcaseCheker ChekProductOnShowacse;
+        public event EventHandler CountCheck;
+        public event EventHandler DeleteError;
+        public event EventHandler ErrorMessage;
+        public event EventHandler ChekProductOnShowacse;
 
         public List<Showcase> _showcasesList;
 
@@ -21,26 +23,26 @@ namespace Shop.Models
             _showcasesList = new List<Showcase>();
         }
 
-        public int GetShowcaseListCount() => _showcasesList.Count();
+        public int GetShowcaseListCount() => _showcasesList.Count;
         public void PlaceShowcase(Showcase showcase)
         {
             _showcasesList.Add(showcase);
-            showcase.Id = _showcasesList.Count();
+            showcase.Id = GetShowcaseListCount();
         }
         public void DeleteShowcase(int showcaseId)
         {
             var findShowcase = GetShowcase(showcaseId);
 
-            if (findShowcase.ProductsInShowcase.Count != 0 && _showcasesList.Count >= showcaseId)
+            if (findShowcase.GetProductCount() != 0 && GetShowcaseListCount() >= showcaseId)
             {
                 DeleteError?.Invoke();
             }
 
-            if (_showcasesList.Count >= showcaseId && findShowcase.ProductsInShowcase.Count == 0)
+            if (GetShowcaseListCount() >= showcaseId && findShowcase.GetProductCount() == 0)
             {
 
-                _showcasesList.RemoveAt(showcaseId - 1);
-                for (int i = 0; i < _showcasesList.Count; i++)
+                _showcasesList.RemoveAll(x => x.Id == showcaseId);
+                for (int i = 0; i < GetShowcaseListCount(); i++)
                 {
                     _showcasesList[i].Id = i + 1;
                 }
@@ -50,7 +52,6 @@ namespace Shop.Models
                 CountCheck?.Invoke();
             }
         }
-
         public Showcase GetShowcase(int showcaseId) => _showcasesList.SingleOrDefault(x => x.Id == showcaseId);
 
         public bool CheckShowcaseCount(int showcaseId)
@@ -73,11 +74,11 @@ namespace Shop.Models
 
             foreach (var showcase in _showcasesList)
             {
-                Console.WriteLine($"Id: {showcase.Id} Name: {showcase.Name} Volume: {showcase.Volume} Time to Create: {showcase.TimeToCreate} Count Products: {showcase.ProductsInShowcase.Count()}");
+                Console.WriteLine($"Id: {showcase.Id} | Name: {showcase.Name} | Volume: {showcase.Volume} | Time to Create: {showcase.TimeToCreate} | Count Products: {showcase.ProductsInShowcase.Count()}");
                 var products = showcase.ProductsInShowcase;
                 foreach (var p in products)
                 {
-                    Console.WriteLine($"    Id: {p.IdInShowcase} Name: {p.Name} Volume: {p.Volume} Time to Create: {p.TimeToCreate}");
+                    Console.WriteLine($"    Id: {p.IdInShowcase} | Name: {p.Name} | Volume: {p.Volume} | Time to Create: {p.TimeToCreate}");
                 }
             }
         }
@@ -97,7 +98,7 @@ namespace Shop.Models
             }
         }
 
-        public bool CheckProductOnShowcase(int showcaseId)
+        public bool CheckProductOnCurrentShowcase(int showcaseId)
         {
             var findShowcase = GetShowcase(showcaseId);
             if (findShowcase.GetProductCount() == 0)
@@ -122,7 +123,7 @@ namespace Shop.Models
                 return;
             }
 
-            if (CheckProductOnShowcase(showcaseId))
+            if (CheckProductOnCurrentShowcase(showcaseId))
             {
                 selectShowcase.ProductsInShowcase.RemoveAll(X => X.IdInShowcase == productId);
 
