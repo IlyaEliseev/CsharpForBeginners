@@ -8,14 +8,21 @@ namespace Shop
 {
     class Messeges
     {
-        public static void ErrorCountMessage()
+        public static void ProductIsCreate()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Product is create!");
+            Console.ResetColor();
+        }
+
+        public static void CountIsEmptyInformation()
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Empty!");
             Console.ResetColor();
         }
 
-        public static void OutOfRangeIndex()
+        public static void IdNotFound()
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Id not found!");
