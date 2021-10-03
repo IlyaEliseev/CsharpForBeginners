@@ -7,22 +7,21 @@ namespace Shop
     {
         public void CreateShop()
         {
-            ShopInterface.ShowUserMenu();
-            Console.WriteLine();
+            
 
             Product product = new Product();
-            product.ErrorMessage += Messeges.ErrorCountMessage;
-            product.IndexOutRange += Messeges.OutOfRangeIndex;
-
-            Showcase showCase = new Showcase();
-            showCase.ErrorMessage += Messeges.ErrorCountMessage;
-            showCase.CountCheck += Messeges.OutOfRangeIndex;
-            showCase.DeleteError += Messeges.DeliteShowcaseMessage;
-            showCase.VolumeError += Messeges.VolumeErrorMessage;
+            product.ProductIsNotfound += Messeges.CountIsEmptyInformation;
+            product.SearchProductIdIsNotSuccessful += Messeges.IdNotFound;
+            product.CreateProductIsDone += Messeges.ProductIsCreate;
+            Showcase showcase = new Showcase();
+            showcase.ErrorMessage += Messeges.CountIsEmptyInformation;
+            showcase.SearchShowcaseIdIsNotSuccessful += Messeges.IdNotFound;
+            showcase.DeleteError += Messeges.DeliteShowcaseMessage;
+            showcase.VolumeError += Messeges.VolumeErrorMessage;
             
 
             ShopHall shopHall = new ShopHall();
-            shopHall.ErrorMessage += Messeges.ErrorCountMessage;
+            shopHall.ErrorMessage += Messeges.CountIsEmptyInformation;
             shopHall.DeleteError += Messeges.DeliteShowcaseMessage;
             shopHall.ChekProductOnShowacse += Messeges.ShowNotProductOnShowcase;
 
@@ -31,6 +30,8 @@ namespace Shop
             string _input;
             while (_isContinue) 
             {
+                ShopInterface.ShowUserMenu();
+                Console.WriteLine();
                 Console.WriteLine("Input command: ");
                 
                 _input = Console.ReadLine();
@@ -65,13 +66,12 @@ namespace Shop
                 {
                     if (product.CheckProductAvailability())
                     {
-                        //Console.WriteLine("Input product Id: ");
-                        int _producyId = CheckCorrectnessId(product);
+                        int _productId = CheckCorrectnessId(showcase);
                         Console.WriteLine("Input product name: ");
                         string _productName = Console.ReadLine();
                         Console.WriteLine("Input product volume: ");
                         double _productVolume = double.Parse(Console.ReadLine());
-                        product.Edit(_producyId, _productName, _productVolume);
+                        product.Edit(_productId, _productName, _productVolume);
                     }
                 }
 
@@ -79,9 +79,9 @@ namespace Shop
                 {
                     if (product.CheckProductAvailability())
                     {
-                        Console.WriteLine("Input index of product: ");
-                        int _indexProduct = Int32.Parse(Console.ReadLine());
-                        product.Delete(_indexProduct);
+                        Console.WriteLine("Input product id: ");
+                        int _productId = Int32.Parse(Console.ReadLine());
+                        product.Delete(_productId);
                     }
                 }
 
@@ -106,7 +106,7 @@ namespace Shop
                     string _nameShowcase = Console.ReadLine();
                     Console.WriteLine("Input volume of showcase: ");
                     double _volumeShowcase = double.Parse(Console.ReadLine());
-                    var creatShowcase = showCase.Create(_nameShowcase, _volumeShowcase);
+                    var creatShowcase = showcase.Create(_nameShowcase, _volumeShowcase);
                     shopHall.PlaceShowcase(creatShowcase);
                 }
 
@@ -122,21 +122,18 @@ namespace Shop
 
                 if (_command == (int)InputCommands.PlaceProductOnShowcase)
                 {
-                    Console.WriteLine("Input product id: ");
-                    int productId = int.Parse(Console.ReadLine());
-                    Console.WriteLine("Input showcase id: ");
-                    int showcaseId = int.Parse(Console.ReadLine());
-                    showCase.PlaceProduct(product, shopHall, productId, showcaseId);
+                    int productId = CheckCorrectnessId(product);
+                    int showcaseId = CheckCorrectnessId(shopHall);
+                    showcase.PlaceProduct(product, shopHall, productId, showcaseId);
                 }
 
                 if (_command == (int)InputCommands.DeleteProductOnShowcase)
                 {
-                    Console.WriteLine("Input showcase id: ");
-                    int showcaseId = int.Parse(Console.ReadLine());
-                    if (shopHall.CheckShowcaseCount(showcaseId) || shopHall.CheckProductOnShowcase(showcaseId))
+                    
+                    int showcaseId = CheckCorrectnessId(shopHall);
+                    if (shopHall.CheckProductOnCurrentShowcase(showcaseId))
                     {
-                        Console.WriteLine("Input product id: ");
-                        int productId = int.Parse(Console.ReadLine());
+                        int productId = CheckCorrectnessId(showcase);
                         shopHall.DeleteProduct(product, productId, showcaseId);
                     }
                 }
@@ -158,11 +155,36 @@ namespace Shop
             }
         }
 
-        public static int CheckCorrectnessId(Product product)
+        public static int CheckCorrectnessId(Showcase showcase)
         {
             int verifiableId;
             bool IsContinue = true;
             
+            do
+            {
+                Console.WriteLine("Input product Id: ");
+                string id = Console.ReadLine();
+                bool succses = int.TryParse(id, out verifiableId);
+                if (succses == false || showcase.GetProductCount() < verifiableId)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Wrong id!");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    IsContinue = false;
+                }
+            } while (IsContinue);
+            
+            return verifiableId;
+
+        }
+        public static int CheckCorrectnessId(Product product)
+        {
+            int verifiableId;
+            bool IsContinue = true;
+
             do
             {
                 Console.WriteLine("Input product Id: ");
@@ -179,9 +201,33 @@ namespace Shop
                     IsContinue = false;
                 }
             } while (IsContinue);
-            
+
             return verifiableId;
 
+        }
+        public static int CheckCorrectnessId(ShopHall shopHall)
+        {
+            int verifiableId;
+            bool IsContinue = true;
+
+            do
+            {
+                Console.WriteLine("Input showcase Id: ");
+                string id = Console.ReadLine();
+                bool succses = int.TryParse(id, out verifiableId);
+                if (succses == false || shopHall.GetShowcaseListCount() < verifiableId)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Wrong id!");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    IsContinue = false;
+                }
+            } while (IsContinue);
+
+            return verifiableId;
         }
 
         public static void ShowUserMenu()
@@ -192,7 +238,7 @@ namespace Shop
             Console.WriteLine($"Press [{(int)InputCommands.CreateShowcase}] to create showcase");
             Console.WriteLine($"Press [{(int)InputCommands.ShowAllShowcases}] to show all showcases");
             Console.WriteLine($"Press [{(int)InputCommands.PlaceProductOnShowcase}] to place product");
-            Console.WriteLine($"Press [{(int)InputCommands.DeleteProductOnShowcase}] to delete product");
+            Console.WriteLine($"Press [{(int)InputCommands.DeleteProductOnShowcase}] to delete product on showcase");
             Console.WriteLine($"Press [{(int)InputCommands.EditShowcase}] to edit showcase");
             Console.WriteLine($"Press [{(int)InputCommands.DeleteShowcase}] to delite showcase");
             Console.WriteLine();
@@ -201,9 +247,6 @@ namespace Shop
             Console.WriteLine($"Press [{(int)InputCommands.EditeProduct}] to edite product");
             Console.WriteLine($"Press [{(int)InputCommands.DeleteProduct}] to delite product");
             Console.WriteLine($"Press [{(int)InputCommands.GetProductInformation}] to get product information");
-            Console.WriteLine();
-            Console.WriteLine("Utility command: ");
-            Console.WriteLine($"Press [{(int)InputCommands.PlaceProductOnShowcase}] to place the product on the showcase");
             Console.WriteLine();
         }
 
