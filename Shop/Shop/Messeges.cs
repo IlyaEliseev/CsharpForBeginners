@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Shop
 {
@@ -10,44 +6,77 @@ namespace Shop
     {
         public static void ProductIsCreate()
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Product is create!");
-            Console.ResetColor();
+            SetGreenColor("Product is create!");
+        }
+
+        public static void ProductIsPlace()
+        {
+            SetGreenColor("Product is place on showcase!");
+        }
+
+        public static void ProductIsEdit()
+        {
+            SetGreenColor("Product is edit!");
+        }
+
+        public static void ProductIsDelete()
+        {
+            SetGreenColor("Product is delete!");
+        }
+
+        public static void ShowcaseIsCreate()
+        {
+            SetGreenColor("Showcase is create!");
+        }
+
+        public static void ShowcaseIsEdit()
+        {
+            SetGreenColor("Showcase is edit!");
+        }
+
+        public static void ShowcaseIsDelete()
+        {
+            SetGreenColor("Showcase is delete!");
         }
 
         public static void CountIsEmptyInformation()
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Empty!");
-            Console.ResetColor();
+            SetRedColor("Empty!");
         }
 
         public static void IdNotFound()
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Id not found!");
-            Console.ResetColor();
+            SetRedColor("Id not found!");
         }
 
         public static void DeliteShowcaseMessage()
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Showcase is not empty!");
-            Console.ResetColor();
+            SetRedColor("Showcase is not empty!");
         }
 
         public static void VolumeErrorMessage()
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Showcase not enoph space!");
-            Console.ResetColor();
+            SetRedColor("Showcase not enoph space!");
         }
 
         public static void ShowNotProductOnShowcase()
         {
+            SetRedColor("No product on Showcase!");
+        }
+
+        public static void SetRedColor(string messege)
+        {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("No product on Showcase!");
+            Console.WriteLine($"{messege}");
             Console.ResetColor();
         }
+
+        public static void SetGreenColor(string messege)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"{messege}");
+            Console.ResetColor();
+        }
+
     }
 }

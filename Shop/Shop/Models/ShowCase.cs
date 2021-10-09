@@ -5,21 +5,15 @@ using Shop.Interfaces;
 
 namespace Shop.Models
 {
-    public delegate void ShowcaseCheker();
-    public class Showcase : IPlaceProduct, ICreateShowcase
-        
+    
+    public class Showcase : ICreateShowcase
     {
-        
-        public event EventHandler ErrorMessage;
-        public event EventHandler SearchShowcaseIdIsNotSuccessful;
-        public event EventHandler DeleteError;
-        public event EventHandler VolumeError;
-        
-
         public int Id { get; set; }
         public string Name { get; set; }
         public double Volume { get; set; }
-        public int VolumeCount { get; set; }
+        public double VolumeCount { get; set; }
+
+
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
 
@@ -45,30 +39,6 @@ namespace Shop.Models
 
         public Product GetProduct(int productId) => ProductsInShowcase.SingleOrDefault(x => x.IdInShowcase == productId);
         public int GetProductCount() => ProductsInShowcase.Count;
-        public void PlaceProduct(Product product, ShopHall shop, int productId, int showcaseId)
-        {
-            var findProduct = product.GetProduct(productId);
-            var findShowcase = shop.GetShowcase(showcaseId);
-            
-            if (findShowcase.Volume < findProduct.Volume)
-            {
-                VolumeError?.Invoke();
-                return;
-            }
-
-            if (product.CheckProductAvailability())
-            {
-                var copyProduct = findProduct.Copy();
-                findShowcase.ProductsInShowcase.Add(copyProduct);
-                copyProduct.IdInShowcase = findShowcase.GetProductCount();
-            }
-            else
-            {
-                SearchShowcaseIdIsNotSuccessful?.Invoke();
-            }
-        }
-
-        
         
     }   
 }

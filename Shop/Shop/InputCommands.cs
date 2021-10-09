@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Shop.Models
 {
     enum InputCommands
@@ -11,6 +6,7 @@ namespace Shop.Models
         CreateShowcase = 1,
         ShowAllShowcases,
         PlaceProductOnShowcase,
+        EditProductOnShowcase,
         DeleteProductOnShowcase,
         EditShowcase,
         DeleteShowcase,

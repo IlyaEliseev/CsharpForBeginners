@@ -8,13 +8,13 @@ namespace Shop.Models
     public delegate void EventHandler();  
 
     public class ShopHall : IDeleteShowcase, IGetShowcase, IChekShowcase, IGetInformationShowcase, IEditShowcase, 
-        ICheckProductInShowcase, IDeleteProductInShowcase
+        ICheckProductInShowcase, IDeleteProductInShowcase, IPlaceProduct
     {
-        
         public event EventHandler CountCheck;
         public event EventHandler DeleteError;
-        public event EventHandler ErrorMessage;
         public event EventHandler ChekProductOnShowacse;
+        public event EventHandler VolumeError;
+        public event EventHandler SearchShowcaseIdIsNotSuccessful;
 
         public List<Showcase> _showcasesList;
 
@@ -74,7 +74,7 @@ namespace Shop.Models
 
             foreach (var showcase in _showcasesList)
             {
-                Console.WriteLine($"Id: {showcase.Id} | Name: {showcase.Name} | Volume: {showcase.Volume} | Time to Create: {showcase.TimeToCreate} | Count Products: {showcase.ProductsInShowcase.Count()}");
+                Console.WriteLine($"Id: {showcase.Id} | Name: {showcase.Name} | Volume: {showcase.Volume} | Time to Create: {showcase.TimeToCreate} | Count Products: {showcase.ProductsInShowcase.Count()} | VolumeCount: {showcase.VolumeCount}");
                 var products = showcase.ProductsInShowcase;
                 foreach (var p in products)
                 {
@@ -83,18 +83,18 @@ namespace Shop.Models
             }
         }
 
-        public void Edit(int showcaseId, string showcaseName, double showcaseVolume)
+        public void EditShowcase(int showcaseId, string showcaseName, double showcaseVolume)
         {
-            var findShowcase = GetShowcase(showcaseId);
+            var SelectShowcase = GetShowcase(showcaseId);
 
-            if (findShowcase.GetProductCount() != 0)
+            if (SelectShowcase.GetProductCount() != 0)
             {
                 DeleteError?.Invoke();
             }
             else
             {
-                findShowcase.Name = showcaseName;
-                findShowcase.Volume = showcaseVolume;
+                SelectShowcase.Name = showcaseName;
+                SelectShowcase.Volume = showcaseVolume;
             }
         }
 
@@ -112,6 +112,50 @@ namespace Shop.Models
             }
         }
 
+        public bool CheckShowcaseVolumeOverflow(int showcaseId, int productId, Product product)
+        {
+            var _selectShowcase = GetShowcase(showcaseId);
+            var _selectProduct = product.GetProduct(productId);
+            if (_selectShowcase.VolumeCount <= _selectShowcase.Volume && GetShowcaseFreeVolume(showcaseId) >= _selectProduct.Volume)
+            {
+                return true;
+            }
+            VolumeError?.Invoke();
+            return false;
+        }
+
+        public double GetShowcaseFreeVolume(int showcaseId)
+        {
+            var _selectShowcase = GetShowcase(showcaseId);
+            double _freeSpace = _selectShowcase.Volume - _selectShowcase.VolumeCount;
+            return _freeSpace;
+        }
+
+        public void CountShowcaseVolume(int showcaseId, int productId)
+        {
+            var _selectShowcase = GetShowcase(showcaseId);
+            var _selectProduct = _selectShowcase.GetProduct(productId);
+            _selectShowcase.VolumeCount += _selectProduct.Volume;
+        }
+
+        public void PlaceProduct(Product product,int productId, int showcaseId)
+        {
+            var selectProduct = product.GetProduct(productId);
+            var selectShowcase = GetShowcase(showcaseId);
+
+            if (product.CheckProductAvailability())
+            {
+                selectShowcase.ProductsInShowcase.Add(selectProduct);
+                product.Delete(productId);
+                selectProduct.IdInShowcase = selectShowcase.GetProductCount();
+                CountShowcaseVolume(showcaseId, productId);
+            }
+            else
+            {
+                SearchShowcaseIdIsNotSuccessful?.Invoke();
+            }
+        }
+
         public void DeleteProduct(Product product, int productId, int showcaseId)
         {
             var selectShowcase = GetShowcase(showcaseId);
@@ -126,11 +170,31 @@ namespace Shop.Models
             if (CheckProductOnCurrentShowcase(showcaseId))
             {
                 selectShowcase.ProductsInShowcase.RemoveAll(X => X.IdInShowcase == productId);
-
+                selectShowcase.VolumeCount-= selectProduct.Volume;
                 for (int i = 0; i < selectShowcase.GetProductCount(); i++)
                 {
                     selectShowcase.ProductsInShowcase[i].IdInShowcase = i + 1;
                 }
+            }
+        }
+        public void EditProduct(int productId,int showcaseId, string newProductName, double newProductVolume)
+        {
+            var _selectShowcase = GetShowcase(showcaseId);
+            var _selectProduct = _selectShowcase.GetProduct(productId);
+            _selectProduct.Name = newProductName;
+            _selectProduct.Volume = newProductVolume;
+        }
+
+        public bool CheckShowcaseAvailability()
+        {
+            if (GetShowcaseListCount() == 0)
+            {
+                CountCheck?.Invoke();
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }

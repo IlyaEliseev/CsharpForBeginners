@@ -4,6 +4,6 @@ namespace Shop.Interfaces
 {
     interface IPlaceProduct
     {
-        void PlaceProduct(Product product, ShopHall shop, int productId, int showcaseId);
+        void PlaceProduct(Product product, int productId, int showcaseId);
     }
 }
