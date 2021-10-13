@@ -1,13 +1,12 @@
-﻿using System;
-
+﻿
 namespace Shop
 {
-    class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
-            var shop = new ShopInterface();
-            shop.CreateShop();
+            var shopApplication = new ShopApplication();
+            shopApplication.Run();
         }
     }
 }

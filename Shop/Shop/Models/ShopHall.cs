@@ -5,9 +5,9 @@ using Shop.Interfaces;
 
 namespace Shop.Models
 {
-    public delegate void EventHandler();  
+    public delegate void EventHandler();
 
-    public class ShopHall : IDeleteShowcase, IGetShowcase, IChekShowcase, IGetInformationShowcase, IEditShowcase, 
+    internal class ShopHall : IDeleteShowcase, IGetShowcase, IChekShowcase, IGetInformationShowcase, IEditShowcase, 
         ICheckProductInShowcase, IDeleteProductInShowcase, IPlaceProduct
     {
         public event EventHandler CountCheck;
@@ -16,17 +16,17 @@ namespace Shop.Models
         public event EventHandler VolumeError;
         public event EventHandler SearchShowcaseIdIsNotSuccessful;
 
-        public List<Showcase> _showcasesList;
+        public List<Showcase> showcaseStorage;
 
         public ShopHall()
         {
-            _showcasesList = new List<Showcase>();
+            showcaseStorage = new List<Showcase>();
         }
 
-        public int GetShowcaseListCount() => _showcasesList.Count;
+        public int GetShowcaseListCount() => showcaseStorage.Count;
         public void PlaceShowcase(Showcase showcase)
         {
-            _showcasesList.Add(showcase);
+            showcaseStorage.Add(showcase);
             showcase.Id = GetShowcaseListCount();
         }
         public void DeleteShowcase(int showcaseId)
@@ -41,10 +41,10 @@ namespace Shop.Models
             if (GetShowcaseListCount() >= showcaseId && findShowcase.GetProductCount() == 0)
             {
 
-                _showcasesList.RemoveAll(x => x.Id == showcaseId);
+                showcaseStorage.RemoveAll(x => x.Id == showcaseId);
                 for (int i = 0; i < GetShowcaseListCount(); i++)
                 {
-                    _showcasesList[i].Id = i + 1;
+                    showcaseStorage[i].Id = i + 1;
                 }
             }
             else
@@ -52,7 +52,7 @@ namespace Shop.Models
                 CountCheck?.Invoke();
             }
         }
-        public Showcase GetShowcase(int showcaseId) => _showcasesList.SingleOrDefault(x => x.Id == showcaseId);
+        public Showcase GetShowcase(int showcaseId) => showcaseStorage.SingleOrDefault(x => x.Id == showcaseId);
 
         public bool CheckShowcaseCount(int showcaseId)
         {
@@ -72,7 +72,7 @@ namespace Shop.Models
         {
             Console.WriteLine("Showcases:");
 
-            foreach (var showcase in _showcasesList)
+            foreach (var showcase in showcaseStorage)
             {
                 Console.WriteLine($"Id: {showcase.Id} | Name: {showcase.Name} | Volume: {showcase.Volume} | Time to Create: {showcase.TimeToCreate} | Count Products: {showcase.ProductsInShowcase.Count()} | VolumeCount: {showcase.VolumeCount}");
                 var products = showcase.ProductsInShowcase;

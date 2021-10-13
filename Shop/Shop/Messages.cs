@@ -2,7 +2,7 @@
 
 namespace Shop
 {
-    class Messeges
+    internal class Messages
     {
         public static void ProductIsCreate()
         {
@@ -77,6 +77,5 @@ namespace Shop
             Console.WriteLine($"{messege}");
             Console.ResetColor();
         }
-
     }
 }

@@ -14,5 +14,6 @@ namespace Shop.Models
         EditeProduct,
         DeleteProduct,
         GetProductInformation,
+        EXITApplication
     }
 }

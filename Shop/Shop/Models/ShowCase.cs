@@ -5,8 +5,8 @@ using Shop.Interfaces;
 
 namespace Shop.Models
 {
-    
-    public class Showcase : ICreateShowcase
+
+    internal class Showcase : ICreateShowcase
     {
         public int Id { get; set; }
         public string Name { get; set; }
