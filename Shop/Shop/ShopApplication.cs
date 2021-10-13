@@ -183,12 +183,12 @@ namespace Shop
                         
                         if (shopHall.CheckProductOnCurrentShowcase(showcaseId))
                         {
-                            int _productId = CheckCorrectnessProductIdInshowcase(shopHall, showcaseId);
+                            int productId = CheckCorrectnessProductIdInshowcase(shopHall, showcaseId);
                             Console.WriteLine("Input new product name: ");
-                            string _productName = Console.ReadLine();
+                            string productName = Console.ReadLine();
                             Console.WriteLine("Input new product volume: ");
-                            double _productVolume = CheckCorrectnessVolume();
-                            shopHall.EditProduct(_productId, showcaseId, _productName, _productVolume);
+                            double productVolume = CheckCorrectnessVolume();
+                            shopHall.EditProduct(productId, showcaseId, productName, productVolume);
                             RaiseEditProductIsDone();
                         }
                     }
