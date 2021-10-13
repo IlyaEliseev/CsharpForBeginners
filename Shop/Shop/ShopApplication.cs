@@ -150,8 +150,8 @@ namespace Shop
                         int showcaseId = CheckCorrectnessShowcaseId(shopHall);
                         if (shopHall.CheckProductOnCurrentShowcase(showcaseId))
                         {
-                            int _productId = CheckCorrectnessProductIdInshowcase(shopHall, showcaseId);
-                            shopHall.DeleteProduct(product, _productId, showcaseId);
+                            int productId = CheckCorrectnessProductIdInshowcase(shopHall, showcaseId);
+                            shopHall.DeleteProduct(product, productId, showcaseId);
                             RaiseDeleteProductIsDone();
                         }
                     }
@@ -161,15 +161,15 @@ namespace Shop
                 {
                     if (shopHall.CheckShowcaseAvailability())
                     {
-                        int _showcaseId = CheckCorrectnessShowcaseId(shopHall);
+                        int showcaseId = CheckCorrectnessShowcaseId(shopHall);
 
-                        if (shopHall.CheckShowcaseCount(_showcaseId))
+                        if (shopHall.CheckShowcaseCount(showcaseId))
                         {
                             Console.WriteLine("Input new showcase name: ");
-                            string _showcaseName = Console.ReadLine();
+                            string showcaseName = Console.ReadLine();
                             Console.WriteLine("Input new showcase volume: ");
-                            double _showcaseVolume = CheckCorrectnessVolume();
-                            shopHall.EditShowcase(_showcaseId, _showcaseName, _showcaseVolume);
+                            double showcaseVolume = CheckCorrectnessVolume();
+                            shopHall.EditShowcase(showcaseId, showcaseName, showcaseVolume);
                             RaiseEditShowcaseIsDone();
                         }
                     }
@@ -179,16 +179,16 @@ namespace Shop
                 {
                     if (shopHall.CheckShowcaseAvailability())
                     {
-                        int _showcaseId = CheckCorrectnessShowcaseId(shopHall);
+                        int showcaseId = CheckCorrectnessShowcaseId(shopHall);
                         
-                        if (shopHall.CheckProductOnCurrentShowcase(_showcaseId))
+                        if (shopHall.CheckProductOnCurrentShowcase(showcaseId))
                         {
-                            int _productId = CheckCorrectnessProductIdInshowcase(shopHall, _showcaseId);
+                            int _productId = CheckCorrectnessProductIdInshowcase(shopHall, showcaseId);
                             Console.WriteLine("Input new product name: ");
                             string _productName = Console.ReadLine();
                             Console.WriteLine("Input new product volume: ");
                             double _productVolume = CheckCorrectnessVolume();
-                            shopHall.EditProduct(_productId, _showcaseId, _productName, _productVolume);
+                            shopHall.EditProduct(_productId, showcaseId, _productName, _productVolume);
                             RaiseEditProductIsDone();
                         }
                     }
