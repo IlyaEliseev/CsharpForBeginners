@@ -1,7 +1,7 @@
 ﻿
 namespace Shop.Interfaces
 {
-    interface IEditProduct
+    public interface IEditProduct
     {
         void Edit(int productId, string newName, double newVolume);
     }

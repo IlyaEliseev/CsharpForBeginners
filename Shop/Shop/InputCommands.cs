@@ -1,7 +1,7 @@
 ﻿
 namespace Shop.Models
 {
-    enum InputCommands
+    public enum InputCommands
     {
         CreateShowcase = 1,
         ShowAllShowcases,

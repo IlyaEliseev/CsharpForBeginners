@@ -2,7 +2,7 @@
 
 namespace Shop.Interfaces
 {
-    interface IGetProduct
+    public interface IGetProduct
     {
         Product GetProduct(int productId);
     }

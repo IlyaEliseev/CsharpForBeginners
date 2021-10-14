@@ -1,7 +1,7 @@
 ﻿
 namespace Shop.Interfaces
 {
-    interface ICheckProductInShowcase
+    public interface ICheckProductInShowcase
     {
         bool CheckProductOnCurrentShowcase(int showcaseId);
     }

@@ -2,7 +2,7 @@
 
 namespace Shop.Interfaces
 {
-    interface IPlaceProduct
+    public interface IPlaceProduct
     {
         void PlaceProduct(Product product, int productId, int showcaseId);
     }

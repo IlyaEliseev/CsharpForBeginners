@@ -2,7 +2,7 @@
 
 namespace Shop.Interfaces
 {
-    interface IGetShowcase
+    public interface IGetShowcase
     {
         Showcase GetShowcase(int showcaseId);
     }

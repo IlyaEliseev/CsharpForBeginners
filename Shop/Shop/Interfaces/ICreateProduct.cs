@@ -1,7 +1,7 @@
 ﻿
 namespace Shop.Interfaces
 {
-    interface ICreateProduct
+    public interface ICreateProduct
     {
         void Create(string productName, double volume);
     }

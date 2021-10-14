@@ -1,7 +1,7 @@
 ﻿
 namespace Shop.Interfaces
 {
-    interface IChekProduct
+    public interface IChekProduct
     {
         bool ChekCount();
     }

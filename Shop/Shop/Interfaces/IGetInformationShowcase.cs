@@ -1,7 +1,7 @@
 ﻿
 namespace Shop.Interfaces
 {
-    interface IGetInformationShowcase
+    public interface IGetInformationShowcase
     {
         void GetInformation();
     }

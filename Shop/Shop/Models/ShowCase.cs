@@ -6,18 +6,16 @@ using Shop.Interfaces;
 namespace Shop.Models
 {
 
-    internal class Showcase : ICreateShowcase
+    public class Showcase : ICreateShowcase
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public double Volume { get; set; }
         public double VolumeCount { get; set; }
-
-
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
 
-        public List<Product> ProductsInShowcase = new List<Product>();
+        public List<Product> productsInShowcase = new List<Product>();
         
         public Showcase()
         {
@@ -29,6 +27,7 @@ namespace Shop.Models
             Name = name;
             Volume = volume;
             TimeToCreate = DateTime.Now;
+            
         }
 
         public Showcase Create(string showcaseName, double showcaseVolume)
@@ -37,8 +36,8 @@ namespace Shop.Models
             return showcase;
         }
 
-        public Product GetProduct(int productId) => ProductsInShowcase.SingleOrDefault(x => x.IdInShowcase == productId);
-        public int GetProductCount() => ProductsInShowcase.Count;
+        public Product GetProduct(int productId) => productsInShowcase.SingleOrDefault(x => x.IdInShowcase == productId);
+        public int GetProductCount() => productsInShowcase.Count;
         
     }   
 }

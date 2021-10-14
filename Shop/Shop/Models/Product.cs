@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Shop.Models
 {
-    internal class Product : IGetInformation, ICreateProduct, IDeleteProduct, IGetProduct, IEditProduct
+    public class Product : IGetInformation, ICreateProduct, IDeleteProduct, IGetProduct, IEditProduct
     {
         public event EventHandler ProductIsNotfound;
         public event EventHandler SearchProductIdIsNotSuccessful;
@@ -17,11 +17,11 @@ namespace Shop.Models
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
 
-        List<Product> productStorage = new List<Product>();
+        private List<Product> _productStorage;
 
         public Product() : base()
         {
-
+            _productStorage = new List<Product>();
         }
 
         public Product(string productName, double volume)
@@ -33,7 +33,7 @@ namespace Shop.Models
 
         public void GetInformation()
         {
-            foreach (var product in productStorage)
+            foreach (var product in _productStorage)
             {
                 Console.WriteLine($"Id: {product.IdInProductList} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate}");
             }
@@ -42,7 +42,7 @@ namespace Shop.Models
         public void Create(string productName, double productVolume)
         {
             Product product = new Product(productName, productVolume);
-            productStorage.Add(product);
+            _productStorage.Add(product);
             product.IdInProductList = GetProductsCount();
         }
 
@@ -50,10 +50,10 @@ namespace Shop.Models
         {
             if (GetProductsCount() >= productId)
             {
-                productStorage.RemoveAll(x => x.IdInProductList == productId);
+                _productStorage.RemoveAll(x => x.IdInProductList == productId);
                 for (int i = 0; i < GetProductsCount(); i++)
                 {
-                    productStorage[i].IdInProductList = i + 1;
+                    _productStorage[i].IdInProductList = i + 1;
                 }
             }
             else
@@ -75,9 +75,9 @@ namespace Shop.Models
             }
         }
 
-        public Product GetProduct(int productId) => productStorage.SingleOrDefault(x => x.IdInProductList == productId);
+        public Product GetProduct(int productId) => _productStorage.SingleOrDefault(x => x.IdInProductList == productId);
             
-        public int GetProductsCount() => productStorage.Count;
+        public int GetProductsCount() => _productStorage.Count;
         public void Edit(int productId, string newProductName, double newProductVolume)
         {
             var selectProduct = GetProduct(productId);
@@ -89,6 +89,5 @@ namespace Shop.Models
         {
             return (Product) this.MemberwiseClone();
         }
-
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace Shop.Interfaces
 {
-    interface IEditShowcase
+    public interface IEditShowcase
     {
         public void EditShowcase(int showcaseId, string showcaseName, double showcaseVolume);
     }

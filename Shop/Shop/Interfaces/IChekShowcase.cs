@@ -1,7 +1,7 @@
 ﻿
 namespace Shop.Interfaces
 {
-    interface IChekShowcase
+    public interface IChekShowcase
     {
         bool CheckShowcaseCount(int showcaseId);
     }

@@ -13,6 +13,7 @@ namespace Shop
         public event Action CreateShowcaseIsDone;
         public event Action EditShowcaseIsDone;
         public event Action DeleteShowcaseIsDone;
+        public event Action VolumeError;
 
         public void Run()
         {
@@ -22,8 +23,9 @@ namespace Shop
             DeleteProductIsDone += Messages.ProductIsDelete;
             CreateShowcaseIsDone += Messages.ShowcaseIsCreate;
             EditShowcaseIsDone += Messages.ShowcaseIsEdit;
-            DeleteShowcaseIsDone+= Messages.ShowcaseIsDelete;
-
+            DeleteShowcaseIsDone += Messages.ShowcaseIsDelete;
+            VolumeError += Messages.VolumeErrorMessage;
+            
             Product product = new Product();
             product.ProductIsNotfound += Messages.CountIsEmptyInformation;
             product.SearchProductIdIsNotSuccessful += Messages.IdNotFound;
@@ -37,9 +39,9 @@ namespace Shop
             shopHall.SearchShowcaseIdIsNotSuccessful += Messages.IdNotFound;
             shopHall.CountCheck += Messages.CountIsEmptyInformation;
 
-            bool IsContinue = true;
+            bool isContinue = true;
 
-            while (IsContinue)
+            while (isContinue)
             {
                 ShopApplication.ShowUserMenu();
                 Console.WriteLine();
@@ -81,8 +83,7 @@ namespace Shop
                 {
                     if (product.CheckProductAvailability())
                     {
-                        Console.WriteLine("Input product id: ");
-                        int productId = Int32.Parse(Console.ReadLine());
+                        int productId = CheckCorrectnessProductId(product);
                         product.Delete(productId);
                         RaiseDeleteProductIsDone();
                     }
@@ -180,7 +181,7 @@ namespace Shop
                     if (shopHall.CheckShowcaseAvailability())
                     {
                         int showcaseId = CheckCorrectnessShowcaseId(shopHall);
-                        
+
                         if (shopHall.CheckProductOnCurrentShowcase(showcaseId))
                         {
                             int productId = CheckCorrectnessProductIdInshowcase(shopHall, showcaseId);
@@ -188,15 +189,22 @@ namespace Shop
                             string productName = Console.ReadLine();
                             Console.WriteLine("Input new product volume: ");
                             double productVolume = CheckCorrectnessVolume();
-                            shopHall.EditProduct(productId, showcaseId, productName, productVolume);
-                            RaiseEditProductIsDone();
+                            if (productVolume <= shopHall.GetShowcaseFreeSpace(showcaseId))
+                            {
+                                shopHall.EditProduct(productId, showcaseId, productName, productVolume);
+                                RaiseEditProductIsDone();
+                            }
+                            else
+                            {
+                                RaiseVolumeErrorMessage();
+                            }
                         }
                     }
                 }
 
                 if (command == (int)InputCommands.EXITApplication)
                 {
-                    IsContinue = false;
+                    isContinue = false;
                 }
             }
         }
@@ -204,7 +212,7 @@ namespace Shop
         public static int CheckCorrectnessProductIdInshowcase(ShopHall shopHall, int showcaseId)
         {
             int verifiableProductId;
-            bool IsContinue = true;
+            bool isContinue = true;
             
             do
             {
@@ -217,18 +225,17 @@ namespace Shop
                 }
                 else
                 {
-                    IsContinue = false;
+                    isContinue = false;
                 }
-            } while (IsContinue);
+            } while (isContinue);
             
             return verifiableProductId;
-
         }
 
         public static int CheckCorrectnessProductId(Product product)
         {
             int verifiableId;
-            bool IsContinue = true;
+            bool isContinue = true;
 
             do
             {
@@ -241,9 +248,9 @@ namespace Shop
                 }
                 else
                 {
-                    IsContinue = false;
+                    isContinue = false;
                 }
-            } while (IsContinue);
+            } while (isContinue);
 
             return verifiableId;
         }
@@ -251,7 +258,7 @@ namespace Shop
         public static int CheckCorrectnessShowcaseId(ShopHall shopHall)
         {
             int verifiableId;
-            bool IsContinue = true;
+            bool isContinue = true;
             
             do
             {
@@ -264,9 +271,9 @@ namespace Shop
                 }
                 else
                 {
-                    IsContinue = false;
+                    isContinue = false;
                 }
-            } while (IsContinue);
+            } while (isContinue);
 
             return verifiableId;
         }
@@ -274,7 +281,7 @@ namespace Shop
         public static double CheckCorrectnessVolume()
         {
             double verifiableVolume;
-            bool IsContinue = true;
+            bool isContinue = true;
 
             do
             {
@@ -286,9 +293,9 @@ namespace Shop
                 }
                 else
                 {
-                    IsContinue = false;
+                    isContinue = false;
                 }
-            } while (IsContinue);
+            } while (isContinue);
 
             return verifiableVolume;
         }
@@ -326,6 +333,11 @@ namespace Shop
         public void RaiseDeleteShowcaseIsDone()
         {
             DeleteShowcaseIsDone?.Invoke();
+        }
+
+        public void RaiseVolumeErrorMessage()
+        {
+            VolumeError?.Invoke();
         }
 
         public static void ShowUserMenu()
