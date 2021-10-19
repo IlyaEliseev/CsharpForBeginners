@@ -56,7 +56,7 @@ namespace Shop
 
         public static void VolumeErrorMessage()
         {
-            SetRedColor("Showcase not enoph space!");
+            SetRedColor("Showcase not enough space!");
         }
 
         public static void ShowNotProductOnShowcase()

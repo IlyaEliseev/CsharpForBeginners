@@ -1,43 +1,63 @@
 ﻿using System;
 using Shop.Models;
+using Shop.Interfaces;
 
 namespace Shop
 {
-    internal class ShopApplication 
+    public class ShopApplication 
     {
-        public delegate void Action();
-        public event Action CreateProductIsDone;
-        public event Action PlaceProductIsDone;
-        public event Action EditProductIsDone;
-        public event Action DeleteProductIsDone;
-        public event Action CreateShowcaseIsDone;
-        public event Action EditShowcaseIsDone;
-        public event Action DeleteShowcaseIsDone;
-        public event Action VolumeError;
+        //public delegate void Action();
+        //public event Action CreateProductIsDone;
+        //public event Action PlaceProductIsDone;
+        //public event Action EditProductIsDone;
+        //public event Action DeleteProductIsDone;
+        //public event Action CreateShowcaseIsDone;
+        //public event Action EditShowcaseIsDone;
+        //public event Action DeleteShowcaseIsDone;
+        //public event Action VolumeError;
 
+        public IProductServiceHandler ProductServiceHandler { get; }
+        public IShowcaseServiceHandler ShowcaseServiceHandler { get; }
+        public NotifyService NotifyService { get; }
+        public ShopApplication(IProductServiceHandler productServiceHandler, IShowcaseServiceHandler showcaseServiceHandler, NotifyService notifyService)
+        {
+            ProductServiceHandler = productServiceHandler;
+            ShowcaseServiceHandler = showcaseServiceHandler;
+            NotifyService = notifyService;
+            notifyService.CreateShowcaseIsDone += Messages.ShowcaseIsCreate;
+            notifyService.CreateProductIsDone += Messages.ProductIsCreate;
+            
+            notifyService.EditProductIsDone += Messages.ProductIsEdit;
+            notifyService.DeleteProductIsDone += Messages.ProductIsDelete;
+
+            notifyService.EditShowcaseIsDone += Messages.ShowcaseIsEdit;
+            notifyService.DeleteShowcaseIsDone += Messages.ShowcaseIsDelete;
+            notifyService.VolumeError += Messages.VolumeErrorMessage;
+        }
+        
         public void Run()
         {
-            CreateProductIsDone += Messages.ProductIsCreate;
-            PlaceProductIsDone += Messages.ProductIsPlace;
-            EditProductIsDone += Messages.ProductIsEdit;
-            DeleteProductIsDone += Messages.ProductIsDelete;
-            CreateShowcaseIsDone += Messages.ShowcaseIsCreate;
-            EditShowcaseIsDone += Messages.ShowcaseIsEdit;
-            DeleteShowcaseIsDone += Messages.ShowcaseIsDelete;
-            VolumeError += Messages.VolumeErrorMessage;
+            //CreateProductIsDone += Messages.ProductIsCreate;
+            //PlaceProductIsDone += Messages.ProductIsPlace;
+            //EditProductIsDone += Messages.ProductIsEdit;
+            //DeleteProductIsDone += Messages.ProductIsDelete;
             
-            Product product = new Product();
-            product.ProductIsNotfound += Messages.CountIsEmptyInformation;
-            product.SearchProductIdIsNotSuccessful += Messages.IdNotFound;
+            //EditShowcaseIsDone += Messages.ShowcaseIsEdit;
+            //DeleteShowcaseIsDone += Messages.ShowcaseIsDelete;
+            //VolumeError += Messages.VolumeErrorMessage;
 
-            Showcase showcase = new Showcase();
 
-            ShopHall shopHall = new ShopHall();
-            shopHall.DeleteError += Messages.DeliteShowcaseMessage;
-            shopHall.ChekProductOnShowacse += Messages.ShowNotProductOnShowcase;
-            shopHall.VolumeError += Messages.VolumeErrorMessage;
-            shopHall.SearchShowcaseIdIsNotSuccessful += Messages.IdNotFound;
-            shopHall.CountCheck += Messages.CountIsEmptyInformation;
+            //ProductService.ProductIsNotfound += Messages.CountIsEmptyInformation;
+            //product.SearchProductIdIsNotSuccessful += Messages.IdNotFound;
+
+            //Showcase showcase = new Showcase();
+
+            //ShopHall shopHall = new ShopHall();
+            //shopHall.DeleteError += Messages.DeliteShowcaseMessage;
+            //shopHall.ChekProductOnShowacse += Messages.ShowNotProductOnShowcase;
+            //shopHall.VolumeError += Messages.VolumeErrorMessage;
+            //shopHall.SearchShowcaseIdIsNotSuccessful += Messages.IdNotFound;
+            //shopHall.CountCheck += Messages.CountIsEmptyInformation;
 
             bool isContinue = true;
 
@@ -57,149 +77,66 @@ namespace Shop
 
                 if (command == (int)InputCommands.CreateProduct)
                 {
-                    Console.WriteLine("Input name of product: ");
-                    string nameProduct = Console.ReadLine();
-                    Console.WriteLine("Input volume of product: ");
-                    double volumeProduct = CheckCorrectnessVolume();
-                    product.Create(nameProduct, volumeProduct);
-                    RaiseCreateProductIsDone();
+                    ProductServiceHandler.CreateProduct();
+                    NotifyService.RaiseCreateProductIsDone();
                 }
 
                 if (command == (int)InputCommands.EditeProduct)
                 {
-                    if (product.CheckProductAvailability())
-                    {
-                        int productId = CheckCorrectnessProductId(product);
-                        Console.WriteLine("Input product name: ");
-                        string productName = Console.ReadLine();
-                        Console.WriteLine("Input product volume: ");
-                        double productVolume = CheckCorrectnessVolume();
-                        product.Edit(productId, productName, productVolume);
-                        RaiseEditProductIsDone();
-                    }
+                    ProductServiceHandler.EditProduct();
+                    NotifyService.RaiseEditProductIsDone();
                 }
 
                 if (command == (int)InputCommands.DeleteProduct)
                 {
-                    if (product.CheckProductAvailability())
-                    {
-                        int productId = CheckCorrectnessProductId(product);
-                        product.Delete(productId);
-                        RaiseDeleteProductIsDone();
-                    }
+                    ProductServiceHandler.DeleteProduct();
+                    NotifyService.RaiseDeleteProductIsDone();
                 }
 
                 if (command == (int)InputCommands.GetProductInformation)
                 {
-                    if (product.CheckProductAvailability())
-                    {
-                        product.GetInformation();
-                    }
+                    ProductServiceHandler.GetProductInformation();
                 }
 
                 if (command == (int)InputCommands.ShowAllShowcases)
                 {
-                    if (shopHall.CheckShowcaseAvailability())
-                    {
-                        shopHall.GetInformation();
-                    }
+                    ShowcaseServiceHandler.GetShowcaseInformation();
                 }
 
                 if (command == (int)InputCommands.CreateShowcase)
                 {
-                    Console.WriteLine("Input name of showcase: ");
-                    string nameShowcase = Console.ReadLine();
-                    Console.WriteLine("Input volume of showcase: ");
-                    double volumeShowcase = CheckCorrectnessVolume();
-                    var creatShowcase = showcase.Create(nameShowcase, volumeShowcase);
-                    shopHall.PlaceShowcase(creatShowcase);
-                    RaiseCreateShowcaseIsDone();
+                    ShowcaseServiceHandler.CreateShowcase();
+                    NotifyService.RaiseCreateShowcaseIsDone();
                 }
 
                 if (command == (int)InputCommands.DeleteShowcase)
                 {
-                    if (shopHall.CheckShowcaseAvailability())
-                    {
-                        int showcaseId = CheckCorrectnessShowcaseId(shopHall);
-                        if (shopHall.CheckShowcaseCount(showcaseId) && shopHall.CheckShowcaseAvailability())
-                        {
-                            shopHall.DeleteShowcase(showcaseId);
-                            RaiseDeleteShowcaseIsDone();
-                        }
-                    }
+                    ShowcaseServiceHandler.DeleteShowcase();
+                    NotifyService.RaiseDeleteShowcaseIsDone();
                 }
 
                 if (command == (int)InputCommands.PlaceProductOnShowcase)
                 {
-                    if (product.CheckProductAvailability())
-                    {
-                        int productId = CheckCorrectnessProductId(product);
-                        int showcaseId = CheckCorrectnessShowcaseId(shopHall);
-
-                        if (shopHall.CheckShowcaseVolumeOverflow(showcaseId, productId, product))
-                        {
-                            shopHall.PlaceProduct(product, productId, showcaseId);
-                            RaisePlaceProductIsDone();
-                        }
-                    }
+                    ShowcaseServiceHandler.PlaceProductOnShowcase();
+                    
                 }
 
                 if (command == (int)InputCommands.DeleteProductOnShowcase)
                 {
-                    if (shopHall.CheckShowcaseAvailability())
-                    {
-                        int showcaseId = CheckCorrectnessShowcaseId(shopHall);
-                        if (shopHall.CheckProductOnCurrentShowcase(showcaseId))
-                        {
-                            int productId = CheckCorrectnessProductIdInshowcase(shopHall, showcaseId);
-                            shopHall.DeleteProduct(product, productId, showcaseId);
-                            RaiseDeleteProductIsDone();
-                        }
-                    }
+                    ShowcaseServiceHandler.DeleteProductOnShowcase();
+                    NotifyService.RaiseDeleteProductIsDone();
                 }
 
                 if (command == (int)InputCommands.EditShowcase)
                 {
-                    if (shopHall.CheckShowcaseAvailability())
-                    {
-                        int showcaseId = CheckCorrectnessShowcaseId(shopHall);
-
-                        if (shopHall.CheckShowcaseCount(showcaseId))
-                        {
-                            Console.WriteLine("Input new showcase name: ");
-                            string showcaseName = Console.ReadLine();
-                            Console.WriteLine("Input new showcase volume: ");
-                            double showcaseVolume = CheckCorrectnessVolume();
-                            shopHall.EditShowcase(showcaseId, showcaseName, showcaseVolume);
-                            RaiseEditShowcaseIsDone();
-                        }
-                    }
+                    ShowcaseServiceHandler.EditeShowcase();
+                    NotifyService.RaiseEditShowcaseIsDone();
                 }
 
                 if (command == (int)InputCommands.EditProductOnShowcase)
                 {
-                    if (shopHall.CheckShowcaseAvailability())
-                    {
-                        int showcaseId = CheckCorrectnessShowcaseId(shopHall);
-
-                        if (shopHall.CheckProductOnCurrentShowcase(showcaseId))
-                        {
-                            int productId = CheckCorrectnessProductIdInshowcase(shopHall, showcaseId);
-                            Console.WriteLine("Input new product name: ");
-                            string productName = Console.ReadLine();
-                            Console.WriteLine("Input new product volume: ");
-                            double productVolume = CheckCorrectnessVolume();
-                            if (productVolume <= shopHall.GetShowcaseFreeSpace(showcaseId))
-                            {
-                                shopHall.EditProduct(productId, showcaseId, productName, productVolume);
-                                RaiseEditProductIsDone();
-                            }
-                            else
-                            {
-                                RaiseVolumeErrorMessage();
-                            }
-                        }
-                    }
+                    ShowcaseServiceHandler.EditeProductOnShowcase();
+                    NotifyService.RaiseEditProductIsDone();
                 }
 
                 if (command == (int)InputCommands.EXITApplication)
@@ -209,136 +146,45 @@ namespace Shop
             }
         }
 
-        public static int CheckCorrectnessProductIdInshowcase(ShopHall shopHall, int showcaseId)
-        {
-            int verifiableProductId;
-            bool isContinue = true;
-            
-            do
-            {
-                Console.WriteLine("Input product Id: ");
-                string id = Console.ReadLine();
-                bool succses = int.TryParse(id, out verifiableProductId);
-                if (succses == false || shopHall.GetShowcase(showcaseId).GetProductCount() < verifiableProductId)
-                {
-                    Messages.SetRedColor("Wrong id!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
-            
-            return verifiableProductId;
-        }
+        //public void RaiseCreateProductIsDone()
+        //{
+        //    CreateProductIsDone?.Invoke();
+        //}
 
-        public static int CheckCorrectnessProductId(Product product)
-        {
-            int verifiableId;
-            bool isContinue = true;
+        //public void RaisePlaceProductIsDone()
+        //{
+        //    PlaceProductIsDone?.Invoke();
+        //}
 
-            do
-            {
-                Console.WriteLine("Input product Id: ");
-                string id = Console.ReadLine();
-                bool succses = int.TryParse(id, out verifiableId);
-                if (succses == false || product.GetProductsCount() < verifiableId)
-                {
-                    Messages.SetRedColor("Wrong id!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
+        //public void RaiseEditProductIsDone()
+        //{
+        //    EditProductIsDone?.Invoke();
+        //}
 
-            return verifiableId;
-        }
+        //public void RaiseDeleteProductIsDone()
+        //{
+        //    DeleteProductIsDone?.Invoke();
+        //}
 
-        public static int CheckCorrectnessShowcaseId(ShopHall shopHall)
-        {
-            int verifiableId;
-            bool isContinue = true;
-            
-            do
-            {
-                Console.WriteLine("Input showcase Id: ");
-                string id = Console.ReadLine();
-                bool succses = int.TryParse(id, out verifiableId);
-                if (succses == false || shopHall.GetShowcaseListCount() < verifiableId)
-                {
-                    Messages.SetRedColor("Wrong id!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
+        //public void RaiseCreateShowcaseIsDone()
+        //{
+        //    CreateShowcaseIsDone?.Invoke();
+        //}
 
-            return verifiableId;
-        }
+        //public void RaiseEditShowcaseIsDone()
+        //{
+        //    EditShowcaseIsDone?.Invoke();
+        //}
 
-        public static double CheckCorrectnessVolume()
-        {
-            double verifiableVolume;
-            bool isContinue = true;
+        //public void RaiseDeleteShowcaseIsDone()
+        //{
+        //    DeleteShowcaseIsDone?.Invoke();
+        //}
 
-            do
-            {
-                string volume = Console.ReadLine();
-                bool succses = double.TryParse(volume, out verifiableVolume);
-                if (succses == false)
-                {
-                    Messages.SetRedColor("Wronge value!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
-
-            return verifiableVolume;
-        }
-
-        public void RaiseCreateProductIsDone()
-        {
-            CreateProductIsDone?.Invoke();
-        }
-
-        public void RaisePlaceProductIsDone()
-        {
-            PlaceProductIsDone?.Invoke();
-        }
-
-        public void RaiseEditProductIsDone()
-        {
-            EditProductIsDone?.Invoke();
-        }
-
-        public void RaiseDeleteProductIsDone()
-        {
-            DeleteProductIsDone?.Invoke();
-        }
-
-        public void RaiseCreateShowcaseIsDone()
-        {
-            CreateShowcaseIsDone?.Invoke();
-        }
-
-        public void RaiseEditShowcaseIsDone()
-        {
-            EditShowcaseIsDone?.Invoke();
-        }
-
-        public void RaiseDeleteShowcaseIsDone()
-        {
-            DeleteShowcaseIsDone?.Invoke();
-        }
-
-        public void RaiseVolumeErrorMessage()
-        {
-            VolumeError?.Invoke();
-        }
+        //public void RaiseVolumeErrorMessage()
+        //{
+        //    VolumeError?.Invoke();
+        //}
 
         public static void ShowUserMenu()
         {
