@@ -1,16 +1,19 @@
 ﻿using System;
 using Shop.Interfaces;
 
-namespace Shop
+namespace Shop.ServiceHandlers
 {
     class ProductServiceHandler : IProductServiceHandler
     {
-        public IProductService ProductService{ get; set; }
+        public IProductService ProductService{ get; }
+        public NotifyService NotifyService { get; }
 
-        public ProductServiceHandler(IProductService productService)
+        public ProductServiceHandler(IProductService productService, NotifyService notifyService)
         {
             ProductService = productService;
+            NotifyService = notifyService;
         }
+
         public void CreateProduct()
         {
             Console.WriteLine("Input name of product: ");
@@ -18,6 +21,7 @@ namespace Shop
             Console.WriteLine("Input volume of product: ");
             double volumeProduct = CheckCorrectnessVolume();
             ProductService.Create(nameProduct, volumeProduct);
+            NotifyService.RaiseCreateProductIsDone();
         }
 
         public void EditProduct()
@@ -30,6 +34,7 @@ namespace Shop
                 Console.WriteLine("Input product volume: ");
                 double productVolume = CheckCorrectnessVolume();
                 ProductService.Edit(productId, productName, productVolume);
+                NotifyService.RaiseEditProductIsDone();
             }
         }
 
@@ -39,6 +44,7 @@ namespace Shop
             {
                 int productId = CheckCorrectnessProductId();
                 ProductService.Delete(productId);
+                NotifyService.RaiseDeleteProductIsDone();
             }
         }
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shop
+﻿namespace Shop
 {
     public class NotifyService
     {
@@ -18,12 +12,8 @@ namespace Shop
         public event EventHandler EditShowcaseIsDone;
         public event EventHandler DeleteShowcaseIsDone;
         public event EventHandler VolumeError;
-
-        //ProductService event
         public event EventHandler ProductIsNotfound;
         public event EventHandler SearchProductIdIsNotSuccessful;
-
-        //ShowcaseService event
         public event EventHandler CountCheck;
         public event EventHandler DeleteError;
         public event EventHandler ChekProductOnShowacse;

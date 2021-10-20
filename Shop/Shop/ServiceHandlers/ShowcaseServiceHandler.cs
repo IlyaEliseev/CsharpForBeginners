@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Shop.Interfaces;
 
-namespace Shop
+namespace Shop.ServiceHandlers
 {
     public class ShowcaseServiceHandler : IShowcaseServiceHandler
     {
         public IProductService ProductService { get; }
         public IShowcaseService ShowcaseService { get; }
         public NotifyService NotifyService { get; }
+
         public ShowcaseServiceHandler(IShowcaseService showcaseService, IProductService productService, NotifyService notifyService)
         {
             ShowcaseService = showcaseService;
             ProductService = productService;
             NotifyService = notifyService;
-            notifyService.VolumeError += Messages.VolumeErrorMessage;
         }
 
         public void CreateShowcase()
@@ -28,6 +24,7 @@ namespace Shop
             double volumeShowcase = CheckCorrectnessVolume();
             var createShowcase = ShowcaseService.Create(nameShowcase, volumeShowcase);
             ShowcaseService.PlaceShowcase(createShowcase);
+            NotifyService.RaiseCreateShowcaseIsDone();
         }
 
         public void DeleteProductOnShowcase()
@@ -39,10 +36,11 @@ namespace Shop
                 {
                     int productId = CheckCorrectnessProductIdInshowcase(ShowcaseService, showcaseId);
                     ShowcaseService.DeleteProduct(ProductService, productId, showcaseId);
+                    NotifyService.RaiseDeleteProductIsDone();
                 }
             }
         }
-
+        
         public void DeleteShowcase()
         {
             if (ShowcaseService.CheckShowcaseAvailability())
@@ -51,6 +49,7 @@ namespace Shop
                 if (ShowcaseService.CheckShowcaseCount(showcaseId) && ShowcaseService.CheckShowcaseAvailability())
                 {
                     ShowcaseService.DeleteShowcase(showcaseId);
+                    NotifyService.RaiseDeleteShowcaseIsDone();
                 }
             }
         }
@@ -71,6 +70,7 @@ namespace Shop
                     if (productVolume <= ShowcaseService.GetShowcaseFreeSpace(showcaseId))
                     {
                         ShowcaseService.EditProduct(productId, showcaseId, productName, productVolume);
+                        NotifyService.RaiseEditProductIsDone();
                     }
                     else
                     {
@@ -93,6 +93,7 @@ namespace Shop
                     Console.WriteLine("Input new showcase volume: ");
                     double showcaseVolume = CheckCorrectnessVolume();
                     ShowcaseService.EditShowcase(showcaseId, showcaseName, showcaseVolume);
+                    NotifyService.RaiseEditShowcaseIsDone();
                 }
             }
         }
@@ -107,7 +108,7 @@ namespace Shop
 
         public void PlaceProductOnShowcase()
         {
-            if (ProductService.CheckProductAvailability())
+            if (ProductService.CheckProductAvailability() && ShowcaseService.CheckShowcaseAvailability())
             {
                 int productId = CheckCorrectnessProductId();
                 int showcaseId = CheckCorrectnessShowcaseId(ShowcaseService);
@@ -115,6 +116,7 @@ namespace Shop
                 if (ShowcaseService.CheckShowcaseVolumeOverflow(showcaseId, productId, ProductService))
                 {
                     ShowcaseService.PlaceProduct(ProductService, productId, showcaseId);
+                    NotifyService.RaisePlaceProductIsDone();
                 }
             }
         }

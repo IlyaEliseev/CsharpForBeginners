@@ -4,12 +4,10 @@ using System.Linq;
 using Shop.Interfaces;
 using Shop.Models;
 
-namespace Shop
+namespace Shop.Services
 {
     public class ProductService : IProductService
     {
-        //public event EventHandler ProductIsNotfound;
-        //public event EventHandler SearchProductIdIsNotSuccessful;
         public NotifyService NotifyService { get; }
 
         private List<Product> _productStorage;
@@ -18,8 +16,6 @@ namespace Shop
         {
             _productStorage = new List<Product>();
             NotifyService = notifyService;
-            notifyService.ProductIsNotfound += Messages.CountIsEmptyInformation;
-            notifyService.SearchProductIdIsNotSuccessful += Messages.IdNotFound;
         }
 
         public void GetInformation()
@@ -75,11 +71,6 @@ namespace Shop
             var selectProduct = GetProduct(productId);
             selectProduct.Name = newProductName;
             selectProduct.Volume = newProductVolume;
-        }
-
-        public Product Copy()
-        {
-            return (Product)this.MemberwiseClone();
         }
     }
 }

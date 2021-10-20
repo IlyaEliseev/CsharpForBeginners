@@ -4,31 +4,17 @@ using System.Linq;
 using Shop.Interfaces;
 using Shop.Models;
 
-namespace Shop
+namespace Shop.Services
 {
-    public delegate void EventHandler();
     public class ShowcaseService : IShowcaseService
     {
-        //public event EventHandler CountCheck;
-        //public event EventHandler DeleteError;
-        //public event EventHandler ChekProductOnShowacse;
-        //public event EventHandler VolumeError;
-        //public event EventHandler SearchShowcaseIdIsNotSuccessful;
         public NotifyService NotifyService { get; }
-        //private List<Product> _productsInShowcase;
         private List<Showcase> _showcasesList;
 
         public ShowcaseService(NotifyService notifyService)
         {
-            //_productsInShowcase = new List<Product>();
             _showcasesList = new List<Showcase>();
             NotifyService = notifyService;
-            notifyService.CountCheck += Messages.CountIsEmptyInformation;
-            notifyService.DeleteError += Messages.DeliteShowcaseMessage;
-            notifyService.ChekProductOnShowacse += Messages.ShowNotProductOnShowcase;
-            notifyService.VolumeError += Messages.VolumeErrorMessage;
-            notifyService.SearchShowcaseIdIsNotSuccessful += Messages.IdNotFound;
-            notifyService.PlaceProductIsDone += Messages.ProductIsPlace;
         }
 
         public Showcase Create(string showcaseName, double showcaseVolume)
@@ -37,8 +23,6 @@ namespace Shop
             return showcase;
         }
 
-        //public Product GetProduct(int productId) => _productsInShowcase.SingleOrDefault(x => x.IdInShowcase == productId);
-        //public int GetProductCount() => _productsInShowcase.Count;
         public int GetShowcaseListCount() => _showcasesList.Count;
 
         public void PlaceShowcase(Showcase showcase)
@@ -137,7 +121,7 @@ namespace Shop
             var selectShowcase = GetShowcase(showcaseId);
             var selectProduct = product.GetProduct(productId);
 
-            if (selectShowcase.VolumeCount <= selectShowcase.Volume && GetShowcaseFreeVolume(showcaseId) >= selectProduct.Volume)
+            if (selectShowcase.VolumeCount <= selectShowcase.Volume && GetShowcaseFreeSpace(showcaseId) >= selectProduct.Volume)
             {
                 return true;
             }
@@ -145,17 +129,10 @@ namespace Shop
             return false;
         }
 
-        public double GetShowcaseFreeVolume(int showcaseId)
+        public void CountShowcaseVolume(IProductService product, int showcaseId, int productId)
         {
             var selectShowcase = GetShowcase(showcaseId);
-            double freeSpace = selectShowcase.Volume - selectShowcase.VolumeCount;
-            return freeSpace;
-        }
-
-        public void CountShowcaseVolume(int showcaseId, int productId)
-        {
-            var selectShowcase = GetShowcase(showcaseId);
-            var selectProduct = selectShowcase.GetProduct(productId);
+            var selectProduct = product.GetProduct(productId);
             selectShowcase.VolumeCount += selectProduct.Volume;
         }
 
@@ -167,10 +144,9 @@ namespace Shop
             if (product.CheckProductAvailability())
             {
                 selectShowcase.productsInShowcase.Add(selectProduct);
+                CountShowcaseVolume(product, showcaseId, productId);
                 product.Delete(productId);
                 selectProduct.IdInShowcase = selectShowcase.GetProductCount();
-                CountShowcaseVolume(showcaseId, productId);
-                NotifyService.RaisePlaceProductIsDone();
             }
             else
             {

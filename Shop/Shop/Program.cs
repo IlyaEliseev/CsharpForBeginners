@@ -1,5 +1,6 @@
 ﻿using Shop.Interfaces;
-using Shop.Models;
+using Shop.Services;
+using Shop.ServiceHandlers;
 
 namespace Shop
 {
@@ -10,7 +11,7 @@ namespace Shop
             NotifyService notifyService = new NotifyService();
             IProductService productService = new ProductService(notifyService);
             IShowcaseService showcaseService = new ShowcaseService(notifyService);
-            IProductServiceHandler productServiceHandler = new ProductServiceHandler(productService);
+            IProductServiceHandler productServiceHandler = new ProductServiceHandler(productService, notifyService);
             IShowcaseServiceHandler ShowcaseServiceHandler = new ShowcaseServiceHandler(showcaseService, productService, notifyService);
             var shopApplication = new ShopApplication(productServiceHandler, ShowcaseServiceHandler, notifyService);
             shopApplication.Run();

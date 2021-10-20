@@ -3,6 +3,7 @@ namespace Shop.Models
 {
     public enum InputCommands
     {
+        EXITApplication,
         CreateShowcase = 1,
         ShowAllShowcases,
         PlaceProductOnShowcase,
@@ -13,7 +14,6 @@ namespace Shop.Models
         CreateProduct,
         EditeProduct,
         DeleteProduct,
-        GetProductInformation,
-        EXITApplication
+        GetProductInformation
     }
 }

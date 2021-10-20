@@ -41,7 +41,7 @@ namespace Shop
 
         public static void CountIsEmptyInformation()
         {
-            SetRedColor("Empty!");
+            SetRedColor("Showcase or product storage empty!");
         }
 
         public static void IdNotFound()

@@ -1,5 +1,4 @@
-﻿using System;
-using Shop.Models;
+﻿using Shop.Models;
 
 namespace Shop.Interfaces
 {
