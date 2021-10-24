@@ -6,6 +6,7 @@ namespace Shop.Interfaces
     {
         Showcase Create(string showcaseName, double showcaseVolume);
         int GetShowcaseListCount();
+        int GerProductShowcaseCount(int showcaseId);
         void PlaceShowcase(Showcase showcase);
         void DeleteShowcase(int showcaseId);
         Showcase GetShowcase(int showcaseId);

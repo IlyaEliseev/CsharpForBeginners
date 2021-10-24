@@ -14,6 +14,10 @@ namespace Shop.Models
         CreateProduct,
         EditeProduct,
         DeleteProduct,
-        GetProductInformation
+        GetProductInformation,
+        ArchivateProduct,
+        UnArchivateProduct,
+        DeleteArchiveProduct,
+        GetArchiveInformation
     }
 }

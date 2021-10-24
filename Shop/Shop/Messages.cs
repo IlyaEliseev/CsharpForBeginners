@@ -39,6 +39,26 @@ namespace Shop
             SetGreenColor("Showcase is delete!");
         }
 
+        public static void ProductArchivate()
+        {
+            SetGreenColor("Product is archivate!");
+        }
+
+        public static void ProductUnArchivate()
+        {
+            SetGreenColor("Product is unarchivate!");
+        }
+
+        public static void ArchiveProductDelete()
+        {
+            SetGreenColor("Archive product is delete!");
+        }
+
+        public static void ArchiveEmpty()
+        {
+            SetRedColor("Archive is empty!");
+        }
+
         public static void CountIsEmptyInformation()
         {
             SetRedColor("Showcase or product storage empty!");

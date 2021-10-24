@@ -35,23 +35,10 @@ namespace Shop.Services
         {
             var findShowcase = GetShowcase(showcaseId);
 
-            if (findShowcase.GetProductCount() != 0 && GetShowcaseListCount() >= showcaseId)
+            _showcasesList.RemoveAll(x => x.Id == showcaseId);
+            for (int i = 0; i < GetShowcaseListCount(); i++)
             {
-                NotifyService.RaiseDeleteError();
-            }
-
-            if (GetShowcaseListCount() >= showcaseId && findShowcase.GetProductCount() == 0)
-            {
-
-                _showcasesList.RemoveAll(x => x.Id == showcaseId);
-                for (int i = 0; i < GetShowcaseListCount(); i++)
-                {
-                    _showcasesList[i].Id = i + 1;
-                }
-            }
-            else
-            {
-                NotifyService.RaiseCountCheck(); 
+                _showcasesList[i].Id = i + 1;
             }
         }
 
@@ -140,18 +127,11 @@ namespace Shop.Services
         {
             var selectProduct = product.GetProduct(productId);
             var selectShowcase = GetShowcase(showcaseId);
-
-            if (product.CheckProductAvailability())
-            {
-                selectShowcase.productsInShowcase.Add(selectProduct);
-                CountShowcaseVolume(product, showcaseId, productId);
-                product.Delete(productId);
-                selectProduct.IdInShowcase = selectShowcase.GetProductCount();
-            }
-            else
-            {
-                NotifyService.RaiseSearchShowcaseIdIsNotSuccessful(); 
-            }
+            selectShowcase.productsInShowcase.Add(selectProduct);
+            CountShowcaseVolume(product, showcaseId, productId);
+            product.Delete(productId);
+            selectProduct.IdInShowcase = selectShowcase.GetProductCount();
+            selectProduct.IdShowcase = showcaseId;
         }
 
         public void DeleteProduct(IProductService product, int productId, int showcaseId)
@@ -202,6 +182,13 @@ namespace Shop.Services
             var selectShowcase = GetShowcase(showcaseId);
             double freespace = selectShowcase.Volume - selectShowcase.VolumeCount;
             return freespace;
+        }
+
+        public int GerProductShowcaseCount(int showcaseId)
+        {
+            var selectShowcase = GetShowcase(showcaseId);
+            var productCount = selectShowcase.GetProductCount();
+            return productCount;
         }
     }
 }

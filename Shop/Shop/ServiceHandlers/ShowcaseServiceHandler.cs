@@ -1,5 +1,5 @@
-﻿using System;
-using Shop.Interfaces;
+﻿using Shop.Interfaces;
+using Shop.Services;
 
 namespace Shop.ServiceHandlers
 {
@@ -8,20 +8,19 @@ namespace Shop.ServiceHandlers
         public IProductService ProductService { get; }
         public IShowcaseService ShowcaseService { get; }
         public NotifyService NotifyService { get; }
-
-        public ShowcaseServiceHandler(IShowcaseService showcaseService, IProductService productService, NotifyService notifyService)
+        public CheckService CheckService { get; }
+        public ShowcaseServiceHandler(IShowcaseService showcaseService, IProductService productService, NotifyService notifyService, CheckService checkService)
         {
             ShowcaseService = showcaseService;
             ProductService = productService;
             NotifyService = notifyService;
+            CheckService = checkService;
         }
 
         public void CreateShowcase()
         {
-            Console.WriteLine("Input name of showcase: ");
-            string nameShowcase = Console.ReadLine();
-            Console.WriteLine("Input volume of showcase: ");
-            double volumeShowcase = CheckCorrectnessVolume();
+            string nameShowcase = CheckService.CheckName();
+            double volumeShowcase = CheckService.CheckVolume();
             var createShowcase = ShowcaseService.Create(nameShowcase, volumeShowcase);
             ShowcaseService.PlaceShowcase(createShowcase);
             NotifyService.RaiseCreateShowcaseIsDone();
@@ -31,10 +30,11 @@ namespace Shop.ServiceHandlers
         {
             if (ShowcaseService.CheckShowcaseAvailability())
             {
-                int showcaseId = CheckCorrectnessShowcaseId(ShowcaseService);
+                int showcaseId = CheckService.CheckShowcaseId(ShowcaseService);
+                
                 if (ShowcaseService.CheckProductOnCurrentShowcase(showcaseId))
                 {
-                    int productId = CheckCorrectnessProductIdInshowcase(ShowcaseService, showcaseId);
+                    int productId = CheckService.CheckProductIdOnShowcase(ShowcaseService, showcaseId);
                     ShowcaseService.DeleteProduct(ProductService, productId, showcaseId);
                     NotifyService.RaiseDeleteProductIsDone();
                 }
@@ -45,8 +45,9 @@ namespace Shop.ServiceHandlers
         {
             if (ShowcaseService.CheckShowcaseAvailability())
             {
-                int showcaseId = CheckCorrectnessShowcaseId(ShowcaseService);
-                if (ShowcaseService.CheckShowcaseCount(showcaseId) && ShowcaseService.CheckShowcaseAvailability())
+                int showcaseId = CheckService.CheckShowcaseId(ShowcaseService);
+
+                if (ShowcaseService.CheckShowcaseCount(showcaseId))
                 {
                     ShowcaseService.DeleteShowcase(showcaseId);
                     NotifyService.RaiseDeleteShowcaseIsDone();
@@ -58,15 +59,14 @@ namespace Shop.ServiceHandlers
         {
             if (ShowcaseService.CheckShowcaseAvailability())
             {
-                int showcaseId = CheckCorrectnessShowcaseId(ShowcaseService);
+                int showcaseId = CheckService.CheckShowcaseId(ShowcaseService);
 
                 if (ShowcaseService.CheckProductOnCurrentShowcase(showcaseId))
                 {
-                    int productId = CheckCorrectnessProductIdInshowcase(ShowcaseService, showcaseId);
-                    Console.WriteLine("Input new product name: ");
-                    string productName = Console.ReadLine();
-                    Console.WriteLine("Input new product volume: ");
-                    double productVolume = CheckCorrectnessVolume();
+                    int productId = CheckService.CheckProductIdOnShowcase(ShowcaseService, showcaseId);
+                    string productName = CheckService.CheckName();
+                    double productVolume = CheckService.CheckVolume();
+
                     if (productVolume <= ShowcaseService.GetShowcaseFreeSpace(showcaseId))
                     {
                         ShowcaseService.EditProduct(productId, showcaseId, productName, productVolume);
@@ -84,17 +84,11 @@ namespace Shop.ServiceHandlers
         {
             if (ShowcaseService.CheckShowcaseAvailability())
             {
-                int showcaseId = CheckCorrectnessShowcaseId(ShowcaseService);
-
-                if (ShowcaseService.CheckShowcaseCount(showcaseId))
-                {
-                    Console.WriteLine("Input new showcase name: ");
-                    string showcaseName = Console.ReadLine();
-                    Console.WriteLine("Input new showcase volume: ");
-                    double showcaseVolume = CheckCorrectnessVolume();
-                    ShowcaseService.EditShowcase(showcaseId, showcaseName, showcaseVolume);
-                    NotifyService.RaiseEditShowcaseIsDone();
-                }
+                int showcaseId = CheckService.CheckShowcaseId(ShowcaseService);
+                string showcaseName = CheckService.CheckName();
+                double showcaseVolume = CheckService.CheckVolume();
+                ShowcaseService.EditShowcase(showcaseId, showcaseName, showcaseVolume);
+                NotifyService.RaiseEditShowcaseIsDone();
             }
         }
 
@@ -110,8 +104,8 @@ namespace Shop.ServiceHandlers
         {
             if (ProductService.CheckProductAvailability() && ShowcaseService.CheckShowcaseAvailability())
             {
-                int productId = CheckCorrectnessProductId();
-                int showcaseId = CheckCorrectnessShowcaseId(ShowcaseService);
+                int showcaseId = CheckService.CheckShowcaseId(ShowcaseService);
+                int productId = CheckService.CheckProductId(ProductService);
 
                 if (ShowcaseService.CheckShowcaseVolumeOverflow(showcaseId, productId, ProductService))
                 {
@@ -119,97 +113,6 @@ namespace Shop.ServiceHandlers
                     NotifyService.RaisePlaceProductIsDone();
                 }
             }
-        }
-
-        public static double CheckCorrectnessVolume()
-        {
-            double verifiableVolume;
-            bool isContinue = true;
-
-            do
-            {
-                string volume = Console.ReadLine();
-                bool succses = double.TryParse(volume, out verifiableVolume);
-                if (succses == false)
-                {
-                    Messages.SetRedColor("Wronge value!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
-
-            return verifiableVolume;
-        }
-
-        public int CheckCorrectnessProductId()
-        {
-            int verifiableId;
-            bool isContinue = true;
-
-            do
-            {
-                Console.WriteLine("Input product Id: ");
-                string id = Console.ReadLine();
-                bool succses = int.TryParse(id, out verifiableId);
-                if (succses == false || ProductService.GetProductsCount() < verifiableId)
-                {
-                    Messages.SetRedColor("Wrong id!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
-
-            return verifiableId;
-        }
-
-        public static int CheckCorrectnessShowcaseId(IShowcaseService shopHall)
-        {
-            int verifiableId;
-            bool isContinue = true;
-
-            do
-            {
-                Console.WriteLine("Input showcase Id: ");
-                string id = Console.ReadLine();
-                bool succses = int.TryParse(id, out verifiableId);
-                if (succses == false || shopHall.GetShowcaseListCount() < verifiableId)
-                {
-                    Messages.SetRedColor("Wrong id!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
-
-            return verifiableId;
-        }
-
-        public static int CheckCorrectnessProductIdInshowcase(IShowcaseService shopHall, int showcaseId)
-        {
-            int verifiableProductId;
-            bool isContinue = true;
-
-            do
-            {
-                Console.WriteLine("Input product Id: ");
-                string id = Console.ReadLine();
-                bool succses = int.TryParse(id, out verifiableProductId);
-                if (succses == false || shopHall.GetShowcase(showcaseId).GetProductCount() < verifiableProductId)
-                {
-                    Messages.SetRedColor("Wrong id!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
-
-            return verifiableProductId;
         }
     }
 }

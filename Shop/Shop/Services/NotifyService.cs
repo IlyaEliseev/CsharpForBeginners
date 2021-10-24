@@ -1,4 +1,4 @@
-﻿namespace Shop
+﻿namespace Shop.Services
 {
     public class NotifyService
     {
@@ -17,7 +17,10 @@
         public event EventHandler CountCheck;
         public event EventHandler DeleteError;
         public event EventHandler ChekProductOnShowacse;
-        public event EventHandler SearchShowcaseIdIsNotSuccessful;
+        public event EventHandler ArchivateProductIsDone;
+        public event EventHandler UnArchivateProductIsDone;
+        public event EventHandler DeleteArchiveProductIsDone;
+        public event EventHandler ArchiveIsEmpty;
 
         public void RaiseCreateShowcaseIsDone()
         {
@@ -84,9 +87,24 @@
             ChekProductOnShowacse?.Invoke();
         }
 
-        public void RaiseSearchShowcaseIdIsNotSuccessful()
+        public void RaiseArchiveIsEmpty()
         {
-            SearchShowcaseIdIsNotSuccessful?.Invoke();
+            ArchiveIsEmpty?.Invoke();
+        }
+
+        public void RaiseArchivateProductIsDone()
+        {
+            ArchivateProductIsDone?.Invoke();
+        }
+
+        public void RaiseUnArchivateProductIsDone()
+        {
+            UnArchivateProductIsDone?.Invoke();
+        }
+
+        public void RaiseDeleteArchiveProductIsDone()
+        {
+            DeleteArchiveProductIsDone?.Invoke();
         }
     }
 }

@@ -1,25 +1,26 @@
 ﻿using System;
 using Shop.Interfaces;
+using Shop.Services;
 
 namespace Shop.ServiceHandlers
 {
-    class ProductServiceHandler : IProductServiceHandler
+    public class ProductServiceHandler : IProductServiceHandler
     {
         public IProductService ProductService{ get; }
         public NotifyService NotifyService { get; }
+        public CheckService CheckService { get; }
 
-        public ProductServiceHandler(IProductService productService, NotifyService notifyService)
+        public ProductServiceHandler(IProductService productService, NotifyService notifyService, CheckService checkService)
         {
             ProductService = productService;
             NotifyService = notifyService;
+            CheckService = checkService;
         }
 
         public void CreateProduct()
         {
-            Console.WriteLine("Input name of product: ");
-            string nameProduct = Console.ReadLine();
-            Console.WriteLine("Input volume of product: ");
-            double volumeProduct = CheckCorrectnessVolume();
+            string nameProduct = CheckService.CheckName();
+            double volumeProduct = CheckService.CheckVolume();
             ProductService.Create(nameProduct, volumeProduct);
             NotifyService.RaiseCreateProductIsDone();
         }
@@ -28,70 +29,33 @@ namespace Shop.ServiceHandlers
         {
             if (ProductService.CheckProductAvailability())
             {
-                int productId = CheckCorrectnessProductId();
-                Console.WriteLine("Input product name: ");
-                string productName = Console.ReadLine();
-                Console.WriteLine("Input product volume: ");
-                double productVolume = CheckCorrectnessVolume();
-                ProductService.Edit(productId, productName, productVolume);
-                NotifyService.RaiseEditProductIsDone();
+                
+                int productId = CheckService.CheckProductId(ProductService);
+                //if (ProductService.GetProductsCount()>= productId)
+                //{
+                    string productName = CheckService.CheckName();
+                    double productVolume = CheckService.CheckVolume();
+                    ProductService.Edit(productId, productName, productVolume);
+                    NotifyService.RaiseEditProductIsDone();
+                //}
+                //else
+                //{
+                   // NotifyService.RaiseSearchProductIdIsNotSuccessful();
+                //}
             }
+            
         }
 
         public void DeleteProduct()
         {
             if (ProductService.CheckProductAvailability())
             {
-                int productId = CheckCorrectnessProductId();
+                int productId = CheckService.CheckProductId(ProductService);
                 ProductService.Delete(productId);
                 NotifyService.RaiseDeleteProductIsDone();
             }
         }
-
-        public static double CheckCorrectnessVolume()
-        {
-            double verifiableVolume;
-            bool isContinue = true;
-
-            do
-            {
-                string volume = Console.ReadLine();
-                bool succses = double.TryParse(volume, out verifiableVolume);
-                if (succses == false)
-                {
-                    Messages.SetRedColor("Wronge value!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
-
-            return verifiableVolume;
-        }
-        
-        public int CheckCorrectnessProductId()
-        {
-            int verifiableId;
-            bool isContinue = true;
-
-            do
-            {
-                Console.WriteLine("Input product Id: ");
-                string id = Console.ReadLine();
-                bool succses = int.TryParse(id, out verifiableId);
-                if (succses == false || ProductService.GetProductsCount() < verifiableId)
-                {
-                    Messages.SetRedColor("Wrong id!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
-
-            return verifiableId;
-        }
+       
 
         public void GetProductInformation()
         {

@@ -9,11 +9,16 @@ namespace Shop
         public static void Main(string[] args)
         {
             NotifyService notifyService = new NotifyService();
+            CheckService checkService = new CheckService();
             IProductService productService = new ProductService(notifyService);
             IShowcaseService showcaseService = new ShowcaseService(notifyService);
-            IProductServiceHandler productServiceHandler = new ProductServiceHandler(productService, notifyService);
-            IShowcaseServiceHandler ShowcaseServiceHandler = new ShowcaseServiceHandler(showcaseService, productService, notifyService);
-            var shopApplication = new ShopApplication(productServiceHandler, ShowcaseServiceHandler, notifyService);
+            IProductArchiveService productArchiveService = new ProductArchiveService(notifyService);
+
+            IProductServiceHandler productServiceHandler = new ProductServiceHandler(productService, notifyService, checkService);
+            IShowcaseServiceHandler ShowcaseServiceHandler = new ShowcaseServiceHandler(showcaseService, productService, notifyService, checkService);
+            IProductArchiveServiceHandler productArchiveServiceHandler = new ProductArchiveServiceHandler(notifyService, productArchiveService, showcaseService, checkService);
+
+            var shopApplication = new ShopApplication(productServiceHandler, ShowcaseServiceHandler, notifyService, productArchiveServiceHandler);
             shopApplication.Run();
         }
     }
