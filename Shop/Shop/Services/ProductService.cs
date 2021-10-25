@@ -20,6 +20,8 @@ namespace Shop.Services
 
         public void GetInformation()
         {
+            Console.WriteLine("Product storage:");
+
             foreach (var product in _productStorage)
             {
                 Console.WriteLine($"Id: {product.IdInProductList} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate}");

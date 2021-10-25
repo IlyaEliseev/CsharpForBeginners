@@ -47,6 +47,7 @@ namespace Shop.Services
         public bool CheckShowcaseCount(int showcaseId)
         {
             var findShowcase = GetShowcase(showcaseId);
+
             if (findShowcase.GetProductCount() != 0)
             {
                 NotifyService.RaiseDeleteError();
@@ -149,6 +150,7 @@ namespace Shop.Services
             {
                 selectShowcase.productsInShowcase.RemoveAll(X => X.IdInShowcase == productId);
                 selectShowcase.VolumeCount -= selectProduct.Volume;
+
                 for (int i = 0; i < selectShowcase.GetProductCount(); i++)
                 {
                     selectShowcase.productsInShowcase[i].IdInShowcase = i + 1;

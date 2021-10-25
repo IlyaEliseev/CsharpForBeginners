@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Shop.Interfaces;
 using Shop.Models;
-
 
 namespace Shop.Services
 {
@@ -27,7 +24,6 @@ namespace Shop.Services
             _productArchive.Add(selectProduct);
             selectProduct.IdInArchive = GetArchiveProductCount();
             selectShowcase.productsInShowcase.Remove(selectProduct);
-            
         }
 
         public void DeleteArchiveProduct(int productId)

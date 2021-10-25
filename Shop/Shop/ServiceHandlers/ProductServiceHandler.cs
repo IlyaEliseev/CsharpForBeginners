@@ -1,5 +1,4 @@
-﻿using System;
-using Shop.Interfaces;
+﻿using Shop.Interfaces;
 using Shop.Services;
 
 namespace Shop.ServiceHandlers
@@ -29,21 +28,12 @@ namespace Shop.ServiceHandlers
         {
             if (ProductService.CheckProductAvailability())
             {
-                
                 int productId = CheckService.CheckProductId(ProductService);
-                //if (ProductService.GetProductsCount()>= productId)
-                //{
-                    string productName = CheckService.CheckName();
-                    double productVolume = CheckService.CheckVolume();
-                    ProductService.Edit(productId, productName, productVolume);
-                    NotifyService.RaiseEditProductIsDone();
-                //}
-                //else
-                //{
-                   // NotifyService.RaiseSearchProductIdIsNotSuccessful();
-                //}
+                string productName = CheckService.CheckName();
+                double productVolume = CheckService.CheckVolume();
+                ProductService.Edit(productId, productName, productVolume);
+                NotifyService.RaiseEditProductIsDone();
             }
-            
         }
 
         public void DeleteProduct()
@@ -55,7 +45,6 @@ namespace Shop.ServiceHandlers
                 NotifyService.RaiseDeleteProductIsDone();
             }
         }
-       
 
         public void GetProductInformation()
         {

@@ -5,7 +5,7 @@ namespace Shop.Services
 {
     public class CheckService
     {
-        internal protected int CheckProductId(IProductService productService)
+        protected internal int CheckProductId(IProductService productService)
         {
             int verifiableId;
             bool isContinue = true;
@@ -28,7 +28,7 @@ namespace Shop.Services
             return verifiableId;
         }
 
-        internal protected int CheckProductIdOnShowcase(IShowcaseService showcaseService, int showcaseId)
+        protected internal int CheckProductIdOnShowcase(IShowcaseService showcaseService, int showcaseId)
         {
             int verifiableId;
             bool isContinue = true;
@@ -51,7 +51,7 @@ namespace Shop.Services
             return verifiableId;
         }
 
-        internal protected int CheckShowcaseId(IShowcaseService showcaseService)
+        protected internal int CheckShowcaseId(IShowcaseService showcaseService)
         {
             int verifiableId;
             bool isContinue = true;
@@ -74,7 +74,7 @@ namespace Shop.Services
             return verifiableId;
         }
 
-        internal protected int CheckProductIdInArchive(IProductArchiveService productArchiveService)
+        protected internal int CheckProductIdInArchive(IProductArchiveService productArchiveService)
         {
             int verifiableId;
             bool isContinue = true;
@@ -97,7 +97,7 @@ namespace Shop.Services
             return verifiableId;
         }
 
-        internal protected double CheckVolume()
+        protected internal double CheckVolume()
         {
             double verifiableVolume;
             bool isContinue = true;
@@ -120,10 +120,11 @@ namespace Shop.Services
             return verifiableVolume;
         }
 
-        internal protected string CheckName()
+        protected internal string CheckName()
         {
             bool isContinue = true;
             string verifiableName;
+
             do
             {
                 Console.WriteLine("Input name:");

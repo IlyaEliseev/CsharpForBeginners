@@ -9,6 +9,7 @@ namespace Shop.ServiceHandlers
         public IShowcaseService ShowcaseService { get; }
         public NotifyService NotifyService { get; }
         public CheckService CheckService { get; }
+
         public ShowcaseServiceHandler(IShowcaseService showcaseService, IProductService productService, NotifyService notifyService, CheckService checkService)
         {
             ShowcaseService = showcaseService;

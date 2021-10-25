@@ -53,56 +53,91 @@ namespace Shop
                 bool succses = int.TryParse(input, out int command);
 
                 if (succses == false || command > Enum.GetNames(typeof(InputCommands)).Length)
-                    Messages.SetRedColor("Wrong command!");
-
-                if (command == (int)InputCommands.CreateProduct)
-                    ProductServiceHandler.CreateProduct();
-
-                if (command == (int)InputCommands.EditeProduct)
-                    ProductServiceHandler.EditProduct();
-
-                if (command == (int)InputCommands.DeleteProduct)
-                    ProductServiceHandler.DeleteProduct();
-
-                if (command == (int)InputCommands.GetProductInformation)
-                    ProductServiceHandler.GetProductInformation();
-
-                if (command == (int)InputCommands.ShowAllShowcases)
-                    ShowcaseServiceHandler.GetShowcaseInformation();
-                
-                if (command == (int)InputCommands.CreateShowcase)
-                    ShowcaseServiceHandler.CreateShowcase();
-
-                if (command == (int)InputCommands.DeleteShowcase)
-                    ShowcaseServiceHandler.DeleteShowcase();
-
-                if (command == (int)InputCommands.PlaceProductOnShowcase)
-                    ShowcaseServiceHandler.PlaceProductOnShowcase();
-
-                if (command == (int)InputCommands.DeleteProductOnShowcase)
-                    ShowcaseServiceHandler.DeleteProductOnShowcase();
-
-                if (command == (int)InputCommands.EditShowcase)
-                    ShowcaseServiceHandler.EditeShowcase();
-
-                if (command == (int)InputCommands.EditProductOnShowcase)
-                    ShowcaseServiceHandler.EditeProductOnShowcase();
-
-                if (command == (int)InputCommands.ArchivateProduct)
-                    ProductArchiveServiceHandler.ArchivateProduct();
-
-                if (command == (int)InputCommands.UnArchivateProduct)
-                    ProductArchiveServiceHandler.UnArchivateProduct();
-
-                if (command == (int)InputCommands.DeleteArchiveProduct)
-                    ProductArchiveServiceHandler.DeleteArchiveProduct();
-
-                if (command == (int)InputCommands.GetArchiveInformation)
-                    ProductArchiveServiceHandler.GetArchiveInformation();
-
-                if (command == (int)InputCommands.EXITApplication)
                 {
-                    isContinue = false;
+                    Messages.SetRedColor("Wrong command!");
+                }
+
+                else
+                {
+                    if (command == (int)InputCommands.CreateProduct)
+                    {
+                        ProductServiceHandler.CreateProduct();
+                    }
+
+                    if (command == (int)InputCommands.EditeProduct)
+                    {
+                        ProductServiceHandler.EditProduct();
+                    }
+
+                    if (command == (int)InputCommands.DeleteProduct)
+                    {
+                        ProductServiceHandler.DeleteProduct();
+                    }
+
+                    if (command == (int)InputCommands.GetProductInformation)
+                    {
+                        ProductServiceHandler.GetProductInformation();
+                    }
+
+                    if (command == (int)InputCommands.ShowAllShowcases)
+                    {
+                        ShowcaseServiceHandler.GetShowcaseInformation();
+                    }
+
+                    if (command == (int)InputCommands.CreateShowcase)
+                    {
+                        ShowcaseServiceHandler.CreateShowcase();
+                    }
+
+                    if (command == (int)InputCommands.DeleteShowcase)
+                    {
+                        ShowcaseServiceHandler.DeleteShowcase();
+                    }
+
+                    if (command == (int)InputCommands.PlaceProductOnShowcase)
+                    {
+                        ShowcaseServiceHandler.PlaceProductOnShowcase();
+                    }
+
+                    if (command == (int)InputCommands.DeleteProductOnShowcase)
+                    {
+                        ShowcaseServiceHandler.DeleteProductOnShowcase();
+                    }
+
+                    if (command == (int)InputCommands.EditShowcase)
+                    {
+                        ShowcaseServiceHandler.EditeShowcase();
+                    }
+
+                    if (command == (int)InputCommands.EditProductOnShowcase)
+                    {
+                        ShowcaseServiceHandler.EditeProductOnShowcase();
+                    }
+
+                    if (command == (int)InputCommands.ArchivateProduct)
+                    {
+                        ProductArchiveServiceHandler.ArchivateProduct();
+                    }
+
+                    if (command == (int)InputCommands.UnArchivateProduct)
+                    {
+                        ProductArchiveServiceHandler.UnArchivateProduct();
+                    }
+
+                    if (command == (int)InputCommands.DeleteArchiveProduct)
+                    {
+                        ProductArchiveServiceHandler.DeleteArchiveProduct();
+                    }
+
+                    if (command == (int)InputCommands.GetArchiveInformation)
+                    {
+                        ProductArchiveServiceHandler.GetArchiveInformation();
+                    }
+
+                    if (command == (int)InputCommands.EXITApplication)
+                    {
+                        isContinue = false;
+                    }
                 }
             }
         }
