@@ -11,7 +11,7 @@ namespace Shop.Tests
        
 
         [Fact]
-        public void CreateProductAndTakeInLlist()
+        public void CreateProduct_ProductListIsNotEmpty()
         {
             // arrange
             var notifyService = new NotifyService();
@@ -24,13 +24,32 @@ namespace Shop.Tests
 
             // act
             productService.Create(name, volume);
+            //productServiceHandler.CreateProduct();
+
+            // assert
+            Assert.True(productService.GetProductsCount() > 0);
+        }
+
+        [Fact]
+        public void CreateProduct_InputParametrsEqualOutput()
+        {
+            // arrange
+            var notifyService = new NotifyService();
+            var checkService = new CheckService();
+            var productService = new ProductService(notifyService);
+            //var productServiceHandler = new ProductServiceHandler(productService, notifyService, checkService);
+
+            string name = "111";
+            var volume = 100;
+
+            // act
+            productService.Create(name, volume);
             var product = productService.GetProduct(1);
             //productServiceHandler.CreateProduct();
 
             // assert
             Assert.Equal(name, product.Name);
             Assert.Equal(volume, product.Volume);
-            Assert.True(productService.GetProductsCount() == 1);
         }
     }
 }
