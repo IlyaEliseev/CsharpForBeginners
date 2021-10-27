@@ -97,7 +97,7 @@ namespace Shop.Services
             return verifiableId;
         }
 
-        protected internal double CheckVolume()
+        public double CheckVolume()
         {
             double verifiableVolume;
             bool isContinue = true;
@@ -120,7 +120,7 @@ namespace Shop.Services
             return verifiableVolume;
         }
 
-        protected internal string CheckName()
+        public string CheckName()
         {
             bool isContinue = true;
             string verifiableName;
