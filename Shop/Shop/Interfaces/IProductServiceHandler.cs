@@ -3,7 +3,7 @@ namespace Shop.Interfaces
 {
     public interface IProductServiceHandler
     {
-        void CreateProduct();
+        bool CreateProduct();
         void EditProduct();
         void DeleteProduct();
         void GetProductInformation();

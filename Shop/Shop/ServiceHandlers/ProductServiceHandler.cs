@@ -16,12 +16,13 @@ namespace Shop.ServiceHandlers
             CheckService = checkService;
         }
 
-        public void CreateProduct()
+        public bool CreateProduct()
         {
             string nameProduct = CheckService.CheckName();
             double volumeProduct = CheckService.CheckVolume();
             ProductService.Create(nameProduct, volumeProduct);
             NotifyService.RaiseCreateProductIsDone();
+            return true;
         }
 
         public void EditProduct()
