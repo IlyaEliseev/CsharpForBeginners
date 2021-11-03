@@ -1,5 +1,5 @@
 ﻿
-namespace Shop.Models
+namespace Shop
 {
     public enum InputCommands
     {

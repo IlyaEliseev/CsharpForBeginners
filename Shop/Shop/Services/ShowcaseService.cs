@@ -104,10 +104,10 @@ namespace Shop.Services
             }
         }
 
-        public bool CheckShowcaseVolumeOverflow(int showcaseId, int productId, IProductService product)
+        public bool CheckShowcaseVolumeOverflow(int showcaseId, int productId, IProductController productController)
         {
             var selectShowcase = GetShowcase(showcaseId);
-            var selectProduct = product.GetProduct(productId);
+            var selectProduct = productController.GetProduct(productId);
 
             if (selectShowcase.VolumeCount <= selectShowcase.Volume && GetShowcaseFreeSpace(showcaseId) >= selectProduct.Volume)
             {
@@ -117,25 +117,25 @@ namespace Shop.Services
             return false;
         }
 
-        public void CountShowcaseVolume(IProductService product, int showcaseId, int productId)
+        public void CountShowcaseVolume(IProductController productController, int showcaseId, int productId)
         {
             var selectShowcase = GetShowcase(showcaseId);
-            var selectProduct = product.GetProduct(productId);
+            var selectProduct = productController.GetProduct(productId);
             selectShowcase.VolumeCount += selectProduct.Volume;
         }
 
-        public void PlaceProduct(IProductService product, int productId, int showcaseId)
+        public void PlaceProduct(IProductController productController, int productId, int showcaseId)
         {
-            var selectProduct = product.GetProduct(productId);
+            var selectProduct = productController.GetProduct(productId);
             var selectShowcase = GetShowcase(showcaseId);
             selectShowcase.productsInShowcase.Add(selectProduct);
-            CountShowcaseVolume(product, showcaseId, productId);
-            product.Delete(productId);
+            CountShowcaseVolume(productController, showcaseId, productId);
+            productController.DeleteProduct(productId);
             selectProduct.IdInShowcase = selectShowcase.GetProductCount();
             selectProduct.IdShowcase = showcaseId;
         }
 
-        public void DeleteProduct(IProductService product, int productId, int showcaseId)
+        public void DeleteProduct(int productId, int showcaseId)
         {
             var selectShowcase = GetShowcase(showcaseId);
             var selectProduct = selectShowcase.GetProduct(productId);

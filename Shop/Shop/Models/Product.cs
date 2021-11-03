@@ -17,7 +17,7 @@ namespace Shop.Models
         {
             
         }
-
+        
         public Product(string productName, double volume)
         {
             Name = productName;

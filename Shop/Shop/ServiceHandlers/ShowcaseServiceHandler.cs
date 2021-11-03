@@ -5,69 +5,64 @@ namespace Shop.ServiceHandlers
 {
     public class ShowcaseServiceHandler : IShowcaseServiceHandler
     {
-        public IProductService ProductService { get; }
         public IShowcaseService ShowcaseService { get; }
         public NotifyService NotifyService { get; }
         public CheckService CheckService { get; }
-
-        public ShowcaseServiceHandler(IShowcaseService showcaseService, IProductService productService, NotifyService notifyService, CheckService checkService)
+        public IProductController ProductController { get; set; }
+        public ShowcaseServiceHandler(IShowcaseService showcaseService, NotifyService notifyService, CheckService checkService, IProductController productController)
         {
             ShowcaseService = showcaseService;
-            ProductService = productService;
             NotifyService = notifyService;
             CheckService = checkService;
+            ProductController = productController;
         }
 
-        public void CreateShowcase()
+        public void CreateShowcase(string nameShowcase, double volumeShowcase)
         {
-            string nameShowcase = CheckService.CheckName();
-            double volumeShowcase = CheckService.CheckVolume();
             var createShowcase = ShowcaseService.Create(nameShowcase, volumeShowcase);
             ShowcaseService.PlaceShowcase(createShowcase);
             NotifyService.RaiseCreateShowcaseIsDone();
         }
 
-        public void DeleteProductOnShowcase()
+        public void DeleteProductOnShowcase(int showcaseId, int productId)
         {
-            if (ShowcaseService.CheckShowcaseAvailability())
+            if (ShowcaseService.CheckShowcaseAvailability() && ShowcaseService.GetShowcaseListCount() >= showcaseId)
             {
-                int showcaseId = CheckService.CheckShowcaseId(ShowcaseService);
-                
                 if (ShowcaseService.CheckProductOnCurrentShowcase(showcaseId))
                 {
-                    int productId = CheckService.CheckProductIdOnShowcase(ShowcaseService, showcaseId);
-                    ShowcaseService.DeleteProduct(ProductService, productId, showcaseId);
+                    
+                    ShowcaseService.DeleteProduct(productId, showcaseId);
                     NotifyService.RaiseDeleteProductIsDone();
                 }
             }
+            else
+            {
+                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+            }
         }
         
-        public void DeleteShowcase()
+        public void DeleteShowcase(int showcaseId)
         {
-            if (ShowcaseService.CheckShowcaseAvailability())
+            if (ShowcaseService.CheckShowcaseAvailability() && ShowcaseService.GetShowcaseListCount() >= showcaseId)
             {
-                int showcaseId = CheckService.CheckShowcaseId(ShowcaseService);
-
                 if (ShowcaseService.CheckShowcaseCount(showcaseId))
                 {
                     ShowcaseService.DeleteShowcase(showcaseId);
                     NotifyService.RaiseDeleteShowcaseIsDone();
                 }
             }
+            else
+            {
+                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+            }
         }
 
-        public void EditeProductOnShowcase()
+        public void EditeProductOnShowcase(int productId, int showcaseId, string productName,double productVolume)
         {
-            if (ShowcaseService.CheckShowcaseAvailability())
+            if (ShowcaseService.CheckShowcaseAvailability() && ShowcaseService.GetShowcaseListCount()>= showcaseId)
             {
-                int showcaseId = CheckService.CheckShowcaseId(ShowcaseService);
-
                 if (ShowcaseService.CheckProductOnCurrentShowcase(showcaseId))
                 {
-                    int productId = CheckService.CheckProductIdOnShowcase(ShowcaseService, showcaseId);
-                    string productName = CheckService.CheckName();
-                    double productVolume = CheckService.CheckVolume();
-
                     if (productVolume <= ShowcaseService.GetShowcaseFreeSpace(showcaseId))
                     {
                         ShowcaseService.EditProduct(productId, showcaseId, productName, productVolume);
@@ -79,17 +74,22 @@ namespace Shop.ServiceHandlers
                     }
                 }
             }
+            else
+            {
+                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+            }
         }
 
-        public void EditeShowcase()
+        public void EditeShowcase(int showcaseId, string showcaseName, double showcaseVolume)
         {
-            if (ShowcaseService.CheckShowcaseAvailability())
+            if (ShowcaseService.CheckShowcaseAvailability() && ShowcaseService.GetShowcaseListCount()>= showcaseId)
             {
-                int showcaseId = CheckService.CheckShowcaseId(ShowcaseService);
-                string showcaseName = CheckService.CheckName();
-                double showcaseVolume = CheckService.CheckVolume();
                 ShowcaseService.EditShowcase(showcaseId, showcaseName, showcaseVolume);
                 NotifyService.RaiseEditShowcaseIsDone();
+            }
+            else
+            {
+                NotifyService.RaiseSearchProductIdIsNotSuccessful();
             }
         }
 
@@ -101,18 +101,22 @@ namespace Shop.ServiceHandlers
             }
         }
 
-        public void PlaceProductOnShowcase()
+        public void PlaceProductOnShowcase(int productId, int showcaseId, IProductController productController)
         {
-            if (ProductService.CheckProductAvailability() && ShowcaseService.CheckShowcaseAvailability())
+            if (ShowcaseService.GetShowcaseListCount() >= showcaseId && productController.GetProductCount()>= productId)
             {
-                int showcaseId = CheckService.CheckShowcaseId(ShowcaseService);
-                int productId = CheckService.CheckProductId(ProductService);
-
-                if (ShowcaseService.CheckShowcaseVolumeOverflow(showcaseId, productId, ProductService))
+                if (productController.CheckProductAvailability() && ShowcaseService.CheckShowcaseAvailability())
                 {
-                    ShowcaseService.PlaceProduct(ProductService, productId, showcaseId);
-                    NotifyService.RaisePlaceProductIsDone();
+                    if (ShowcaseService.CheckShowcaseVolumeOverflow(showcaseId, productId, productController))
+                    {
+                        ShowcaseService.PlaceProduct(productController, productId, showcaseId);
+                        NotifyService.RaisePlaceProductIsDone();
+                    }
                 }
+            }
+            else
+            {
+                NotifyService.RaiseSearchProductIdIsNotSuccessful();
             }
         }
     }

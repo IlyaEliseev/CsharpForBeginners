@@ -5,26 +5,27 @@ namespace Shop.Services
 {
     public class CheckService
     {
-        protected internal int CheckProductId(IProductService productService)
+
+        protected internal int CheckProductId(string id)
         {
             int verifiableId;
             bool isContinue = true;
 
             do
             {
-                Console.WriteLine("Input product Id: ");
-                string id = Console.ReadLine();
                 bool succses = int.TryParse(id, out verifiableId);
-                if (succses == false || productService.GetProductsCount() < verifiableId)
+                if (succses == false)
                 {
                     Messages.SetRedColor("Id not found!");
+                    Console.WriteLine("Input Id: ");
+                    id = Console.ReadLine();
                 }
                 else
                 {
                     isContinue = false;
                 }
-            } while (isContinue);
-
+            }while (isContinue);
+            
             return verifiableId;
         }
 
@@ -97,51 +98,47 @@ namespace Shop.Services
             return verifiableId;
         }
 
-        public double CheckVolume()
+        public double CheckVolume(string volume)
         {
             double verifiableVolume;
             bool isContinue = true;
-            
+
             do
             {
-                Console.WriteLine("Input volume: ");
-                string volume = Console.ReadLine();
                 bool succses = double.TryParse(volume, out verifiableVolume);
+                
                 if (succses == false)
                 {
                     Messages.SetRedColor("Volume is uncorrect!");
+                    Console.WriteLine("Input volume: ");
+                    volume = Console.ReadLine();
                 }
                 else
                 {
                     isContinue = false;
                 }
             } while (isContinue);
-
             return verifiableVolume;
         }
 
-        public string CheckName()
+        public string CheckName(string name)
         {
             bool isContinue = true;
-            string verifiableName;
 
             do
             {
-                Console.WriteLine("Input name:");
-                string name = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(name))
                 {
                     Messages.SetRedColor("Name is uncorrect!");
+                    Console.WriteLine("Input name:");
+                    name = Console.ReadLine();
                 }
                 else
                 {
                     isContinue = false;
                 }
-                verifiableName = name;
-
             } while (isContinue);
-            
-            return verifiableName;
+            return name;
         }
     }
 }
