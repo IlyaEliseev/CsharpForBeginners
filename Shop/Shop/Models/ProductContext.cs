@@ -4,11 +4,11 @@ namespace Shop.Models
 {
     public class ProductContext 
     {
-        public List<Product> _productStorage;
+        public List<Product> ProductStorage { get; private set; }
 
         public ProductContext()
         {
-            _productStorage = new List<Product>();
+            ProductStorage = new List<Product>();
         }
     }
 }
