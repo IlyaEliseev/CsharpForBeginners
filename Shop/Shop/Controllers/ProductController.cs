@@ -9,7 +9,8 @@ namespace Shop.Controllers
 {
     public class ProductController : IProductController
     {
-        private IRepository<Product> _productRepository;
+        public IUnitOfWork UnitOfWork { get; }
+
         public NotifyService NotifyService { get; }
         public CheckService CheckService { get; }
 
@@ -22,23 +23,24 @@ namespace Shop.Controllers
         {
             NotifyService = notifyService;
             CheckService = checkService;
-            _productRepository = new ProductRepository();
+            UnitOfWork = new UnitOfWork(new ShopContext());
         }
 
         public bool CreateProduct(string nameProduct, double volumeProduct)
         {
             Product product = new Product(nameProduct, volumeProduct);
-            _productRepository.AddProduct(product);
-            product.IdInProductList = _productRepository.GetCount();
+            UnitOfWork.ProductRepository.Add(product);
+            product.IdInProductList = UnitOfWork.ProductRepository.GetCount();
             NotifyService.RaiseCreateProductIsDone();
             return true;
         }
-
+        
         public void EditProduct(int productId, string productName, double productVolume)
         {
-            if (CheckProductAvailability() && _productRepository.GetCount() >= productId)
+           
+            if (CheckProductAvailability() && UnitOfWork.ProductRepository.GetCount() >= productId)
             {
-                var selectProduct = _productRepository.GetProduct(productId);
+                var selectProduct = UnitOfWork.ProductRepository.GetById(productId);
                 selectProduct.Name = productName;
                 selectProduct.Volume = productVolume;
                 NotifyService.RaiseEditProductIsDone();
@@ -53,13 +55,13 @@ namespace Shop.Controllers
         {
             if (CheckProductAvailability())
             {
-                if (_productRepository.GetCount() >= productId)
+                if (UnitOfWork.ProductRepository.GetCount() >= productId)
                 {
-                    _productRepository.RemoveProduct(productId);
+                    UnitOfWork.ProductRepository.DeleteById(productId);
                     NotifyService.RaiseDeleteProductIsDone();
-                    var products = from p in _productRepository.GetProductList()
+                    var products = from p in UnitOfWork.ProductRepository.GetAll()
                                    select p;
-                    for (int i = 0; i < _productRepository.GetCount(); i++)
+                    for (int i = 0; i < UnitOfWork.ProductRepository.GetCount(); i++)
                     {
                         products.ElementAtOrDefault(0).IdInProductList = i + 1;
                     }
@@ -78,7 +80,7 @@ namespace Shop.Controllers
             {
                 Console.WriteLine("Product storage:");
 
-                foreach (var product in _productRepository.GetProductList())
+                foreach (var product in UnitOfWork.ProductRepository.GetAll())
                 {
                     Console.WriteLine($"Id: {product.IdInProductList} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate}");
                 }
@@ -87,7 +89,7 @@ namespace Shop.Controllers
 
         public bool CheckProductAvailability()
         {
-            if (_productRepository.GetCount() == 0)
+            if (UnitOfWork.ProductRepository.GetCount() == 0)
             {
                 NotifyService.RaiseProductIsNotfound();
                 return false;
@@ -100,12 +102,12 @@ namespace Shop.Controllers
 
         public Product GetProduct(int id)
         {
-            return _productRepository.GetProduct(id);
+            return UnitOfWork.ProductRepository.GetById(id);
         }
 
         public int GetProductCount()
         {
-            return _productRepository.GetCount();
+            return UnitOfWork.ProductRepository.GetCount();
         }
     }
 }

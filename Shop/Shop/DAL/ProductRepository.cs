@@ -4,38 +4,38 @@ using System.Linq;
 
 namespace Shop.DAL
 {
-    public class ProductRepository : IRepository<Product>
+    public class ProductRepository : IProductRepository
     {
-        public ProductContext Context { get; private set; }
+        public ShopContext ShopContext { get; private set; }
 
-        public ProductRepository()
+        public ProductRepository(ShopContext shopContext) 
         {
-            Context = new ProductContext();
+            ShopContext = shopContext;
         }
 
-        public IEnumerable<Product> GetProductList()
+        public IEnumerable<Product> GetAll()
         {
-            return Context.ProductStorage.ToList();
+            return ShopContext.ProductContext.ToList();
         }
 
-        public Product GetProduct(int id)
+        public Product GetById(int id)
         {
-            return Context.ProductStorage.SingleOrDefault(x => x.IdInProductList == id);
+            return ShopContext.ProductContext.SingleOrDefault(x => x.IdInProductList == id);
         }
 
-        public void AddProduct(Product entity)
+        public void Add(Product entity)
         {
-            Context.ProductStorage.Add(entity);
+            ShopContext.ProductContext.Add(entity);
         }
 
-        public void RemoveProduct(int id)
+        public void DeleteById(int id)
         {
-            Context.ProductStorage.RemoveAll(x => x.IdInProductList == id);
+            ShopContext.ProductContext.RemoveAll(x => x.IdInProductList == id);
         }
 
         public int GetCount()
         {
-            return Context.ProductStorage.Count;
+            return ShopContext.ProductContext.Count;
         }
     }
 }

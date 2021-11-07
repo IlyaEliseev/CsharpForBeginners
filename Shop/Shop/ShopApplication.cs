@@ -7,6 +7,7 @@ namespace Shop
     public class ShopApplication 
     {
         public IProductController ProductController { get; }
+        
         public IShowcaseServiceHandler ShowcaseServiceHandler { get; }
         public IProductArchiveServiceHandler ProductArchiveServiceHandler { get; }
         public NotifyService NotifyService { get; }
@@ -20,7 +21,7 @@ namespace Shop
             ProductArchiveServiceHandler = productArchiveServiceHandler;
             NotifyService = notifyService;
             CheckService = checkService;
-
+            
             notifyService.CreateShowcaseIsDone += Messages.ShowcaseIsCreate;
             notifyService.CreateProductIsDone += Messages.ProductIsCreate;
             notifyService.EditProductIsDone += Messages.ProductIsEdit;
@@ -43,7 +44,7 @@ namespace Shop
         public void Run()
         {
             bool isContinue = true;
-
+            
             while (isContinue)
             {
                 ShopApplication.ShowUserMenu();
