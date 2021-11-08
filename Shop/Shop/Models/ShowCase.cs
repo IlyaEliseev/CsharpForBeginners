@@ -26,7 +26,7 @@ namespace Shop.Models
             Name = name;
             Volume = volume;
             TimeToCreate = DateTime.Now;
-            UnitOfWork = new UnitOfWork(new ShopContext());
+            UnitOfWork = new UnitOfWork();
         }
 
         public Product GetProduct(int productId) => UnitOfWork.ProductOnShowcaseRepository.GetById(productId);

@@ -23,7 +23,7 @@ namespace Shop.Controllers
         {
             NotifyService = notifyService;
             CheckService = checkService;
-            UnitOfWork = new UnitOfWork(new ShopContext());
+            UnitOfWork = new UnitOfWork();
         }
 
         public bool CreateProduct(string nameProduct, double volumeProduct)

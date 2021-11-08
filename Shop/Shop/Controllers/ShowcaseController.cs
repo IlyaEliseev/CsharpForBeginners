@@ -22,7 +22,7 @@ namespace Shop.Controllers
             NotifyService = notifyService;
             CheckService = checkService;
             ProductController = productController;
-            UnitOfWork = new UnitOfWork(new ShopContext());
+            UnitOfWork = new UnitOfWork();
         }
 
         public void CreateShowcase(string nameShowcase, double volumeShowcase)
