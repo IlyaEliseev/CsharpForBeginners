@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Shop.DAL
 {
-    public interface IProductOnShowcaseRepository : IRepository<Product>
+    public interface IArchiveRepository : IRepository<Product>
     {
-       
+
     }
 }

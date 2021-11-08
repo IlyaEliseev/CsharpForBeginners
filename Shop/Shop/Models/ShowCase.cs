@@ -14,11 +14,11 @@ namespace Shop.Models
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
         public IUnitOfWork UnitOfWork { get; }
-        public List<Product> productsInShowcase = new List<Product>();
+        //public List<Product> productsInShowcase = new List<Product>();
         
         public Showcase()
         {
-            UnitOfWork = new UnitOfWork(new ShopContext());
+            
         }
 
         public Showcase(string name, double volume)
@@ -26,10 +26,11 @@ namespace Shop.Models
             Name = name;
             Volume = volume;
             TimeToCreate = DateTime.Now;
+            UnitOfWork = new UnitOfWork(new ShopContext());
         }
 
-        public Product GetProduct(int productId) => UnitOfWork.ProductOnShowcaseRepository.SingleOrDefault(x => x.IdInShowcase == productId);
+        public Product GetProduct(int productId) => UnitOfWork.ProductOnShowcaseRepository.GetById(productId);
 
-        public int GetProductCount() => productsInShowcase.Count;
+        public int GetProductCount() => UnitOfWork.ProductOnShowcaseRepository.GetCount();
     }   
 }

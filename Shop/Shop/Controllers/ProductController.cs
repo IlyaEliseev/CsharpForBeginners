@@ -1,5 +1,4 @@
 ﻿using System;
-using Shop.Interfaces;
 using Shop.Services;
 using Shop.DAL;
 using Shop.Models;
@@ -13,6 +12,7 @@ namespace Shop.Controllers
 
         public NotifyService NotifyService { get; }
         public CheckService CheckService { get; }
+        
 
         public ProductController()
         {
@@ -63,7 +63,7 @@ namespace Shop.Controllers
                                    select p;
                     for (int i = 0; i < UnitOfWork.ProductRepository.GetCount(); i++)
                     {
-                        products.ElementAtOrDefault(0).IdInProductList = i + 1;
+                        products.ElementAtOrDefault(i).IdInProductList = i + 1;
                     }
                 }
                 else

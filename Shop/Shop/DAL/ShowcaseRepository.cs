@@ -1,6 +1,7 @@
 ﻿using Shop.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Shop.DAL
 {
@@ -15,32 +16,27 @@ namespace Shop.DAL
 
         public void Add(Showcase entity)
         {
-            throw new NotImplementedException();
-        }
-
-        public void AddProduct(int productId, int showcaseId)
-        {
-            throw new NotImplementedException();
+            ShopContext.ShowcaseContext.Add(entity); 
         }
 
         public IEnumerable<Showcase> GetAll()
         {
-            throw new NotImplementedException();
+            return ShopContext.ShowcaseContext.ToList();
         }
 
         public Showcase GetById(int id)
         {
-            throw new NotImplementedException();
+            return ShopContext.ShowcaseContext.SingleOrDefault(x => x.Id == id);
         }
 
         public int GetCount()
         {
-            throw new NotImplementedException();
+            return ShopContext.ShowcaseContext.Count;
         }
 
         public void DeleteById(int id)
         {
-            throw new NotImplementedException();
+            ShopContext.ShowcaseContext.RemoveAll((x => x.Id == id));
         }
     }
 }
