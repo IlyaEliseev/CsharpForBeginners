@@ -9,10 +9,8 @@ namespace Shop.Controllers
     public class ProductController : IProductController
     {
         public IUnitOfWork UnitOfWork { get; }
-
         public NotifyService NotifyService { get; }
         public CheckService CheckService { get; }
-        
 
         public ProductController()
         {
@@ -37,7 +35,6 @@ namespace Shop.Controllers
         
         public void EditProduct(int productId, string productName, double productVolume)
         {
-           
             if (CheckProductAvailability() && UnitOfWork.ProductRepository.GetCount() >= productId)
             {
                 var selectProduct = UnitOfWork.ProductRepository.GetById(productId);
@@ -70,7 +67,6 @@ namespace Shop.Controllers
                 {
                     NotifyService.RaiseSearchProductIdIsNotSuccessful();
                 }
-                
             }
         }
 
@@ -79,7 +75,6 @@ namespace Shop.Controllers
             if (CheckProductAvailability())
             {
                 Console.WriteLine("Product storage:");
-
                 foreach (var product in UnitOfWork.ProductRepository.GetAll())
                 {
                     Console.WriteLine($"Id: {product.IdInProductList} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate}");

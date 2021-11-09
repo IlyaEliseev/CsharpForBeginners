@@ -9,7 +9,6 @@ namespace Shop.Models
         public List<Product> ProductOnShowcaseContext { get; private set; }
         public List<Product> ArchiveContext { get; private set; }
 
-
         public ShopContext()
         {
             ProductContext = new List<Product>();

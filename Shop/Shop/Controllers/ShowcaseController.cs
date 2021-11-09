@@ -1,12 +1,8 @@
 ﻿using Shop.DAL;
-using Shop.Interfaces;
 using Shop.Models;
 using Shop.Services;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Shop.Controllers 
 {
@@ -35,7 +31,7 @@ namespace Shop.Controllers
 
         public void DeleteShowcase(int showcaseId)
         {
-            if (CheckShowcaseAvailability() && ProductController.GetProductCount() >= showcaseId)
+            if (CheckShowcaseAvailability() && GetShowcaseCount() >= showcaseId)
             {
                 if (CheckShowcaseCount(showcaseId))
                 {
@@ -61,7 +57,7 @@ namespace Shop.Controllers
             {
                 if (ProductController.CheckProductAvailability() && CheckShowcaseAvailability())
                 {
-                    if (CheckShowcaseVolumeOverflow(showcaseId, productId, productController))
+                    if (CheckShowcaseVolumeOverflow(showcaseId, productId))
                     {
                         var selectProduct = ProductController.GetProduct(productId);
                         var selectShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId);
@@ -82,22 +78,99 @@ namespace Shop.Controllers
 
         public void DeleteProductOnShowcase(int showcaseId, int productId)
         {
-            throw new NotImplementedException();
+            if (CheckShowcaseAvailability() && GetShowcaseCount() >= showcaseId)
+            {
+                var selectShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId);
+                var selectProduct = selectShowcase.GetProduct(productId);
+
+                if (CheckProductOnCurrentShowcase(showcaseId))
+                {
+                    selectShowcase.UnitOfWork.ProductOnShowcaseRepository.DeleteById(productId);
+                    NotifyService.RaiseDeleteProductIsDone();
+                    selectShowcase.VolumeCount -= selectProduct.Volume;
+                    var products = from p in selectShowcase.UnitOfWork.ProductOnShowcaseRepository.GetAll()
+                                   select p;
+                    for (int i = 0; i < products.Count(); i++)
+                    {
+                        products.ElementAtOrDefault(i).IdInShowcase = i + 1;
+                    }
+                }
+            }
+            else
+            {
+                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+            }
         }
 
         public void EditeShowcase(int showcaseId, string showcaseName, double showcaseVolume)
         {
-            throw new NotImplementedException();
+            if (CheckShowcaseAvailability() && GetShowcaseCount() >= showcaseId)
+            {
+                var selectShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId); 
+                var products = from p in selectShowcase.UnitOfWork.ProductOnShowcaseRepository.GetAll()
+                               select p;
+                if (products.Count() != 0)
+                {
+                    NotifyService.RaiseDeleteError();
+                }
+                else
+                {
+                    selectShowcase.Name = showcaseName;
+                    selectShowcase.Volume = showcaseVolume; 
+                    NotifyService.RaiseEditShowcaseIsDone();
+                }
+                
+            }
+            else
+            {
+                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+            }
         }
 
         public void EditeProductOnShowcase(int productId, int showcaseId, string productName, double productVolume)
         {
-            throw new NotImplementedException();
+            if (CheckShowcaseAvailability() && GetShowcaseCount() >= showcaseId)
+            {
+                if (CheckProductOnCurrentShowcase(showcaseId))
+                {
+                    if (productVolume <= GetShowcaseFreeSpace(showcaseId))
+                    {
+                        var selectShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId);
+                        var selectProduct = selectShowcase.UnitOfWork.ProductOnShowcaseRepository.GetById(productId);
+                        selectProduct.Name = productName;
+                        selectProduct.Volume = productVolume;
+                        NotifyService.RaiseEditProductIsDone();
+                    }
+                    else
+                    {
+                        NotifyService.RaiseVolumeErrorMessage();
+                    }
+                }
+            }
+            else
+            {
+                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+            }
         }
 
         public void GetShowcaseInformation()
         {
-            throw new NotImplementedException();
+            if (CheckShowcaseAvailability())
+            {
+                Console.WriteLine("Showcases:");
+                var selectShowcase = from s in UnitOfWork.ShowcaseRepository.GetAll()
+                                     select s;
+                foreach (var showcase in selectShowcase)
+                {
+                    Console.WriteLine($"Id: {showcase.Id} | Name: {showcase.Name} | Volume: {showcase.Volume} | Time to Create: {showcase.TimeToCreate} | Count Products: {showcase.GetProductCount()} | VolumeCount: {showcase.VolumeCount}");
+                    var products = from p in showcase.UnitOfWork.ProductOnShowcaseRepository.GetAll()
+                                   select p;
+                    foreach (var p in products)
+                    {
+                        Console.WriteLine($"    Id: {p.IdInShowcase} | Name: {p.Name} | Volume: {p.Volume} | Time to Create: {p.TimeToCreate}");
+                    }
+                }
+            }
         }
 
         public bool CheckShowcaseAvailability()
@@ -115,7 +188,7 @@ namespace Shop.Controllers
 
         public double GetShowcaseFreeSpace(int showcaseId)
         {
-            var selectShowcase = GetShowcase(showcaseId);
+            var selectShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId);
             double freespace = selectShowcase.Volume - selectShowcase.VolumeCount;
             return freespace;
         }
@@ -127,7 +200,61 @@ namespace Shop.Controllers
 
         public void SumShowcaseVolume(int showcaseId, int productId)
         {
-            throw new NotImplementedException();
+            var selectShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId);
+            var selectProduct = ProductController.GetProduct(productId);
+            selectShowcase.VolumeCount += selectProduct.Volume;
+        }
+
+        public bool CheckShowcaseCount(int showcaseId)
+        {
+            var findShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId);
+            if (findShowcase.UnitOfWork.ProductOnShowcaseRepository.GetCount() != 0)
+            {
+                NotifyService.RaiseDeleteError();
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public bool CheckShowcaseVolumeOverflow(int showcaseId, int productId)
+        {
+            var selectShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId);
+            var selectProduct = ProductController.GetProduct(productId);
+            if (selectShowcase.VolumeCount <= selectShowcase.Volume && GetShowcaseFreeSpace(showcaseId) >= selectProduct.Volume)
+            {
+                return true;
+            }
+            NotifyService.RaiseVolumeErrorMessage();
+            return false;
+        }
+
+        public bool CheckProductOnCurrentShowcase(int showcaseId)
+        {
+            var selectShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId); 
+            if (selectShowcase.UnitOfWork.ProductOnShowcaseRepository.GetCount() == 0)
+            {
+                NotifyService.RaiseChekProductOnShowacse();
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public Showcase GetShowcaseById(int showcaseId)
+        {
+            return UnitOfWork.ShowcaseRepository.GetById(showcaseId);
+        }
+
+        public int GetProductCountOnShowcase(int showcaseId)
+        {
+            var selectShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId);
+            int count = selectShowcase.UnitOfWork.ProductOnShowcaseRepository.GetCount();
+            return count;
         }
     }
 }

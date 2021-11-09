@@ -1,5 +1,5 @@
 ﻿using System;
-using Shop.Interfaces;
+using Shop.Controllers;
 using Shop.Services;
 
 namespace Shop
@@ -7,21 +7,20 @@ namespace Shop
     public class ShopApplication 
     {
         public IProductController ProductController { get; }
-        
-        public IShowcaseServiceHandler ShowcaseServiceHandler { get; }
-        public IProductArchiveServiceHandler ProductArchiveServiceHandler { get; }
+        public IShowcaseController ShowcaseController { get; }
+        public IProductArchiveController ProductArchiveController { get; }
         public NotifyService NotifyService { get; }
         public CheckService CheckService { get; }
 
-        public ShopApplication(IProductController productController, IShowcaseServiceHandler showcaseServiceHandler, 
-            NotifyService notifyService, IProductArchiveServiceHandler productArchiveServiceHandler, CheckService checkService)
+        public ShopApplication(IProductController productController, NotifyService notifyService, CheckService checkService, 
+                               IShowcaseController showcaseController, IProductArchiveController productArchiveController)
         {
             ProductController = productController;
-            ShowcaseServiceHandler = showcaseServiceHandler;
-            ProductArchiveServiceHandler = productArchiveServiceHandler;
+            ProductArchiveController = productArchiveController;
             NotifyService = notifyService;
             CheckService = checkService;
-            
+            ShowcaseController = showcaseController;
+
             notifyService.CreateShowcaseIsDone += Messages.ShowcaseIsCreate;
             notifyService.CreateProductIsDone += Messages.ProductIsCreate;
             notifyService.EditProductIsDone += Messages.ProductIsEdit;
@@ -44,16 +43,13 @@ namespace Shop
         public void Run()
         {
             bool isContinue = true;
-            
             while (isContinue)
             {
                 ShopApplication.ShowUserMenu();
                 Console.WriteLine();
                 Console.WriteLine("Input command: ");
-
                 string input = Console.ReadLine();
                 bool succses = int.TryParse(input, out int command);
-
                 if (succses == false || command > Enum.GetNames(typeof(InputCommands)).Length)
                 {
                     Messages.SetRedColor("Wrong command!");
@@ -70,7 +66,7 @@ namespace Shop
 
                     if (command == (int)InputCommands.EditeProduct)
                     {
-                        int productId = CheckService.CheckProductId(GetProductId());
+                        int productId = CheckService.CheckId(GetProductId());
                         string productName = CheckService.CheckName(GetName());
                         double productVolume = CheckService.CheckVolume(GetVolume());
                         ProductController.EditProduct(productId, productName, productVolume);
@@ -78,7 +74,7 @@ namespace Shop
 
                     if (command == (int)InputCommands.DeleteProduct)
                     {
-                        int productId = CheckService.CheckProductId(GetProductId());
+                        int productId = CheckService.CheckId(GetProductId());
                         ProductController.DeleteProduct(productId);
                     }
 
@@ -89,71 +85,75 @@ namespace Shop
 
                     if (command == (int)InputCommands.ShowAllShowcases)
                     {
-                        ShowcaseServiceHandler.GetShowcaseInformation();
+                        ShowcaseController.GetShowcaseInformation();
                     }
 
                     if (command == (int)InputCommands.CreateShowcase)
                     {
                         string nameShowcase = CheckService.CheckName(GetName());
                         double volumeShowcase = CheckService.CheckVolume(GetVolume());
-                        ShowcaseServiceHandler.CreateShowcase(nameShowcase, volumeShowcase);
+                        ShowcaseController.CreateShowcase(nameShowcase, volumeShowcase);
                     }
 
                     if (command == (int)InputCommands.DeleteShowcase)
                     {
-                        int showcaseId = CheckService.CheckProductId(GetShowcaseId());
-                        ShowcaseServiceHandler.DeleteShowcase(showcaseId);
+                        int showcaseId = CheckService.CheckId(GetShowcaseId());
+                        ShowcaseController.DeleteShowcase(showcaseId);
                     }
 
                     if (command == (int)InputCommands.PlaceProductOnShowcase)
                     {
-                        int showcaseId = CheckService.CheckProductId(GetShowcaseId());
-                        int productId = CheckService.CheckProductId(GetProductId());
-                        ShowcaseServiceHandler.PlaceProductOnShowcase(productId, showcaseId, ProductController);
+                        int showcaseId = CheckService.CheckId(GetShowcaseId());
+                        int productId = CheckService.CheckId(GetProductId());
+                        ShowcaseController.PlaceProductOnShowcase(productId, showcaseId);
                     }
 
                     if (command == (int)InputCommands.DeleteProductOnShowcase)
                     {
-                        int showcaseId = CheckService.CheckProductId(GetShowcaseId());
-                        int productId = CheckService.CheckProductId(GetProductId());
-                        ShowcaseServiceHandler.DeleteProductOnShowcase(showcaseId, productId);
+                        int showcaseId = CheckService.CheckId(GetShowcaseId());
+                        int productId = CheckService.CheckId(GetProductId());
+                        ShowcaseController.DeleteProductOnShowcase(showcaseId, productId);
                     }
 
                     if (command == (int)InputCommands.EditShowcase)
                     {
-                        int showcaseId = CheckService.CheckProductId(GetShowcaseId());
+                        int showcaseId = CheckService.CheckId(GetShowcaseId());
                         string showcaseName = CheckService.CheckName(GetName());
                         double showcaseVolume = CheckService.CheckVolume(GetVolume());
-                        ShowcaseServiceHandler.EditeShowcase(showcaseId, showcaseName, showcaseVolume);
+                        ShowcaseController.EditeShowcase(showcaseId, showcaseName, showcaseVolume);
                     }
 
                     if (command == (int)InputCommands.EditProductOnShowcase)
                     {
-                        int productId = CheckService.CheckProductId(GetProductId());
-                        int showcaseId = CheckService.CheckProductId(GetShowcaseId());
+                        int showcaseId = CheckService.CheckId(GetShowcaseId());
+                        int productId = CheckService.CheckId(GetProductId());
                         string productName = CheckService.CheckName(GetName());
                         double productVolume = CheckService.CheckVolume(GetVolume());
-                        ShowcaseServiceHandler.EditeProductOnShowcase(productId, showcaseId, productName, productVolume);
+                        ShowcaseController.EditeProductOnShowcase(productId, showcaseId, productName, productVolume);
                     }
 
                     if (command == (int)InputCommands.ArchivateProduct)
                     {
-                        ProductArchiveServiceHandler.ArchivateProduct();
+                        var showcaseId = CheckService.CheckId(GetShowcaseId());
+                        int productId = CheckService.CheckId(GetProductId());
+                        ProductArchiveController.ArchivateProduct(productId, showcaseId);
                     }
 
                     if (command == (int)InputCommands.UnArchivateProduct)
                     {
-                        ProductArchiveServiceHandler.UnArchivateProduct();
+                        var productId = CheckService.CheckId(GetProductId());
+                        ProductArchiveController.UnArchivateProduct(productId);
                     }
 
                     if (command == (int)InputCommands.DeleteArchiveProduct)
                     {
-                        ProductArchiveServiceHandler.DeleteArchiveProduct();
+                        int productId = CheckService.CheckId(GetProductId());
+                        ProductArchiveController.DeleteArchiveProduct(productId);
                     }
 
                     if (command == (int)InputCommands.GetArchiveInformation)
                     {
-                        ProductArchiveServiceHandler.GetArchiveInformation();
+                        ProductArchiveController.GetArchiveInformation();
                     }
 
                     if (command == (int)InputCommands.EXITApplication)

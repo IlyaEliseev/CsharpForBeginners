@@ -1,20 +1,17 @@
 ﻿using System;
-using Shop.Interfaces;
 
 namespace Shop.Services
 {
     public class CheckService
     {
-
-        protected internal int CheckProductId(string id)
+        protected internal int CheckId(string id)
         {
             int verifiableId;
             bool isContinue = true;
-
             do
             {
                 bool succses = int.TryParse(id, out verifiableId);
-                if (succses == false)
+                if (succses == false || verifiableId == 0)
                 {
                     Messages.SetRedColor("Id not found!");
                     Console.WriteLine("Input Id: ");
@@ -29,80 +26,10 @@ namespace Shop.Services
             return verifiableId;
         }
 
-        protected internal int CheckProductIdOnShowcase(IShowcaseService showcaseService, int showcaseId)
-        {
-            int verifiableId;
-            bool isContinue = true;
-
-            do
-            {
-                Console.WriteLine("Input product Id: ");
-                string id = Console.ReadLine();
-                bool succses = int.TryParse(id, out verifiableId);
-                if (succses == false || showcaseService.GerProductShowcaseCount(showcaseId) < verifiableId)
-                {
-                    Messages.SetRedColor("Id not found!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
-
-            return verifiableId;
-        }
-
-        protected internal int CheckShowcaseId(IShowcaseService showcaseService)
-        {
-            int verifiableId;
-            bool isContinue = true;
-
-            do
-            {
-                Console.WriteLine("Input showcase Id: ");
-                string id = Console.ReadLine();
-                bool succses = int.TryParse(id, out verifiableId);
-                if (succses == false || showcaseService.GetShowcaseListCount() < verifiableId)
-                {
-                    Messages.SetRedColor("Id not found!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
-
-            return verifiableId;
-        }
-
-        protected internal int CheckProductIdInArchive(IProductArchiveService productArchiveService)
-        {
-            int verifiableId;
-            bool isContinue = true;
-
-            do
-            {
-                Console.WriteLine("Input product Id: ");
-                string id = Console.ReadLine();
-                bool succses = int.TryParse(id, out verifiableId);
-                if (succses == false || productArchiveService.GetArchiveProductCount() < verifiableId)
-                {
-                    Messages.SetRedColor("Id not found!");
-                }
-                else
-                {
-                    isContinue = false;
-                }
-            } while (isContinue);
-
-            return verifiableId;
-        }
-
         public double CheckVolume(string volume)
         {
             double verifiableVolume;
             bool isContinue = true;
-
             do
             {
                 bool succses = double.TryParse(volume, out verifiableVolume);
@@ -124,7 +51,6 @@ namespace Shop.Services
         public string CheckName(string name)
         {
             bool isContinue = true;
-
             do
             {
                 if (string.IsNullOrWhiteSpace(name))

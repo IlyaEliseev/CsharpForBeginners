@@ -1,6 +1,6 @@
 ﻿using Shop.Models;
 
-namespace Shop.Interfaces
+namespace Shop.Controllers
 {
     public interface IProductController
     {

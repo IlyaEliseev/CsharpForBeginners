@@ -1,9 +1,6 @@
 ﻿using Shop.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Shop.DAL
 {
@@ -18,27 +15,27 @@ namespace Shop.DAL
 
         public void Add(Product entity)
         {
-            throw new NotImplementedException();
+            ShopContext.ProductOnShowcaseContext.Add(entity);
         }
 
         public void DeleteById(int id)
         {
-            throw new NotImplementedException();
+            ShopContext.ProductOnShowcaseContext.RemoveAll(x => x.IdInShowcase == id);
         }
 
         public IEnumerable<Product> GetAll()
         {
-            throw new NotImplementedException();
+            return ShopContext.ProductOnShowcaseContext.ToList();
         }
 
         public Product GetById(int id)
         {
-            throw new NotImplementedException();
+            return ShopContext.ProductOnShowcaseContext.SingleOrDefault(x => x.IdInShowcase == id);
         }
 
         public int GetCount()
         {
-            throw new NotImplementedException();
+            return ShopContext.ProductOnShowcaseContext.Count;
         }
     }
 }

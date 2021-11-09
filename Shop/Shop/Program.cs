@@ -1,6 +1,4 @@
-﻿using Shop.Interfaces;
-using Shop.Services;
-using Shop.ServiceHandlers;
+﻿using Shop.Services;
 using Shop.Controllers;
 
 namespace Shop
@@ -12,13 +10,11 @@ namespace Shop
             NotifyService notifyService = new NotifyService();
             CheckService checkService = new CheckService();
             
-            IShowcaseService showcaseService = new ShowcaseService(notifyService);
-            IProductArchiveService productArchiveService = new ProductArchiveService(notifyService);
             IProductController productController = new ProductController(notifyService, checkService);
-            IShowcaseServiceHandler ShowcaseServiceHandler = new ShowcaseServiceHandler(showcaseService, notifyService, checkService, productController);
-            IProductArchiveServiceHandler productArchiveServiceHandler = new ProductArchiveServiceHandler(notifyService, productArchiveService, showcaseService, checkService);
-            
-            var shopApplication = new ShopApplication(productController, ShowcaseServiceHandler, notifyService, productArchiveServiceHandler, checkService);
+            IShowcaseController showcaseController = new ShowcaseController(notifyService, checkService, productController);
+            IProductArchiveController productArchiveController = new ProductArchiveController(notifyService, showcaseController, checkService);
+
+            var shopApplication = new ShopApplication(productController, notifyService, checkService, showcaseController, productArchiveController);
             shopApplication.Run();
         }
     }

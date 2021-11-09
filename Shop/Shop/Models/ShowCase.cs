@@ -1,7 +1,5 @@
 ﻿using Shop.DAL;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Shop.Models
 {
@@ -14,7 +12,6 @@ namespace Shop.Models
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
         public IUnitOfWork UnitOfWork { get; }
-        //public List<Product> productsInShowcase = new List<Product>();
         
         public Showcase()
         {

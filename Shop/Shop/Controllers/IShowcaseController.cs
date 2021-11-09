@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Shop.Models;
 
 namespace Shop.Controllers
 {
@@ -16,6 +12,13 @@ namespace Shop.Controllers
         void EditeProductOnShowcase(int productId, int showcaseId, string productName, double productVolume);
         void GetShowcaseInformation();
         bool CheckShowcaseAvailability();
+        bool CheckShowcaseCount(int showcaseId);
+        bool CheckShowcaseVolumeOverflow(int showcaseId, int productId);
         double GetShowcaseFreeSpace(int showcaseId);
+        int GetShowcaseCount();
+        void SumShowcaseVolume(int showcaseId, int productId);
+        bool CheckProductOnCurrentShowcase(int showcaseId);
+        Showcase GetShowcaseById(int showcaseId);
+        int GetProductCountOnShowcase(int showcaseId);
     }
 }
