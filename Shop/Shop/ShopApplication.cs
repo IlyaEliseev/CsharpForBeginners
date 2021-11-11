@@ -59,9 +59,9 @@ namespace Shop
                 {
                     if (command == (int)InputCommands.CreateProduct)
                     {
-                        string nameProduct = CheckService.CheckName(GetName());
-                        double volumeProduct = CheckService.CheckVolume(GetVolume());
-                        ProductController.CreateProduct(nameProduct, volumeProduct);
+                        string productName = CheckService.CheckName(GetName());
+                        double productVolume = CheckService.CheckVolume(GetVolume());
+                        ProductController.CreateProduct(productName, productVolume);
                     }
 
                     if (command == (int)InputCommands.EditeProduct)
@@ -90,9 +90,9 @@ namespace Shop
 
                     if (command == (int)InputCommands.CreateShowcase)
                     {
-                        string nameShowcase = CheckService.CheckName(GetName());
-                        double volumeShowcase = CheckService.CheckVolume(GetVolume());
-                        ShowcaseController.CreateShowcase(nameShowcase, volumeShowcase);
+                        string showcaseName = CheckService.CheckName(GetName());
+                        double showcaseVolume = CheckService.CheckVolume(GetVolume());
+                        ShowcaseController.CreateShowcase(showcaseName, showcaseVolume);
                     }
 
                     if (command == (int)InputCommands.DeleteShowcase)

@@ -24,9 +24,9 @@ namespace Shop.Controllers
             UnitOfWork = new UnitOfWork();
         }
 
-        public bool CreateProduct(string nameProduct, double volumeProduct)
+        public bool CreateProduct(string productName, double productVolume)
         {
-            Product product = new Product(nameProduct, volumeProduct);
+            Product product = new Product(productName, productVolume);
             UnitOfWork.ProductRepository.Add(product);
             product.IdInProductList = UnitOfWork.ProductRepository.GetCount();
             NotifyService.RaiseCreateProductIsDone();

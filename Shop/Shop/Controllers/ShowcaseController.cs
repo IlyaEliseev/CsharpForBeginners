@@ -21,9 +21,9 @@ namespace Shop.Controllers
             UnitOfWork = new UnitOfWork();
         }
 
-        public void CreateShowcase(string nameShowcase, double volumeShowcase)
+        public void CreateShowcase(string showcaseName, double showcaseVolume)
         {
-            Showcase showcase = new Showcase(nameShowcase, volumeShowcase);
+            Showcase showcase = new Showcase(showcaseName, showcaseVolume);
             UnitOfWork.ShowcaseRepository.Add(showcase);
             showcase.Id = UnitOfWork.ShowcaseRepository.GetCount();
             NotifyService.RaiseCreateShowcaseIsDone();
