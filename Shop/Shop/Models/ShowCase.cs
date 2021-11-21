@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Shop.DAL;
+using System;
 
 namespace Shop.Models
 {
@@ -12,12 +11,11 @@ namespace Shop.Models
         public double VolumeCount { get; set; }
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
-
-        public List<Product> productsInShowcase = new List<Product>();
+        public IUnitOfWork UnitOfWork { get; }
         
         public Showcase()
         {
-
+            
         }
 
         public Showcase(string name, double volume)
@@ -25,10 +23,11 @@ namespace Shop.Models
             Name = name;
             Volume = volume;
             TimeToCreate = DateTime.Now;
+            UnitOfWork = new UnitOfWork();
         }
 
-        public Product GetProduct(int productId) => productsInShowcase.SingleOrDefault(x => x.IdInShowcase == productId);
+        public Product GetProduct(int productId) => UnitOfWork.ProductOnShowcaseRepository.GetById(productId);
 
-        public int GetProductCount() => productsInShowcase.Count;
+        public int GetProductCount() => UnitOfWork.ProductOnShowcaseRepository.GetCount();
     }   
 }
