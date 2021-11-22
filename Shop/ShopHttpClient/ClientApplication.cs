@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Shop.ShopHttpClient.Controllers;
 using Shop.ShopHttpClient.Services;
 
 namespace Shop.ShopHttpClient
 {
-    class ClientApplication
+    public class ClientApplication
     {
         public IProductHttpController ProductHttpController { get; }
         public IProductArchiveHttpController ProductArchiveHttpController { get; }

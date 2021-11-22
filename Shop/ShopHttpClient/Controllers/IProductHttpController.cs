@@ -1,4 +1,5 @@
-﻿namespace Shop.ShopHttpClient.Controllers
+﻿
+namespace Shop.ShopHttpClient.Controllers
 {
     public interface IProductHttpController
     {

@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop", "Shop\Shop.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.Tests", "Shop.Tests\Shop.Tests.csproj", "{BF78F855-76D4-4FDD-83D4-ACE62FC4F2B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopHttpClient", "ShopHttpClient\ShopHttpClient.csproj", "{3E82CEB9-BB4B-4EF9-93F0-BD175E7E3193}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopHttpClient", "ShopHttpClient\ShopHttpClient.csproj", "{3E82CEB9-BB4B-4EF9-93F0-BD175E7E3193}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopHttpServer", "ShopHttpServer\ShopHttpServer.csproj", "{7818A496-4ACD-4BCA-9603-8B54EE3787AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{3E82CEB9-BB4B-4EF9-93F0-BD175E7E3193}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E82CEB9-BB4B-4EF9-93F0-BD175E7E3193}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E82CEB9-BB4B-4EF9-93F0-BD175E7E3193}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7818A496-4ACD-4BCA-9603-8B54EE3787AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7818A496-4ACD-4BCA-9603-8B54EE3787AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7818A496-4ACD-4BCA-9603-8B54EE3787AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7818A496-4ACD-4BCA-9603-8B54EE3787AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
