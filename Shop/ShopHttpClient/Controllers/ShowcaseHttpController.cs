@@ -28,9 +28,10 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.PostAsync("http://localhost:44987/app/showcase", stringResponce).Result;
+            var responce = _httpClient.PostAsync("app/showcase", stringResponce).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
-            }
+            Console.WriteLine(content);
+        }
 
         public void DeleteProductOnShowcase(int showcaseId, int productId)
         {
@@ -42,8 +43,9 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.DeleteAsync($"http://localhost:44987/app/showcase/product/{productId}").Result;
+            var responce = _httpClient.DeleteAsync($"app/showcase/product/{productId}").Result;
             var content = responce.Content.ReadAsStringAsync().Result;
+            Console.WriteLine(content);
         }
 
         public void DeleteShowcase(int showcaseId)
@@ -55,8 +57,9 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.DeleteAsync($"http://localhost:44987/app/showcase/{showcaseId}").Result;
+            var responce = _httpClient.DeleteAsync($"app/showcase/{showcaseId}").Result;
             var content = responce.Content.ReadAsStringAsync().Result;
+            Console.WriteLine(content);
         }
 
         public void EditeProductOnShowcase(int productId, int showcaseId, string productName, double productVolume)
@@ -71,8 +74,9 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.PutAsync("http://localhost:44987/app/showcase", stringResponce).Result;
+            var responce = _httpClient.PutAsync("app/showcase", stringResponce).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
+            Console.WriteLine(content);
         }
 
         public void EditeShowcase(int showcaseId, string showcaseName, double showcaseVolume)
@@ -86,22 +90,25 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.PutAsync("http://localhost:44987/app/showcase", stringResponce).Result;
+            var responce = _httpClient.PutAsync("app/showcase", stringResponce).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
+            Console.WriteLine(content);
         }
 
         public void GetShowcaseInformation()
         {
-            var showcases = JsonConvert.DeserializeObject<List<Showcase>>("http://localhost:44987/app/showcase");
+            var resopnce = _httpClient.GetAsync("app/showcase").Result;
+            var content = resopnce.Content.ReadAsStringAsync().Result;
+            var showcases = JsonConvert.DeserializeObject<List<Showcase>>(content);
             foreach (var showcase in showcases)
             {
-                Console.WriteLine($"Id: {showcase.Id} | Name: {showcase.Name} | Volume: {showcase.Volume} | Time to Create: {showcase.TimeToCreate} | Count Products: {showcase.GetProductCount()} | VolumeCount: {showcase.VolumeCount}");
-                var products = from p in showcase.UnitOfWork.ProductOnShowcaseRepository.GetAll()
-                               select p;
-                foreach (var p in products)
-                {
-                    Console.WriteLine($"    Id: {p.IdInShowcase} | Name: {p.Name} | Volume: {p.Volume} | Time to Create: {p.TimeToCreate}");
-                }
+                Console.WriteLine($"Id: {showcase.Id} | Name: {showcase.Name} | Volume: {showcase.Volume} | Time to Create: {showcase.TimeToCreate} | Count Products: | VolumeCount: {showcase.VolumeCount}");
+                //var products = from p in showcase.UnitOfWork.ProductOnShowcaseRepository.GetAll()
+                //               select p;
+                //foreach (var p in showcase.UnitOfWork.ProductOnShowcaseRepository.GetAll())
+                //{
+                //    Console.WriteLine($"    Id: {p.IdInShowcase} | Name: {p.Name} | Volume: {p.Volume} | Time to Create: {p.TimeToCreate}");
+                //}
             }
         }
 
@@ -115,8 +122,9 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var resopnce = _httpClient.PatchAsync("http://localhost:44987/app/showcase", stringResponce).Result;
+            var resopnce = _httpClient.PatchAsync("app/showcase", stringResponce).Result;
             var content = resopnce.Content.ReadAsStringAsync().Result;
+            Console.WriteLine(content);
         }
     }
 }

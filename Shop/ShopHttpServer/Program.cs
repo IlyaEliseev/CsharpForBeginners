@@ -14,8 +14,8 @@ namespace Shop.ShopHttpServer
             NotifyService notifyService = new NotifyService();
             CheckService checkService = new CheckService();
             IProductController productController = new ProductController(notifyService, checkService);
-
-            var shopServerApplication = new ShopServerApplication(httpListener, productController);
+            IShowcaseController showcaseController = new ShowcaseController(notifyService, checkService, productController);
+            var shopServerApplication = new ShopServerApplication(httpListener, productController, showcaseController);
             shopServerApplication.Run();
         }
     }

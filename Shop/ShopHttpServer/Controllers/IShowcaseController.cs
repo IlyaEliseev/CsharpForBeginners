@@ -1,4 +1,5 @@
 ﻿using Shop.Models;
+using System.Collections.Generic;
 
 namespace Shop.ShopHttpServer.Controllers
 {
@@ -20,5 +21,6 @@ namespace Shop.ShopHttpServer.Controllers
         bool CheckProductOnCurrentShowcase(int showcaseId);
         Showcase GetShowcaseById(int showcaseId);
         int GetProductCountOnShowcase(int showcaseId);
+        IEnumerable<Showcase> GetShowcases();
     }
 }

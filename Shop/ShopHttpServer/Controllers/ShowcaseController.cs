@@ -3,6 +3,7 @@ using Shop.Models;
 using Shop.ShopHttpServer.Services;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Shop.ShopHttpServer.Controllers 
 {
@@ -255,6 +256,11 @@ namespace Shop.ShopHttpServer.Controllers
             var selectShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId);
             int count = selectShowcase.UnitOfWork.ProductOnShowcaseRepository.GetCount();
             return count;
+        }
+
+        public IEnumerable<Showcase> GetShowcases()
+        {
+            return UnitOfWork.ShowcaseRepository.GetAll();
         }
     }
 }
