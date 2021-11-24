@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
-using Shop.Models;
+using Shop.ShopModels.Models;
 
 namespace Shop.ShopHttpClient.Controllers
 {

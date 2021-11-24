@@ -1,7 +1,7 @@
 ﻿using System;
 using Shop.ShopHttpServer.Services;
 using Shop.ShopHttpServer.DAL;
-using Shop.Models;
+using Shop.ShopHttpServer.Models;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -12,7 +12,7 @@ namespace Shop.ShopHttpServer.Controllers
         public IUnitOfWork UnitOfWork { get; }
         public NotifyService NotifyService { get; }
         public CheckService CheckService { get; }
-
+        public List<string> productUriPath;
         public ProductController()
         {
             
@@ -23,6 +23,7 @@ namespace Shop.ShopHttpServer.Controllers
             NotifyService = notifyService;
             CheckService = checkService;
             UnitOfWork = new UnitOfWork();
+            productUriPath = new List<string>();
         }
 
         public bool CreateProduct(string productName, double productVolume)
@@ -109,6 +110,25 @@ namespace Shop.ShopHttpServer.Controllers
         public IEnumerable<Product> GetProducts()
         {
             return UnitOfWork.ProductRepository.GetAll(); 
+        }
+
+        public void AddUri(string uri)
+        {
+            productUriPath.Add(uri);
+        }
+
+        public void DeleteUri(string uri)
+        {
+            productUriPath.Remove(uri);
+            for (int i = 0; i < productUriPath.Count; i++)
+            {
+                productUriPath[i] = $"/app/product/{i + 1}";
+            }
+        }
+
+        public string FindUri(string uri)
+        {
+            return productUriPath.Find(x => x == uri);
         }
     }
 }

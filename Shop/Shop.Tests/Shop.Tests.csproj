@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ShopHttpClient\ShopHttpClient.csproj" />
-    <ProjectReference Include="..\Shop\Shop.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using Shop.Models;
+﻿using Shop.ShopHttpServer.Models;
 using System.Collections.Generic;
 
 namespace Shop.ShopHttpServer.Controllers

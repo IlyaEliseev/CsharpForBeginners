@@ -1,5 +1,5 @@
 ﻿using Shop.ShopHttpServer.DAL;
-using Shop.Models;
+using Shop.ShopHttpServer.Models;
 using Shop.ShopHttpServer.Services;
 using System;
 using System.Linq;

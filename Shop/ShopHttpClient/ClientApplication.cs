@@ -1,6 +1,7 @@
 ﻿using System;
 using Shop.ShopHttpClient.Controllers;
 using Shop.ShopHttpClient.Services;
+using Shop.ShopHttpServer.DAL;
 
 namespace Shop.ShopHttpClient
 {
@@ -24,6 +25,7 @@ namespace Shop.ShopHttpClient
 
         public void Run()
         {
+            UnitOfWork unitOfWork = new UnitOfWork();
             bool isContinue = true;
             while (isContinue)
             {

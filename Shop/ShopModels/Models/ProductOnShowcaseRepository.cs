@@ -1,10 +1,9 @@
-﻿using Shop.ShopHttpServer.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Shop.ShopHttpServer.DAL
+namespace Shop.ShopModels.Models
 {
-    public class ProductOnShowcaseRepository : IProductOnShowcaseRepository
+    public class ProductOnShowcaseRepository 
     {
         public ShopContext ShopContext { get; private set; }
 

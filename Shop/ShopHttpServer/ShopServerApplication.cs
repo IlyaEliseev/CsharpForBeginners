@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Shop.Models;
+using Shop.ShopHttpServer.Models;
 using System;
 using System.IO;
 using System.Net;
@@ -58,6 +58,7 @@ namespace Shop.ShopHttpServer
                             productVolume = productPostData.Volume;
                             ProductController.CreateProduct(productName, productVolume);
                             responceBody = "Product is create";
+                            ProductController.AddUri($"/app/product/{ProductController.GetProductCount()}");
                             SetResponce(responceBody, context);
                             Console.WriteLine(productPostData);
                             break;
@@ -75,12 +76,10 @@ namespace Shop.ShopHttpServer
                         default:
                             break;
                     }
-
-                    //_httpListener.Close();
                 }
-
+                
                 //Products http delete method
-                if (request.Url.PathAndQuery == path)
+                if (path == ProductController.FindUri(path))
                 {
                     switch (request.HttpMethod)
                     {
@@ -88,11 +87,10 @@ namespace Shop.ShopHttpServer
                             productId = int.Parse(request.Url.Segments.Last());
                             ProductController.DeleteProduct(productId);
                             responceBody = "Product is delete";
+                            ProductController.DeleteUri($"/app/product/{productId}");
                             SetResponce(responceBody, context);
                             break;
                     }
-
-                    //_httpListener.Close();
                 }
 
                 //Showcases http methods
@@ -133,15 +131,13 @@ namespace Shop.ShopHttpServer
                             showcaseId = showcasePatchData.ShowcaseId;
                             productId = showcasePatchData.ProductId;
                             ShowcaseController.PlaceProductOnShowcase(productId, showcaseId);
-                            responceBody = "Showcase is edit";
+                            responceBody = "Product place on showcase";
                             SetResponce(responceBody, context);
                             Console.WriteLine(showcasePatchData);
                             break;
                         default:
                             break;
                     }
-
-                    //_httpListener.Close();
                 }
 
                 //Showcases http delete method
@@ -150,14 +146,48 @@ namespace Shop.ShopHttpServer
                     switch (request.HttpMethod)
                     {
                         case "DELETE":
-                            productId = int.Parse(request.Url.Segments.Last());
-                            ProductController.DeleteProduct(productId);
+                            showcaseId = int.Parse(request.Url.Segments.Last());
+                            ShowcaseController.DeleteShowcase(showcaseId);
                             responceBody = "Product is delete";
                             SetResponce(responceBody, context);
                             break;
                     }
+                }
 
-                    //_httpListener.Close();
+                //Product on showcase http methods
+                if (path == "/app/archiveProduct")
+                {
+                    switch (request.HttpMethod)
+                    {
+                        case "PUT": // edit prodduct on showcase
+                            responce.StatusCode = (int)HttpStatusCode.OK;
+                            var productOnShowcasePutData = GetRequestDataBody<HttpResponce>(context);
+                            showcaseId = productOnShowcasePutData.ShowcaseId;
+                            productId = productOnShowcasePutData.ProductId;
+                            productName = productOnShowcasePutData.ProductName;
+                            productVolume = productOnShowcasePutData.ProductVolume;
+                            ShowcaseController.EditeProductOnShowcase(productId, showcaseId, productName, productVolume);
+                            responceBody = "Product on showcase is edit";
+                            SetResponce(responceBody, context);
+                            Console.WriteLine(productOnShowcasePutData);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                //Product on showcase http delete method
+                if (request.Url.PathAndQuery == path)
+                {
+                    switch (request.HttpMethod)
+                    {
+                        case "DELETE":
+                            showcaseId = int.Parse(request.Url.Segments.Last());
+                            ShowcaseController.DeleteShowcase(showcaseId);
+                            responceBody = "Product is delete";
+                            SetResponce(responceBody, context);
+                            break;
+                    }
                 }
             }
         }

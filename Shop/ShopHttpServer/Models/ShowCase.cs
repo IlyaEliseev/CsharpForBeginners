@@ -1,7 +1,7 @@
 ﻿using Shop.ShopHttpServer.DAL;
 using System;
 
-namespace Shop.ShopModel.Models
+namespace Shop.ShopHttpServer.Models
 {
     public class Showcase 
     {
@@ -15,7 +15,7 @@ namespace Shop.ShopModel.Models
         
         public Showcase()
         {
-            
+            UnitOfWork = new UnitOfWork();
         }
 
         public Showcase(string name, double volume)

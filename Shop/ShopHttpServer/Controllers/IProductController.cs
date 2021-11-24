@@ -1,4 +1,4 @@
-﻿using Shop.Models;
+﻿using Shop.ShopHttpServer.Models;
 using System.Collections.Generic;
 
 namespace Shop.ShopHttpServer.Controllers
@@ -13,5 +13,8 @@ namespace Shop.ShopHttpServer.Controllers
         Product GetProduct(int id);
         IEnumerable<Product> GetProducts();
         int GetProductCount();
+        void AddUri(string uri);
+        void DeleteUri(string uri);
+        string FindUri(string uri);
     }
 }

@@ -1,5 +1,4 @@
-﻿
-namespace Shop.ShopHttpServer.DAL
+﻿namespace Shop.ShopHttpServer.DAL
 {
     public interface IUnitOfWork
     {

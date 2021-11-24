@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Net.Http;
-using Shop.Models;
+using Shop.ShopModels.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using Shop.ShopHttpServer.DAL;
+using System.Text;
 
 namespace Shop.ShopHttpClient.Controllers
 {
@@ -27,7 +29,7 @@ namespace Shop.ShopHttpClient.Controllers
             };
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
-            var stringResponce = new StringContent(jsonResponce);
+            var stringResponce = new StringContent(jsonResponce, Encoding.UTF8, "application/string");
             var responce = _httpClient.PostAsync("app/showcase", stringResponce).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
@@ -43,7 +45,7 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.DeleteAsync($"app/showcase/product/{productId}").Result;
+            var responce = _httpClient.DeleteAsync($"app/showcase/{showcaseId}/product/{productId}").Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }
@@ -100,15 +102,14 @@ namespace Shop.ShopHttpClient.Controllers
             var resopnce = _httpClient.GetAsync("app/showcase").Result;
             var content = resopnce.Content.ReadAsStringAsync().Result;
             var showcases = JsonConvert.DeserializeObject<List<Showcase>>(content);
+
             foreach (var showcase in showcases)
             {
-                Console.WriteLine($"Id: {showcase.Id} | Name: {showcase.Name} | Volume: {showcase.Volume} | Time to Create: {showcase.TimeToCreate} | Count Products: | VolumeCount: {showcase.VolumeCount}");
-                //var products = from p in showcase.UnitOfWork.ProductOnShowcaseRepository.GetAll()
-                //               select p;
-                //foreach (var p in showcase.UnitOfWork.ProductOnShowcaseRepository.GetAll())
-                //{
-                //    Console.WriteLine($"    Id: {p.IdInShowcase} | Name: {p.Name} | Volume: {p.Volume} | Time to Create: {p.TimeToCreate}");
-                //}
+                Console.WriteLine($"Id: {showcase.Id} | Name: {showcase.Name} | Volume: {showcase.Volume} | Time to Create: {showcase.TimeToCreate} | Count Products: {showcase.UnitOfWork.ProductOnShowcaseRepository.GetCount()}| VolumeCount: {showcase.VolumeCount}");
+                foreach (var p in showcase.UnitOfWork.ProductOnShowcaseRepository.GetAll())
+                {
+                    Console.WriteLine($"    Id: {p.IdInShowcase} | Name: {p.Name} | Volume: {p.Volume} | Time to Create: {p.TimeToCreate}");
+                }
             }
         }
 

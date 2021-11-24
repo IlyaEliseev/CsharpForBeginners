@@ -1,4 +1,4 @@
-﻿using Shop.Models;
+﻿using Shop.ShopHttpServer.Models;
 
 namespace Shop.ShopHttpServer.DAL
 {
