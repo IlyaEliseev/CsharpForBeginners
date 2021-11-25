@@ -76,7 +76,7 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.PutAsync("app/showcase", stringResponce).Result;
+            var responce = _httpClient.PutAsync("app/showcase/product", stringResponce).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }

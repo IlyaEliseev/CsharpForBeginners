@@ -114,7 +114,10 @@ namespace Shop.ShopHttpServer.Controllers
 
         public void AddUri(string uri)
         {
-            productUriPath.Add(uri);
+            if (!productUriPath.Contains(uri) && productUriPath.Count <= UnitOfWork.ProductRepository.GetCount())
+            {
+                productUriPath.Add(uri);
+            }
         }
 
         public void DeleteUri(string uri)

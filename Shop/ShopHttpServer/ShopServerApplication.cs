@@ -14,11 +14,19 @@ namespace Shop.ShopHttpServer
         private readonly HttpListener _httpListener;
         public IProductController ProductController { get; }
         public IShowcaseController ShowcaseController { get; }
-        public ShopServerApplication(HttpListener httpListener, IProductController productController, IShowcaseController showcaseController)
+        public IUriPathController ProductUrlPathController { get; }
+        public IUriPathController ShowcaseUriPathController { get; }
+        public IUriPathController ProductOnShowcaseUriPathController { get; }
+
+        public ShopServerApplication(HttpListener httpListener, IProductController productController, IShowcaseController showcaseController, 
+                                     IUriPathController productUrlPathController, IUriPathController showcaseUriPathController, IUriPathController productOnShowcaseUriPathController)
         {
             _httpListener = httpListener;
             ProductController = productController;
             ShowcaseController = showcaseController;
+            ProductUrlPathController = productUrlPathController;
+            ShowcaseUriPathController = showcaseUriPathController;
+            ProductOnShowcaseUriPathController = productOnShowcaseUriPathController;
         }
 
         internal void Run()
@@ -41,7 +49,7 @@ namespace Shop.ShopHttpServer
                 var path = request.Url.PathAndQuery;
 
                 //Products http methods
-                if (path == "/app/product")
+                if (path == ProductUrlPathController.Path)
                 {
                     switch (request.HttpMethod)
                     {
@@ -58,7 +66,7 @@ namespace Shop.ShopHttpServer
                             productVolume = productPostData.Volume;
                             ProductController.CreateProduct(productName, productVolume);
                             responceBody = "Product is create";
-                            ProductController.AddUri($"/app/product/{ProductController.GetProductCount()}");
+                            ProductUrlPathController.AddUri(ProductUrlPathController.Path + $"/{ProductController.GetProductCount()}");
                             SetResponce(responceBody, context);
                             Console.WriteLine(productPostData);
                             break;
@@ -79,7 +87,7 @@ namespace Shop.ShopHttpServer
                 }
                 
                 //Products http delete method
-                if (path == ProductController.FindUri(path))
+                if (path == ProductUrlPathController.FindUri(path))
                 {
                     switch (request.HttpMethod)
                     {
@@ -87,14 +95,14 @@ namespace Shop.ShopHttpServer
                             productId = int.Parse(request.Url.Segments.Last());
                             ProductController.DeleteProduct(productId);
                             responceBody = "Product is delete";
-                            ProductController.DeleteUri($"/app/product/{productId}");
+                            //ProductController.DeleteUri($"/app/product/{productId}");
                             SetResponce(responceBody, context);
                             break;
                     }
                 }
 
                 //Showcases http methods
-                if (path == "/app/showcase")
+                if (path == ShowcaseUriPathController.Path)
                 {
                     switch (request.HttpMethod)
                     {
@@ -110,6 +118,7 @@ namespace Shop.ShopHttpServer
                             showcaseName = showcasePostData.Name;
                             showcaseVolume = showcasePostData.Volume;
                             ShowcaseController.CreateShowcase(showcaseName, showcaseVolume);
+                            ShowcaseUriPathController.AddUri(ShowcaseUriPathController.Path + $"/{ShowcaseController.GetShowcaseCount()}");
                             responceBody = "Showcase is create";
                             SetResponce(responceBody, context);
                             Console.WriteLine(showcasePostData);
@@ -131,6 +140,7 @@ namespace Shop.ShopHttpServer
                             showcaseId = showcasePatchData.ShowcaseId;
                             productId = showcasePatchData.ProductId;
                             ShowcaseController.PlaceProductOnShowcase(productId, showcaseId);
+                            ProductOnShowcaseUriPathController.AddUri(ShowcaseUriPathController.Path + $"/{showcaseId}" + $"/product/{ShowcaseController.GetProductCountOnShowcase(showcaseId)}");
                             responceBody = "Product place on showcase";
                             SetResponce(responceBody, context);
                             Console.WriteLine(showcasePatchData);
@@ -141,7 +151,7 @@ namespace Shop.ShopHttpServer
                 }
 
                 //Showcases http delete method
-                if (request.Url.PathAndQuery == path)
+                if (path == ShowcaseUriPathController.FindUri(path))
                 {
                     switch (request.HttpMethod)
                     {
@@ -155,7 +165,7 @@ namespace Shop.ShopHttpServer
                 }
 
                 //Product on showcase http methods
-                if (path == "/app/archiveProduct")
+                if (path == ProductOnShowcaseUriPathController.Path)
                 {
                     switch (request.HttpMethod)
                     {
@@ -163,7 +173,7 @@ namespace Shop.ShopHttpServer
                             responce.StatusCode = (int)HttpStatusCode.OK;
                             var productOnShowcasePutData = GetRequestDataBody<HttpResponce>(context);
                             showcaseId = productOnShowcasePutData.ShowcaseId;
-                            productId = productOnShowcasePutData.ProductId;
+                            productId = productOnShowcasePutData.ProductInShowcaseId;
                             productName = productOnShowcasePutData.ProductName;
                             productVolume = productOnShowcasePutData.ProductVolume;
                             ShowcaseController.EditeProductOnShowcase(productId, showcaseId, productName, productVolume);
@@ -177,19 +187,24 @@ namespace Shop.ShopHttpServer
                 }
 
                 //Product on showcase http delete method
-                if (request.Url.PathAndQuery == path)
+                if (path == ProductOnShowcaseUriPathController.FindUri(path))
                 {
                     switch (request.HttpMethod)
                     {
                         case "DELETE":
-                            showcaseId = int.Parse(request.Url.Segments.Last());
-                            ShowcaseController.DeleteShowcase(showcaseId);
+                            string stringPAth = request.Url.Segments[3];
+                            showcaseId = int.Parse(stringPAth.TrimEnd('/'));
+                            productId = int.Parse(request.Url.Segments.Last());
+                            ShowcaseController.DeleteProductOnShowcase(showcaseId, productId);
                             responceBody = "Product is delete";
                             SetResponce(responceBody, context);
                             break;
                     }
                 }
+
+                responce.Close();
             }
+            
         }
 
         public static T GetRequestDataBody<T>(HttpListenerContext context)

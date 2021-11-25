@@ -1,6 +1,5 @@
 ﻿using Shop.ShopHttpServer.Controllers;
 using Shop.ShopHttpServer.Services;
-using System;
 using System.Net;
 
 namespace Shop.ShopHttpServer
@@ -11,11 +10,16 @@ namespace Shop.ShopHttpServer
         {
             var httpListener = new HttpListener();
             httpListener.Prefixes.Add("http://localhost:44987/");
-            NotifyService notifyService = new NotifyService();
-            CheckService checkService = new CheckService();
+            var notifyService = new NotifyService();
+            var checkService = new CheckService();
             IProductController productController = new ProductController(notifyService, checkService);
             IShowcaseController showcaseController = new ShowcaseController(notifyService, checkService, productController);
-            var shopServerApplication = new ShopServerApplication(httpListener, productController, showcaseController);
+            IUriPathController productUriPathController = new ProductUriPathController(productController);
+            IUriPathController showcasetUrlPathController = new ShowcaseUriPathController(showcaseController);
+            IUriPathController productOnShowcaseUriPathController = new ProductOnShowcaseUriPathController(showcaseController);
+
+            var shopServerApplication = new ShopServerApplication(httpListener, productController, showcaseController, productUriPathController, 
+                                                                    showcasetUrlPathController, productOnShowcaseUriPathController);
             shopServerApplication.Run();
         }
     }
