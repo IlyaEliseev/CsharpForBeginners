@@ -14,12 +14,14 @@ namespace Shop.ShopHttpServer
             var checkService = new CheckService();
             IProductController productController = new ProductController(notifyService, checkService);
             IShowcaseController showcaseController = new ShowcaseController(notifyService, checkService, productController);
+            IProductArchiveController productArchiveController = new ProductArchiveController(notifyService, showcaseController, checkService);
             IUriPathController productUriPathController = new ProductUriPathController(productController);
             IUriPathController showcasetUrlPathController = new ShowcaseUriPathController(showcaseController);
             IUriPathController productOnShowcaseUriPathController = new ProductOnShowcaseUriPathController(showcaseController);
+            IUriPathController productArchiveUriPathController = new ProductArchiveUriPathController(productArchiveController);
 
-            var shopServerApplication = new ShopServerApplication(httpListener, productController, showcaseController, productUriPathController, 
-                                                                    showcasetUrlPathController, productOnShowcaseUriPathController);
+            var shopServerApplication = new ShopServerApplication(httpListener, productController, showcaseController, productArchiveController, productUriPathController, 
+                                                                    showcasetUrlPathController, productOnShowcaseUriPathController, productArchiveUriPathController);
             shopServerApplication.Run();
         }
     }

@@ -6,12 +6,12 @@ namespace Shop.ShopHttpServer.DAL
 {
     public class ProductRepository : IProductRepository
     {
-        public ShopContext ShopContext { get; private set; }
-
         public ProductRepository(ShopContext shopContext) 
         {
             ShopContext = shopContext;
         }
+
+        public ShopContext ShopContext { get; private set; }
 
         public IEnumerable<Product> GetAll()
         {

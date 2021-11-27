@@ -12,7 +12,8 @@ namespace Shop.ShopHttpClient.Controllers
     public class ShowcaseHttpController : IShowcaseHttpController
     {
         private readonly HttpClient _httpClient;
-        private readonly string _uri;
+        private readonly string _showcaseUri; 
+        private readonly string _productOnShowcaseUri;
 
         public ShowcaseHttpController(HttpClient httpClient, Uri baseUrl)
         {

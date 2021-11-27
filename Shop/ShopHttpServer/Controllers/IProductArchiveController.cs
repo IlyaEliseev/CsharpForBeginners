@@ -1,4 +1,7 @@
-﻿namespace Shop.ShopHttpServer.Controllers
+﻿using Shop.ShopHttpServer.Models;
+using System.Collections.Generic;
+
+namespace Shop.ShopHttpServer.Controllers
 {
     public interface IProductArchiveController
     {
@@ -8,5 +11,6 @@
         void DeleteArchiveProduct(int productId);
         int GetArchiveProductCount();
         bool CheckArchiveAvailability();
+        IEnumerable<Product> GetArchiveProducts();
     }
 }

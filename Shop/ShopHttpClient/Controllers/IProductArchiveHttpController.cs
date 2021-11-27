@@ -7,5 +7,6 @@ namespace Shop.ShopHttpClient.Controllers
         void GetArchiveInformation();
         void UnArchivateProduct(int productId);
         void DeleteArchiveProduct(int productId);
+
     }
 }

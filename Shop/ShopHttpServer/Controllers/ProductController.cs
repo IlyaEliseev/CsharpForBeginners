@@ -9,15 +9,6 @@ namespace Shop.ShopHttpServer.Controllers
 {
     public class ProductController : IProductController
     {
-        public IUnitOfWork UnitOfWork { get; }
-        public NotifyService NotifyService { get; }
-        public CheckService CheckService { get; }
-        public List<string> productUriPath;
-        public ProductController()
-        {
-            
-        }
-
         public ProductController(NotifyService notifyService, CheckService checkService)
         {
             NotifyService = notifyService;
@@ -25,6 +16,11 @@ namespace Shop.ShopHttpServer.Controllers
             UnitOfWork = new UnitOfWork();
             productUriPath = new List<string>();
         }
+
+        public IUnitOfWork UnitOfWork { get; }
+        public NotifyService NotifyService { get; }
+        public CheckService CheckService { get; }
+        public List<string> productUriPath;
 
         public bool CreateProduct(string productName, double productVolume)
         {

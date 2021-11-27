@@ -11,23 +11,27 @@ namespace Shop.ShopHttpServer
 {
     internal class ShopServerApplication
     {
-        private readonly HttpListener _httpListener;
-        public IProductController ProductController { get; }
-        public IShowcaseController ShowcaseController { get; }
-        public IUriPathController ProductUrlPathController { get; }
-        public IUriPathController ShowcaseUriPathController { get; }
-        public IUriPathController ProductOnShowcaseUriPathController { get; }
-
-        public ShopServerApplication(HttpListener httpListener, IProductController productController, IShowcaseController showcaseController, 
-                                     IUriPathController productUrlPathController, IUriPathController showcaseUriPathController, IUriPathController productOnShowcaseUriPathController)
+        public ShopServerApplication(HttpListener httpListener, IProductController productController, IShowcaseController showcaseController, IProductArchiveController productArchiveController,
+                                     IUriPathController productUrlPathController, IUriPathController showcaseUriPathController, IUriPathController productOnShowcaseUriPathController, IUriPathController productArchiveUriPathController)
         {
             _httpListener = httpListener;
             ProductController = productController;
             ShowcaseController = showcaseController;
+            ProductArchiveController = productArchiveController;
             ProductUrlPathController = productUrlPathController;
             ShowcaseUriPathController = showcaseUriPathController;
             ProductOnShowcaseUriPathController = productOnShowcaseUriPathController;
+            ProductArchiveUriPathController = productArchiveUriPathController;
         }
+
+        private readonly HttpListener _httpListener;
+        public IProductController ProductController { get; }
+        public IShowcaseController ShowcaseController { get; }
+        public IProductArchiveController ProductArchiveController { get; }
+        public IUriPathController ProductUrlPathController { get; }
+        public IUriPathController ShowcaseUriPathController { get; }
+        public IUriPathController ProductOnShowcaseUriPathController { get; }
+        public IUriPathController ProductArchiveUriPathController { get; }
 
         internal void Run()
         {
@@ -60,8 +64,8 @@ namespace Shop.ShopHttpServer
                             responce.StatusCode = (int)HttpStatusCode.OK;
                             break;
                         case "POST":
-                            responce.StatusCode = (int)HttpStatusCode.OK;
                             var productPostData = GetRequestDataBody<Product>(context);
+                            responce.StatusCode = (int)HttpStatusCode.OK;
                             productName = productPostData.Name;
                             productVolume = productPostData.Volume;
                             ProductController.CreateProduct(productName, productVolume);
@@ -71,8 +75,8 @@ namespace Shop.ShopHttpServer
                             Console.WriteLine(productPostData);
                             break;
                         case "PUT":
-                            responce.StatusCode = (int)HttpStatusCode.OK;
                             var productPutData = GetRequestDataBody<Product>(context);
+                            responce.StatusCode = (int)HttpStatusCode.OK;
                             productId = productPutData.IdInProductList;
                             productName = productPutData.Name;
                             productVolume = productPutData.Volume;
@@ -95,7 +99,6 @@ namespace Shop.ShopHttpServer
                             productId = int.Parse(request.Url.Segments.Last());
                             ProductController.DeleteProduct(productId);
                             responceBody = "Product is delete";
-                            //ProductController.DeleteUri($"/app/product/{productId}");
                             SetResponce(responceBody, context);
                             break;
                     }
@@ -113,8 +116,8 @@ namespace Shop.ShopHttpServer
                             responce.StatusCode = (int)HttpStatusCode.OK;
                             break;
                         case "POST":
-                            responce.StatusCode = (int)HttpStatusCode.OK;
                             var showcasePostData = GetRequestDataBody<Showcase>(context);
+                            responce.StatusCode = (int)HttpStatusCode.OK;
                             showcaseName = showcasePostData.Name;
                             showcaseVolume = showcasePostData.Volume;
                             ShowcaseController.CreateShowcase(showcaseName, showcaseVolume);
@@ -124,8 +127,8 @@ namespace Shop.ShopHttpServer
                             Console.WriteLine(showcasePostData);
                             break;
                         case "PUT":
-                            responce.StatusCode = (int)HttpStatusCode.OK;
                             var showcasePutData = GetRequestDataBody<Showcase>(context);
+                            responce.StatusCode = (int)HttpStatusCode.OK;
                             showcaseId = showcasePutData.Id;
                             showcaseName = showcasePutData.Name;
                             showcaseVolume = showcasePutData.Volume;
@@ -135,8 +138,8 @@ namespace Shop.ShopHttpServer
                             Console.WriteLine(showcasePutData);
                             break;
                         case "PATCH":
-                            responce.StatusCode = (int)HttpStatusCode.OK;
                             var showcasePatchData = GetRequestDataBody<HttpResponce>(context);
+                            responce.StatusCode = (int)HttpStatusCode.OK;
                             showcaseId = showcasePatchData.ShowcaseId;
                             productId = showcasePatchData.ProductId;
                             ShowcaseController.PlaceProductOnShowcase(productId, showcaseId);
@@ -170,8 +173,8 @@ namespace Shop.ShopHttpServer
                     switch (request.HttpMethod)
                     {
                         case "PUT": // edit prodduct on showcase
-                            responce.StatusCode = (int)HttpStatusCode.OK;
                             var productOnShowcasePutData = GetRequestDataBody<HttpResponce>(context);
+                            responce.StatusCode = (int)HttpStatusCode.OK;
                             showcaseId = productOnShowcasePutData.ShowcaseId;
                             productId = productOnShowcasePutData.ProductInShowcaseId;
                             productName = productOnShowcasePutData.ProductName;
@@ -196,6 +199,59 @@ namespace Shop.ShopHttpServer
                             showcaseId = int.Parse(stringPAth.TrimEnd('/'));
                             productId = int.Parse(request.Url.Segments.Last());
                             ShowcaseController.DeleteProductOnShowcase(showcaseId, productId);
+                            responceBody = "Product is delete";
+                            SetResponce(responceBody, context);
+                            break;
+                    }
+                }
+
+                //Archive http methods
+                if (path == ProductArchiveUriPathController.Path)
+                {
+                    switch (request.HttpMethod)
+                    {
+                        case "GET":
+                            var archiveProducts = ProductArchiveController.GetArchiveProducts();
+                            responceBody = JsonConvert.SerializeObject(archiveProducts, Formatting.Indented);
+                            SetResponce(responceBody, context);
+                            responce.StatusCode = (int)HttpStatusCode.OK;
+                            break;
+                        case "POST": //Archivate product
+                            var archivePostData = GetRequestDataBody<HttpResponce>(context);
+                            responce.StatusCode = (int)HttpStatusCode.OK;
+                            productId = archivePostData.ProductInShowcaseId;
+                            showcaseId = archivePostData.ShowcaseId;
+                            ProductArchiveController.ArchivateProduct(productId, showcaseId);
+                            responceBody = "Product is archivate";
+                            ProductArchiveUriPathController.AddUri(ProductArchiveUriPathController.Path + $"/{ProductArchiveController.GetArchiveProductCount()}");
+                            SetResponce(responceBody, context);
+                            Console.WriteLine(archivePostData);
+                            break;
+                        case "PATCH": // Unarchivate product
+                            var archivePatchData = GetRequestDataBody<HttpResponce>(context);
+                            responce.StatusCode = (int)HttpStatusCode.OK;
+                            productId = archivePatchData.ProductInArchiveId;
+                            ProductArchiveController.UnArchivateProduct(productId);
+                            responceBody = "Product is unarchivate";
+                            SetResponce(responceBody, context);
+                            Console.WriteLine(archivePatchData);
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+
+                //Delete product in archive
+                if (path == ProductArchiveUriPathController.FindUri(path))
+                {
+                    switch (request.HttpMethod)
+                    {
+                        case "DELETE":
+                            //string stringPAth = request.Url.Segments[3];
+                            //showcaseId = int.Parse(stringPAth.TrimEnd('/'));
+                            productId = int.Parse(request.Url.Segments.Last());
+                            ProductArchiveController.DeleteArchiveProduct(productId);
                             responceBody = "Product is delete";
                             SetResponce(responceBody, context);
                             break;

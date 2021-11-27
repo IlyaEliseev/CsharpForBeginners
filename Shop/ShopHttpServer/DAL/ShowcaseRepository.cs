@@ -6,12 +6,12 @@ namespace Shop.ShopHttpServer.DAL
 {
     public class ShowcaseRepository : IShowcaseRepository
     {
-        public ShopContext ShopContext { get; private set; }
-
         public ShowcaseRepository(ShopContext shopContext)
         {
             ShopContext = shopContext;
         }
+
+        public ShopContext ShopContext { get; private set; }
 
         public void Add(Showcase entity)
         {

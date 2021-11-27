@@ -9,10 +9,6 @@ namespace Shop.ShopHttpServer.Controllers
 {
     public class ShowcaseController : IShowcaseController
     {
-        public IUnitOfWork UnitOfWork { get; }
-        public IProductController ProductController { get; }
-        public NotifyService NotifyService { get; }
-        public CheckService CheckService { get; }
 
         public ShowcaseController(NotifyService notifyService, CheckService checkService, IProductController productController)
         {
@@ -21,6 +17,11 @@ namespace Shop.ShopHttpServer.Controllers
             ProductController = productController;
             UnitOfWork = new UnitOfWork();
         }
+
+        public IUnitOfWork UnitOfWork { get; }
+        public IProductController ProductController { get; }
+        public NotifyService NotifyService { get; }
+        public CheckService CheckService { get; }
 
         public void CreateShowcase(string showcaseName, double showcaseVolume)
         {

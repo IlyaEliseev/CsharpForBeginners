@@ -9,14 +9,14 @@ namespace Shop.ShopHttpClient.Controllers
 {
     public class ProductHttpController : IProductHttpController
     {
-        private readonly HttpClient _httpClient;
-        private readonly string _uri;
-
         public ProductHttpController(HttpClient httpClient, Uri baseUrl)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = baseUrl;
         }
+
+        private readonly HttpClient _httpClient;
+        private readonly string _productUri;
 
         public void CreateProduct(string productName, double productVolume)
         {
