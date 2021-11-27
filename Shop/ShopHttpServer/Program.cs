@@ -15,13 +15,13 @@ namespace Shop.ShopHttpServer
             IProductController productController = new ProductController(notifyService, checkService);
             IShowcaseController showcaseController = new ShowcaseController(notifyService, checkService, productController);
             IProductArchiveController productArchiveController = new ProductArchiveController(notifyService, showcaseController, checkService);
-            IUriPathController productUriPathController = new ProductUriPathController(productController);
-            IUriPathController showcasetUrlPathController = new ShowcaseUriPathController(showcaseController);
-            IUriPathController productOnShowcaseUriPathController = new ProductOnShowcaseUriPathController(showcaseController);
-            IUriPathController productArchiveUriPathController = new ProductArchiveUriPathController(productArchiveController);
+            IPathController productPathController = new ProductPathController(productController);
+            IPathController showcasetPathController = new ShowcasePathController(showcaseController);
+            IPathController productOnShowcasePathController = new ProductOnShowcasePathController();
+            IPathController productArchivePathController = new ProductArchivePathController(productArchiveController);
 
-            var shopServerApplication = new ShopServerApplication(httpListener, productController, showcaseController, productArchiveController, productUriPathController, 
-                                                                    showcasetUrlPathController, productOnShowcaseUriPathController, productArchiveUriPathController);
+            var shopServerApplication = new ShopServerApplication(httpListener, productController, showcaseController, productArchiveController, productPathController, 
+                                                                    showcasetPathController, productOnShowcasePathController, productArchivePathController);
             shopServerApplication.Run();
         }
     }

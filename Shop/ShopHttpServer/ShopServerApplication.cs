@@ -12,26 +12,26 @@ namespace Shop.ShopHttpServer
     internal class ShopServerApplication
     {
         public ShopServerApplication(HttpListener httpListener, IProductController productController, IShowcaseController showcaseController, IProductArchiveController productArchiveController,
-                                     IUriPathController productUrlPathController, IUriPathController showcaseUriPathController, IUriPathController productOnShowcaseUriPathController, IUriPathController productArchiveUriPathController)
+                                     IPathController productPathController, IPathController showcasePathController, IPathController productOnShowcasePathController, IPathController productArchivePathController)
         {
             _httpListener = httpListener;
             ProductController = productController;
             ShowcaseController = showcaseController;
             ProductArchiveController = productArchiveController;
-            ProductUrlPathController = productUrlPathController;
-            ShowcaseUriPathController = showcaseUriPathController;
-            ProductOnShowcaseUriPathController = productOnShowcaseUriPathController;
-            ProductArchiveUriPathController = productArchiveUriPathController;
+            ProductPathController = productPathController;
+            ShowcasePathController = showcasePathController;
+            ProductOnShowcasePathController = productOnShowcasePathController;
+            ProductArchivePathController = productArchivePathController;
         }
 
         private readonly HttpListener _httpListener;
         public IProductController ProductController { get; }
         public IShowcaseController ShowcaseController { get; }
         public IProductArchiveController ProductArchiveController { get; }
-        public IUriPathController ProductUrlPathController { get; }
-        public IUriPathController ShowcaseUriPathController { get; }
-        public IUriPathController ProductOnShowcaseUriPathController { get; }
-        public IUriPathController ProductArchiveUriPathController { get; }
+        public IPathController ProductPathController { get; }
+        public IPathController ShowcasePathController { get; }
+        public IPathController ProductOnShowcasePathController { get; }
+        public IPathController ProductArchivePathController { get; }
 
         internal void Run()
         {
@@ -53,7 +53,7 @@ namespace Shop.ShopHttpServer
                 var path = request.Url.PathAndQuery;
 
                 //Products http methods
-                if (path == ProductUrlPathController.Path)
+                if (path == ProductPathController.Path)
                 {
                     switch (request.HttpMethod)
                     {
@@ -70,7 +70,7 @@ namespace Shop.ShopHttpServer
                             productVolume = productPostData.Volume;
                             ProductController.CreateProduct(productName, productVolume);
                             responceBody = "Product is create";
-                            ProductUrlPathController.AddUri(ProductUrlPathController.Path + $"/{ProductController.GetProductCount()}");
+                            ProductPathController.AddPath(ProductPathController.Path + $"/{ProductController.GetProductCount()}");
                             SetResponce(responceBody, context);
                             Console.WriteLine(productPostData);
                             break;
@@ -91,7 +91,7 @@ namespace Shop.ShopHttpServer
                 }
                 
                 //Products http delete method
-                if (path == ProductUrlPathController.FindUri(path))
+                if (path == ProductPathController.FindPath(path))
                 {
                     switch (request.HttpMethod)
                     {
@@ -105,7 +105,7 @@ namespace Shop.ShopHttpServer
                 }
 
                 //Showcases http methods
-                if (path == ShowcaseUriPathController.Path)
+                if (path == ShowcasePathController.Path)
                 {
                     switch (request.HttpMethod)
                     {
@@ -121,7 +121,7 @@ namespace Shop.ShopHttpServer
                             showcaseName = showcasePostData.Name;
                             showcaseVolume = showcasePostData.Volume;
                             ShowcaseController.CreateShowcase(showcaseName, showcaseVolume);
-                            ShowcaseUriPathController.AddUri(ShowcaseUriPathController.Path + $"/{ShowcaseController.GetShowcaseCount()}");
+                            ShowcasePathController.AddPath(ShowcasePathController.Path + $"/{ShowcaseController.GetShowcaseCount()}");
                             responceBody = "Showcase is create";
                             SetResponce(responceBody, context);
                             Console.WriteLine(showcasePostData);
@@ -143,7 +143,7 @@ namespace Shop.ShopHttpServer
                             showcaseId = showcasePatchData.ShowcaseId;
                             productId = showcasePatchData.ProductId;
                             ShowcaseController.PlaceProductOnShowcase(productId, showcaseId);
-                            ProductOnShowcaseUriPathController.AddUri(ShowcaseUriPathController.Path + $"/{showcaseId}" + $"/product/{ShowcaseController.GetProductCountOnShowcase(showcaseId)}");
+                            ProductOnShowcasePathController.AddPath(ShowcasePathController.Path + $"/{showcaseId}" + $"/product/{ShowcaseController.GetProductCountOnShowcase(showcaseId)}");
                             responceBody = "Product place on showcase";
                             SetResponce(responceBody, context);
                             Console.WriteLine(showcasePatchData);
@@ -154,7 +154,7 @@ namespace Shop.ShopHttpServer
                 }
 
                 //Showcases http delete method
-                if (path == ShowcaseUriPathController.FindUri(path))
+                if (path == ShowcasePathController.FindPath(path))
                 {
                     switch (request.HttpMethod)
                     {
@@ -168,7 +168,7 @@ namespace Shop.ShopHttpServer
                 }
 
                 //Product on showcase http methods
-                if (path == ProductOnShowcaseUriPathController.Path)
+                if (path == ProductOnShowcasePathController.Path)
                 {
                     switch (request.HttpMethod)
                     {
@@ -190,7 +190,7 @@ namespace Shop.ShopHttpServer
                 }
 
                 //Product on showcase http delete method
-                if (path == ProductOnShowcaseUriPathController.FindUri(path))
+                if (path == ProductOnShowcasePathController.FindPath(path))
                 {
                     switch (request.HttpMethod)
                     {
@@ -206,7 +206,7 @@ namespace Shop.ShopHttpServer
                 }
 
                 //Archive http methods
-                if (path == ProductArchiveUriPathController.Path)
+                if (path == ProductArchivePathController.Path)
                 {
                     switch (request.HttpMethod)
                     {
@@ -223,7 +223,7 @@ namespace Shop.ShopHttpServer
                             showcaseId = archivePostData.ShowcaseId;
                             ProductArchiveController.ArchivateProduct(productId, showcaseId);
                             responceBody = "Product is archivate";
-                            ProductArchiveUriPathController.AddUri(ProductArchiveUriPathController.Path + $"/{ProductArchiveController.GetArchiveProductCount()}");
+                            ProductArchivePathController.AddPath(ProductArchivePathController.Path + $"/{ProductArchiveController.GetArchiveProductCount()}");
                             SetResponce(responceBody, context);
                             Console.WriteLine(archivePostData);
                             break;
@@ -243,7 +243,7 @@ namespace Shop.ShopHttpServer
                 }
 
                 //Delete product in archive
-                if (path == ProductArchiveUriPathController.FindUri(path))
+                if (path == ProductArchivePathController.FindPath(path))
                 {
                     switch (request.HttpMethod)
                     {
