@@ -11,15 +11,15 @@ namespace Shop.ShopHttpClient.Controllers
 {
     public class ShowcaseHttpController : IShowcaseHttpController
     {
-        private readonly HttpClient _httpClient;
-        private readonly string _showcaseUri; 
-        private readonly string _productOnShowcaseUri;
-
         public ShowcaseHttpController(HttpClient httpClient, Uri baseUrl)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = baseUrl;
         }
+
+        private readonly HttpClient _httpClient;
+        private readonly string _showcaseUri; 
+        private readonly string _productOnShowcaseUri;
 
         public void CreateShowcase(string nameShowcase, double volumeShowcase)
         {

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopHttpClient", "ShopHttpC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopHttpServer", "ShopHttpServer\ShopHttpServer.csproj", "{7818A496-4ACD-4BCA-9603-8B54EE3787AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopModels", "ShopModels\ShopModels.csproj", "{47B1B651-A6E5-4D08-9410-5D7B41FB3617}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopModels", "ShopModels\ShopModels.csproj", "{47B1B651-A6E5-4D08-9410-5D7B41FB3617}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
