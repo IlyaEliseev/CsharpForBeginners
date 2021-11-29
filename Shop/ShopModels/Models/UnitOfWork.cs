@@ -12,7 +12,7 @@ namespace Shop.ShopModels.Models
             {
                 if (_productOnShowcaseRepository == null)
                 {
-                    _productOnShowcaseRepository = new ProductOnShowcaseRepository(_context);
+                    _productOnShowcaseRepository = new ProductOnShowcaseRepository(_context.ProductOnShowcaseContext);
                 }
                 return _productOnShowcaseRepository;
             }

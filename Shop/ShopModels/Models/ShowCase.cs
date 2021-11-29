@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Shop.ShopModels.Models
 {
@@ -11,8 +10,8 @@ namespace Shop.ShopModels.Models
         public double VolumeCount { get; set; }
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToDelite { get; set; }
-        public UnitOfWork UnitOfWork { get; }
-        public List<Product> products;
+        public UnitOfWork UnitOfWork { get; set; }
+        
 
         public Showcase()
         {

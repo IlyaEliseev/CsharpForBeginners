@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Net.Http;
-using Shop.ShopModels.Models;
+//using Shop.ShopModels.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using Shop.ShopHttpServer.DAL;
 using System.Text;
+using Shop.ShopHttpServer.Models;
 
 namespace Shop.ShopHttpClient.Controllers
 {

@@ -16,7 +16,7 @@ namespace Shop.ShopHttpServer.DAL
             {
                 if (_productRepository==null)
                 {
-                    _productRepository = new ProductRepository(_context);
+                    _productRepository = new ProductRepository(_context.ProductContext);
                 }
                 return _productRepository;
             }
@@ -28,7 +28,7 @@ namespace Shop.ShopHttpServer.DAL
             {
                 if (_showcaseRepository == null)
                 {
-                    _showcaseRepository = new ShowcaseRepository(_context);
+                    _showcaseRepository = new ShowcaseRepository(_context.ShowcaseContext);
                 }
                 return _showcaseRepository;
             }
@@ -40,7 +40,7 @@ namespace Shop.ShopHttpServer.DAL
             {
                 if (_productOnShowcaseRepository == null)
                 {
-                    _productOnShowcaseRepository = new ProductOnShowcaseRepository(_context);
+                    _productOnShowcaseRepository = new ProductOnShowcaseRepository(_context.ProductOnShowcaseContext);
                 }
                 return _productOnShowcaseRepository;
             }
@@ -51,7 +51,7 @@ namespace Shop.ShopHttpServer.DAL
             {
                 if (_archiveRepository == null)
                 {
-                    _archiveRepository = new ArchiveRepository(_context); ;
+                    _archiveRepository = new ArchiveRepository(_context.ArchiveContext); 
                 }
                 return _archiveRepository;
             }

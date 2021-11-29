@@ -6,36 +6,36 @@ namespace Shop.ShopHttpServer.DAL
 {
     public class ProductRepository : IProductRepository
     {
-        public ProductRepository(ShopContext shopContext) 
+        public ProductRepository(List<Product> productContext) 
         {
-            ShopContext = shopContext;
+            Context = productContext;
         }
 
-        public ShopContext ShopContext { get; private set; }
+        public List<Product> Context { get; private set; }
 
         public IEnumerable<Product> GetAll()
         {
-            return ShopContext.ProductContext.ToList();
+            return Context.ToList();
         }
 
         public Product GetById(int id)
         {
-            return ShopContext.ProductContext.SingleOrDefault(x => x.IdInProductList == id);
+            return Context.SingleOrDefault(x => x.IdInProductList == id);
         }
 
         public void Add(Product entity)
         {
-            ShopContext.ProductContext.Add(entity);
+            Context.Add(entity);
         }
 
         public void DeleteById(int id)
         {
-            ShopContext.ProductContext.RemoveAll(x => x.IdInProductList == id);
+            Context.RemoveAll(x => x.IdInProductList == id);
         }
 
         public int GetCount()
         {
-            return ShopContext.ProductContext.Count;
+            return Context.Count;
         }
     }
 }
