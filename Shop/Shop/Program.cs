@@ -13,8 +13,9 @@ namespace Shop
             IProductController productController = new ProductController(notifyService, checkService);
             IShowcaseController showcaseController = new ShowcaseController(notifyService, checkService, productController);
             IProductArchiveController productArchiveController = new ProductArchiveController(notifyService, showcaseController, checkService);
-
-            var shopApplication = new ShopApplication(productController, notifyService, checkService, showcaseController, productArchiveController);
+            FilesController filesController = new FilesController();
+            filesController.ReadFromFile(productController, showcaseController, productArchiveController);
+            var shopApplication = new ShopApplication(productController, notifyService, checkService, showcaseController, productArchiveController, filesController);
             shopApplication.Run();
         }
     }

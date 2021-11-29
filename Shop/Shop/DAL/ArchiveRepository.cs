@@ -6,36 +6,36 @@ namespace Shop.DAL
 {
     public class ArchiveRepository : IArchiveRepository
     {
-        public ShopContext ShopContext { get; private set; }
-
-        public ArchiveRepository(ShopContext shopContext)
+        public ArchiveRepository(List<Product> archiveContext)
         {
-            ShopContext = shopContext;
+            Context = archiveContext;
         }
+
+        public List<Product> Context { get; private set; }
 
         public IEnumerable<Product> GetAll()
         {
-            return ShopContext.ArchiveContext.ToList();
+            return Context.ToList();
         }
 
         public Product GetById(int id)
         {
-            return ShopContext.ArchiveContext.SingleOrDefault(x => x.IdInArchive == id);
+            return Context.SingleOrDefault(x => x.IdInArchive == id);
         }
 
         public void Add(Product entity)
         {
-            ShopContext.ArchiveContext.Add(entity);
+            Context.Add(entity);
         }
 
         public void DeleteById(int id)
         {
-            ShopContext.ArchiveContext.RemoveAll(x => x.IdInArchive == id);
+            Context.RemoveAll(x => x.IdInArchive == id);
         }
 
         public int GetCount()
         {
-            return ShopContext.ArchiveContext.Count;
+            return Context.Count;
         }
     }
 }

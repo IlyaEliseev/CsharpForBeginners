@@ -1,0 +1,22 @@
+[
+  {
+    "IdInProductList": 1,
+    "IdInShowcase": 0,
+    "IdInArchive": 0,
+    "IdShowcase": 0,
+    "Name": "11",
+    "Volume": 11.0,
+    "TimeToCreate": "2021-11-29T23:14:00.2572973+03:00",
+    "TimeToArchive": "0001-01-01T00:00:00"
+  },
+  {
+    "IdInProductList": 2,
+    "IdInShowcase": 0,
+    "IdInArchive": 0,
+    "IdShowcase": 0,
+    "Name": "22",
+    "Volume": 22.0,
+    "TimeToCreate": "2021-11-29T23:14:02.3447642+03:00",
+    "TimeToArchive": "0001-01-01T00:00:00"
+  }
+]

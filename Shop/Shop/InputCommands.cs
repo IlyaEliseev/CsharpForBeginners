@@ -18,6 +18,7 @@ namespace Shop
         ArchivateProduct,
         UnArchivateProduct,
         DeleteArchiveProduct,
-        GetArchiveInformation
+        GetArchiveInformation,
+        SaveDataToFile
     }
 }

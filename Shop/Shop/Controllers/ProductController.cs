@@ -3,15 +3,12 @@ using Shop.Services;
 using Shop.DAL;
 using Shop.Models;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Shop.Controllers
 {
     public class ProductController : IProductController
     {
-        public IUnitOfWork UnitOfWork { get; }
-        public NotifyService NotifyService { get; }
-        public CheckService CheckService { get; }
-
         public ProductController()
         {
             
@@ -23,6 +20,10 @@ namespace Shop.Controllers
             CheckService = checkService;
             UnitOfWork = new UnitOfWork();
         }
+
+        public IUnitOfWork UnitOfWork { get; }
+        public NotifyService NotifyService { get; }
+        public CheckService CheckService { get; }
 
         public bool CreateProduct(string productName, double productVolume)
         {
@@ -103,6 +104,16 @@ namespace Shop.Controllers
         public int GetProductCount()
         {
             return UnitOfWork.ProductRepository.GetCount();
+        }
+
+        public IEnumerable<Product> GetProducts()
+        {
+            return UnitOfWork.ProductRepository.GetAll();
+        }
+
+        public void AddDataFromFile(Product product)
+        {
+            UnitOfWork.ProductRepository.Add(product);
         }
     }
 }

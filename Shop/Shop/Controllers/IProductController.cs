@@ -1,4 +1,5 @@
 ﻿using Shop.Models;
+using System.Collections.Generic;
 
 namespace Shop.Controllers
 {
@@ -11,5 +12,7 @@ namespace Shop.Controllers
         bool CheckProductAvailability();
         Product GetProduct(int id);
         int GetProductCount();
+        IEnumerable<Product> GetProducts();
+        void AddDataFromFile(Product product);
     }
 }

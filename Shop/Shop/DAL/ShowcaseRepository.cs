@@ -6,36 +6,36 @@ namespace Shop.DAL
 {
     public class ShowcaseRepository : IShowcaseRepository
     {
-        public ShopContext ShopContext { get; private set; }
-
-        public ShowcaseRepository(ShopContext shopContext)
+        public ShowcaseRepository(List<Showcase> shopContext)
         {
-            ShopContext = shopContext;
+            Context = shopContext;
         }
+
+        public List<Showcase> Context { get; private set; }
 
         public void Add(Showcase entity)
         {
-            ShopContext.ShowcaseContext.Add(entity); 
+            Context.Add(entity); 
         }
 
         public IEnumerable<Showcase> GetAll()
         {
-            return ShopContext.ShowcaseContext.ToList();
+            return Context.ToList();
         }
 
         public Showcase GetById(int id)
         {
-            return ShopContext.ShowcaseContext.SingleOrDefault(x => x.Id == id);
+            return Context.SingleOrDefault(x => x.Id == id);
         }
 
         public int GetCount()
         {
-            return ShopContext.ShowcaseContext.Count;
+            return Context.Count;
         }
 
         public void DeleteById(int id)
         {
-            ShopContext.ShowcaseContext.RemoveAll((x => x.Id == id));
+            Context.RemoveAll((x => x.Id == id));
         }
     }
 }

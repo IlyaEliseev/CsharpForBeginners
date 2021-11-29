@@ -2,17 +2,13 @@
 using Shop.Models;
 using Shop.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Shop.Controllers 
 {
     public class ShowcaseController : IShowcaseController
     {
-        public IUnitOfWork UnitOfWork { get; }
-        public IProductController ProductController { get; }
-        public NotifyService NotifyService { get; }
-        public CheckService CheckService { get; }
-
         public ShowcaseController(NotifyService notifyService, CheckService checkService, IProductController productController)
         {
             NotifyService = notifyService;
@@ -21,9 +17,19 @@ namespace Shop.Controllers
             UnitOfWork = new UnitOfWork();
         }
 
+        public IUnitOfWork UnitOfWork { get; }
+        public IProductController ProductController { get; }
+        public NotifyService NotifyService { get; }
+        public CheckService CheckService { get; }
+
         public void CreateShowcase(string showcaseName, double showcaseVolume)
         {
-            Showcase showcase = new Showcase(showcaseName, showcaseVolume);
+            Showcase showcase = new Showcase()
+            {
+                Name = showcaseName,
+                Volume = showcaseVolume
+            };
+            
             UnitOfWork.ShowcaseRepository.Add(showcase);
             showcase.Id = UnitOfWork.ShowcaseRepository.GetCount();
             NotifyService.RaiseCreateShowcaseIsDone();
@@ -256,5 +262,15 @@ namespace Shop.Controllers
             int count = selectShowcase.UnitOfWork.ProductOnShowcaseRepository.GetCount();
             return count;
         }
-    }
+
+        public IEnumerable<Showcase> GetShowcases()
+        {
+            return UnitOfWork.ShowcaseRepository.GetAll();
+        }
+
+        public void AddDataFromFile(Showcase showcase)
+        {
+            UnitOfWork.ShowcaseRepository.Add(showcase);
+        } 
+    }   
 }

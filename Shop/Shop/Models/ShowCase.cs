@@ -1,7 +1,7 @@
-﻿using Shop.ShopHttpServer.DAL;
+﻿using Shop.DAL;
 using System;
 
-namespace Shop.ShopModel.Models
+namespace Shop.Models
 {
     public class Showcase 
     {
@@ -15,7 +15,8 @@ namespace Shop.ShopModel.Models
         
         public Showcase()
         {
-            
+            UnitOfWork = new UnitOfWork();
+            TimeToCreate = DateTime.Now;
         }
 
         public Showcase(string name, double volume)

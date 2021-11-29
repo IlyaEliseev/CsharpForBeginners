@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Shop.Controllers;
 using Shop.Services;
 
@@ -11,15 +12,17 @@ namespace Shop
         public IProductArchiveController ProductArchiveController { get; }
         public NotifyService NotifyService { get; }
         public CheckService CheckService { get; }
+        public FilesController FilesController { get; }
 
         public ShopApplication(IProductController productController, NotifyService notifyService, CheckService checkService, 
-                               IShowcaseController showcaseController, IProductArchiveController productArchiveController)
+                               IShowcaseController showcaseController, IProductArchiveController productArchiveController, FilesController filesController)
         {
             ProductController = productController;
             ProductArchiveController = productArchiveController;
             NotifyService = notifyService;
             CheckService = checkService;
             ShowcaseController = showcaseController;
+            FilesController = filesController;
 
             notifyService.CreateShowcaseIsDone += Messages.ShowcaseIsCreate;
             notifyService.CreateProductIsDone += Messages.ProductIsCreate;
@@ -156,6 +159,11 @@ namespace Shop
                         ProductArchiveController.GetArchiveInformation();
                     }
 
+                    if (command == (int)InputCommands.SaveDataToFile)
+                    {
+                        FilesController.WriteToFile(ProductController, ShowcaseController, ProductArchiveController);
+                    }
+
                     if (command == (int)InputCommands.EXITApplication)
                     {
                         isContinue = false;
@@ -215,6 +223,7 @@ namespace Shop
             Console.WriteLine($"Press [{(int)InputCommands.UnArchivateProduct}] to UNARCHIVATE product");
             Console.WriteLine($"Press [{(int)InputCommands.DeleteArchiveProduct}] to DELETE archive product");
             Console.WriteLine($"Press [{(int)InputCommands.GetArchiveInformation}] to GET archive information");
+            Console.WriteLine($"Press [{(int)InputCommands.SaveDataToFile}] to save data in file");
             Console.WriteLine();
             Console.WriteLine($"Press [{(int)InputCommands.EXITApplication}] to EXIT the application");
             Console.WriteLine();

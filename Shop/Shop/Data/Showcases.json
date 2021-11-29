@@ -1,0 +1,57 @@
+[
+  {
+    "Id": 1,
+    "Name": "111",
+    "Volume": 111.0,
+    "VolumeCount": 0.0,
+    "TimeToCreate": "2021-11-29T22:54:56.1747158+03:00",
+    "TimeToDelite": "0001-01-01T00:00:00",
+    "UnitOfWork": {
+      "ProductRepository": {
+        "Context": []
+      },
+      "ShowcaseRepository": {
+        "Context": []
+      },
+      "ProductOnShowcaseRepository": {
+        "Context": [
+          {
+            "IdInProductList": 1,
+            "IdInShowcase": 1,
+            "IdInArchive": 1,
+            "IdShowcase": 1,
+            "Name": "1",
+            "Volume": 1.0,
+            "TimeToCreate": "2021-11-29T22:55:03.9658342+03:00",
+            "TimeToArchive": "2021-11-29T23:14:12.5618194+03:00"
+          }
+        ]
+      },
+      "ArchiveRepository": {
+        "Context": []
+      }
+    }
+  },
+  {
+    "Id": 2,
+    "Name": "11",
+    "Volume": 11.0,
+    "VolumeCount": 0.0,
+    "TimeToCreate": "2021-11-29T23:14:43.7277979+03:00",
+    "TimeToDelite": "0001-01-01T00:00:00",
+    "UnitOfWork": {
+      "ProductRepository": {
+        "Context": []
+      },
+      "ShowcaseRepository": {
+        "Context": []
+      },
+      "ProductOnShowcaseRepository": {
+        "Context": []
+      },
+      "ArchiveRepository": {
+        "Context": []
+      }
+    }
+  }
+]

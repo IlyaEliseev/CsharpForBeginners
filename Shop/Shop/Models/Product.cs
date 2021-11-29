@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Shop.Models
-{
+{   
     public class Product 
     {
         public int IdInProductList { get; set; }

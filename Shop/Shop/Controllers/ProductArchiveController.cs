@@ -1,17 +1,14 @@
 ﻿using Shop.DAL;
+using Shop.Models;
 using Shop.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Shop.Controllers
 {
     public class ProductArchiveController : IProductArchiveController
     {
-        public NotifyService NotifyService { get; }
-        public IShowcaseController ShowcaseController { get; }
-        public CheckService CheckService { get; }
-        public IUnitOfWork UnitOfWork { get; }
-
         public ProductArchiveController(NotifyService notifyService, IShowcaseController showcaseController, CheckService checkService)
         {
             NotifyService = notifyService;
@@ -19,6 +16,10 @@ namespace Shop.Controllers
             CheckService = checkService;
             UnitOfWork = new UnitOfWork();
         }
+        public NotifyService NotifyService { get; }
+        public IShowcaseController ShowcaseController { get; }
+        public CheckService CheckService { get; }
+        public IUnitOfWork UnitOfWork { get; }
 
         public void ArchivateProduct(int productId, int showcaseId)
         {
@@ -93,6 +94,11 @@ namespace Shop.Controllers
             return UnitOfWork.ArchiveRepository.GetCount();
         }
 
+        public IEnumerable<Product> GetArchiveProducts()
+        {
+            return UnitOfWork.ArchiveRepository.GetAll(); 
+        }
+
         public void UnArchivateProduct(int productId)
         {
             if (CheckArchiveAvailability() && GetArchiveProductCount() >= productId)
@@ -114,6 +120,11 @@ namespace Shop.Controllers
             {
                 NotifyService.RaiseSearchProductIdIsNotSuccessful();
             }
+        }
+
+        public void AddDataFromFile(Product archiveProduct)
+        {
+            UnitOfWork.ArchiveRepository.Add(archiveProduct);
         }
     }
 }
