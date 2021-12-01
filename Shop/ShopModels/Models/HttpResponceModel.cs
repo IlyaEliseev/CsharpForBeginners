@@ -1,7 +1,6 @@
-﻿
-namespace Shop.ShopModels.Models
+﻿namespace Shop.ShopModels.Models
 {
-    public class HttpResponce
+    public class HttpResponceModel
     {
         public int ProductId { get; set; }
         public int ShowcaseId { get; set; }

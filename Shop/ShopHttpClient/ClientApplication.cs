@@ -7,20 +7,18 @@ namespace Shop.ShopHttpClient
 {
     public class ClientApplication
     {
-        public ClientApplication(IProductHttpController productHttpController, IProductArchiveHttpController productArchiveHttpController, IShowcaseHttpController showcaseHttpController,
-                                 NotifyService notifyService, CheckService checkService)
+        public ClientApplication(IProductHttpRequestController productHttpController, IProductArchiveHttpRequestController productArchiveHttpController, IShowcaseHttpRequestController showcaseHttpController,
+                                  CheckService checkService)
         {
             ProductHttpController = productHttpController;
             ProductArchiveHttpController = productArchiveHttpController;
             ShowcaseHttpController = showcaseHttpController;
-            NotifyService = notifyService;
             CheckService = checkService;
         }
 
-        public IProductHttpController ProductHttpController { get; }
-        public IProductArchiveHttpController ProductArchiveHttpController { get; }
-        public IShowcaseHttpController ShowcaseHttpController { get; }
-        public NotifyService NotifyService { get; }
+        public IProductHttpRequestController ProductHttpController { get; }
+        public IProductArchiveHttpRequestController ProductArchiveHttpController { get; }
+        public IShowcaseHttpRequestController ShowcaseHttpController { get; }
         public CheckService CheckService { get; }
 
         public void Run()

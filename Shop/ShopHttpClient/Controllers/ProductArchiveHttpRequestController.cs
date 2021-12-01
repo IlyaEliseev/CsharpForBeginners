@@ -6,20 +6,20 @@ using Shop.ShopModels.Models;
 
 namespace Shop.ShopHttpClient.Controllers
 {
-    public class ProductArchiveHttpController : IProductArchiveHttpController
+    public class ProductArchiveHttpRequestController : IProductArchiveHttpRequestController
     {
-        public ProductArchiveHttpController(HttpClient httpClient, Uri baseUrl)
+        public ProductArchiveHttpRequestController(HttpClient httpClient, Uri baseUrl)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = baseUrl;
         }
 
         private readonly HttpClient _httpClient;
-        private readonly string _productArchiveUri = "http://localhost:44987/app/archiveProduct";
+        private readonly string _productArchivePath = "app/archiveProduct";
 
         public void ArchivateProduct(int productId, int showcaseId)
         {
-            var newResponce = new HttpResponce()
+            var newResponce = new HttpResponceModel()
             {
                 ProductInShowcaseId = productId,
                 ShowcaseId = showcaseId
@@ -27,29 +27,29 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.PostAsync(_productArchiveUri, stringResponce).Result;
+            var responce = _httpClient.PostAsync(_productArchivePath, stringResponce).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }
 
         public void DeleteArchiveProduct(int productId)
         {
-            var newResponce = new HttpResponce()
+            var newResponce = new HttpResponceModel()
             {
                 ProductInArchiveId = productId
             };
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var sreingResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.DeleteAsync(_productArchiveUri + $"/{productId}").Result;
+            var responce = _httpClient.DeleteAsync(_productArchivePath + $"/{productId}").Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }
 
         public void GetArchiveInformation()
         {
-            var responce = _httpClient.GetAsync(_productArchiveUri).Result;
+            var responce = _httpClient.GetAsync(_productArchivePath).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
-            var archiveProducts = JsonConvert.DeserializeObject<List<Product>>(content);
+            var archiveProducts = JsonConvert.DeserializeObject<List<ProductModel>>(content);
 
             foreach (var product in archiveProducts)
             {
@@ -59,14 +59,14 @@ namespace Shop.ShopHttpClient.Controllers
 
         public void UnArchivateProduct(int productId)
         {
-            var newResponce = new HttpResponce()
+            var newResponce = new HttpResponceModel()
             {
                 ProductInArchiveId = productId,
             };
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.PatchAsync(_productArchiveUri, stringResponce).Result;
+            var responce = _httpClient.PatchAsync(_productArchivePath, stringResponce).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }

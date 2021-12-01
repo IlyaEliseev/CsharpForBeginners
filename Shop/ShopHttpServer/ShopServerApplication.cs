@@ -6,6 +6,8 @@ using System.Net;
 using System.Text;
 using Shop.ShopHttpServer.Controllers;
 using System.Linq;
+using Shop.ShopModels.Models;
+using Shop.ShopHttpServer.HttpResponceControllers;
 
 namespace Shop.ShopHttpServer
 {
@@ -22,12 +24,14 @@ namespace Shop.ShopHttpServer
             ShowcasePathController = showcasePathController;
             ProductOnShowcasePathController = productOnShowcasePathController;
             ProductArchivePathController = productArchivePathController;
+            ProductHttpController = new ProductHttpController(productController, new StreamDataController(), productPathController);
         }
 
         private readonly HttpListener _httpListener;
         public IProductController ProductController { get; }
         public IShowcaseController ShowcaseController { get; }
         public IProductArchiveController ProductArchiveController { get; }
+        public ProductHttpController ProductHttpController { get; set; }
         public IPathController ProductPathController { get; }
         public IPathController ShowcasePathController { get; }
         public IPathController ProductOnShowcasePathController { get; }
@@ -52,57 +56,7 @@ namespace Shop.ShopHttpServer
                 double showcaseVolume;
                 var path = request.Url.PathAndQuery;
 
-                //Products http methods
-                if (path == ProductPathController.Path)
-                {
-                    switch (request.HttpMethod)
-                    {
-                        case "GET":
-                            var products = ProductController.GetProducts();
-                            responceBody = JsonConvert.SerializeObject(products, Formatting.Indented);
-                            SetResponce(responceBody, context);
-                            responce.StatusCode = (int)HttpStatusCode.OK;
-                            break;
-                        case "POST":
-                            var productPostData = GetRequestDataBody<Product>(context);
-                            responce.StatusCode = (int)HttpStatusCode.OK;
-                            productName = productPostData.Name;
-                            productVolume = productPostData.Volume;
-                            ProductController.CreateProduct(productName, productVolume);
-                            responceBody = "Product is create";
-                            ProductPathController.AddPath(ProductPathController.Path + $"/{ProductController.GetProductCount()}");
-                            SetResponce(responceBody, context);
-                            Console.WriteLine(productPostData);
-                            break;
-                        case "PUT":
-                            var productPutData = GetRequestDataBody<Product>(context);
-                            responce.StatusCode = (int)HttpStatusCode.OK;
-                            productId = productPutData.IdInProductList;
-                            productName = productPutData.Name;
-                            productVolume = productPutData.Volume;
-                            ProductController.EditProduct(productId, productName, productVolume);
-                            responceBody = "Product is edit";
-                            SetResponce(responceBody, context);
-                            Console.WriteLine(productPutData);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                
-                //Products http delete method
-                if (path == ProductPathController.FindPath(path))
-                {
-                    switch (request.HttpMethod)
-                    {
-                        case "DELETE":
-                            productId = int.Parse(request.Url.Segments.Last());
-                            ProductController.DeleteProduct(productId);
-                            responceBody = "Product is delete";
-                            SetResponce(responceBody, context);
-                            break;
-                    }
-                }
+                ProductHttpController.StartController(context, path);
 
                 //Showcases http methods
                 if (path == ShowcasePathController.Path)
@@ -138,7 +92,7 @@ namespace Shop.ShopHttpServer
                             Console.WriteLine(showcasePutData);
                             break;
                         case "PATCH":
-                            var showcasePatchData = GetRequestDataBody<HttpResponce>(context);
+                            var showcasePatchData = GetRequestDataBody<HttpResponceModel>(context);
                             responce.StatusCode = (int)HttpStatusCode.OK;
                             showcaseId = showcasePatchData.ShowcaseId;
                             productId = showcasePatchData.ProductId;
@@ -173,7 +127,7 @@ namespace Shop.ShopHttpServer
                     switch (request.HttpMethod)
                     {
                         case "PUT": // edit prodduct on showcase
-                            var productOnShowcasePutData = GetRequestDataBody<HttpResponce>(context);
+                            var productOnShowcasePutData = GetRequestDataBody<HttpResponceModel>(context);
                             responce.StatusCode = (int)HttpStatusCode.OK;
                             showcaseId = productOnShowcasePutData.ShowcaseId;
                             productId = productOnShowcasePutData.ProductInShowcaseId;
@@ -217,7 +171,7 @@ namespace Shop.ShopHttpServer
                             responce.StatusCode = (int)HttpStatusCode.OK;
                             break;
                         case "POST": //Archivate product
-                            var archivePostData = GetRequestDataBody<HttpResponce>(context);
+                            var archivePostData = GetRequestDataBody<HttpResponceModel>(context);
                             responce.StatusCode = (int)HttpStatusCode.OK;
                             productId = archivePostData.ProductInShowcaseId;
                             showcaseId = archivePostData.ShowcaseId;
@@ -228,7 +182,7 @@ namespace Shop.ShopHttpServer
                             Console.WriteLine(archivePostData);
                             break;
                         case "PATCH": // Unarchivate product
-                            var archivePatchData = GetRequestDataBody<HttpResponce>(context);
+                            var archivePatchData = GetRequestDataBody<HttpResponceModel>(context);
                             responce.StatusCode = (int)HttpStatusCode.OK;
                             productId = archivePatchData.ProductInArchiveId;
                             ProductArchiveController.UnArchivateProduct(productId);

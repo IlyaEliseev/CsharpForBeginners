@@ -1,7 +1,6 @@
-﻿
-namespace Shop.ShopHttpClient.Controllers
+﻿namespace Shop.ShopHttpClient.Controllers
 {
-    public interface IProductArchiveHttpController
+    public interface IProductArchiveHttpRequestController
     {
         void ArchivateProduct(int productId, int showcaseId);
         void GetArchiveInformation();

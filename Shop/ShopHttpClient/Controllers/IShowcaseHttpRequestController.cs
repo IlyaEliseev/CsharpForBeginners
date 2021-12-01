@@ -1,6 +1,6 @@
 ﻿namespace Shop.ShopHttpClient.Controllers
 {
-    public interface IShowcaseHttpController
+    public interface IShowcaseHttpRequestController
     {
         void CreateShowcase(string nameShowcase, double volumeShowcase);
         void DeleteShowcase(int showcaseId);

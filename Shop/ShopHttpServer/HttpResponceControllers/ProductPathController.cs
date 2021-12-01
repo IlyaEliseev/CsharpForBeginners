@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Shop.ShopHttpServer.Controllers;
+using System.Collections.Generic;
 
-namespace Shop.ShopHttpServer.Controllers
+namespace Shop.ShopHttpServer.HttpResponceControllers
 {
     public class ProductPathController : IPathController
     {

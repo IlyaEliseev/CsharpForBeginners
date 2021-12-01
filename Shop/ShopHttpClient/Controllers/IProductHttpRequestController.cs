@@ -1,7 +1,6 @@
-﻿
-namespace Shop.ShopHttpClient.Controllers
+﻿namespace Shop.ShopHttpClient.Controllers
 {
-    public interface IProductHttpController
+    public interface IProductHttpRequestController
     {
         void CreateProduct(string productName, double productVolume);
         void EditProduct(int productId, string productName, double productVolume);

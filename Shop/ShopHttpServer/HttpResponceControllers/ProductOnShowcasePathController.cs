@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Shop.ShopHttpServer.Controllers
+namespace Shop.ShopHttpServer.HttpResponceControllers
 {
     public class ProductOnShowcasePathController : IPathController
     {

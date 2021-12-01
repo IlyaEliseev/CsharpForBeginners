@@ -7,20 +7,20 @@ using System.Collections.Generic;
 
 namespace Shop.ShopHttpClient.Controllers
 {
-    public class ProductHttpController : IProductHttpController
+    public class ProductHttpRequestController : IProductHttpRequestController
     {
-        public ProductHttpController(HttpClient httpClient, Uri baseUrl)
+        public ProductHttpRequestController(HttpClient httpClient, Uri baseUrl)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = baseUrl;
         }
 
         private readonly HttpClient _httpClient;
-        private readonly string _productUri;
+        private readonly string _productPath = "app/product";
 
         public void CreateProduct(string productName, double productVolume)
         {
-            var newProduct = new Product()
+            var newProduct = new ProductModel()
             {
                 Name = productName,
                 Volume = productVolume
@@ -28,26 +28,21 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonContent = JsonConvert.SerializeObject(newProduct);
             var stringContent = new StringContent(jsonContent, Encoding.UTF8, "aplication/json");
-            var responce = _httpClient.PostAsync("app/product", stringContent).Result;
+            var responce = _httpClient.PostAsync(_productPath, stringContent).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }
 
         public void DeleteProduct(int productId)
         {
-            var httpResponce = new HttpResponce()
-            {
-                ProductId = productId
-            };
-
-            var responce = _httpClient.DeleteAsync($"app/product/{productId}").Result;
+            var responce = _httpClient.DeleteAsync(_productPath + $"/{productId}").Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }
 
         public void EditProduct(int productId, string productName, double productVolume)
         {
-            var newProduct = new Product()
+            var newProduct = new ProductModel()
             {
                 IdInProductList = productId,
                 Name = productName,
@@ -56,16 +51,16 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonContent = JsonConvert.SerializeObject(newProduct);
             var stringContent = new StringContent(jsonContent, Encoding.UTF8, "aplication/json");
-            var responce = _httpClient.PutAsync("app/product", stringContent).Result;
+            var responce = _httpClient.PutAsync(_productPath, stringContent).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }
 
         public void GetProductInformation()
         {
-            var responce = _httpClient.GetAsync("app/product").Result;
+            var responce = _httpClient.GetAsync(_productPath).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
-            var products = JsonConvert.DeserializeObject<List<Product>>(content);
+            var products = JsonConvert.DeserializeObject<List<ProductModel>>(content);
 
             foreach (var product in products)
             {

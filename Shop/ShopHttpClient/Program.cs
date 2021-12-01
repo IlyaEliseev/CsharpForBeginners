@@ -12,12 +12,11 @@ namespace Shop.ShopHttpClient
             var httpclient = new HttpClient();
             var baseUri = new Uri("http://localhost:44987");
             var checkService = new CheckService();
-            var notifyService = new NotifyService();
-            var productHttpController = new ProductHttpController(httpclient, baseUri);
-            var showcaseHttpController = new ShowcaseHttpController(httpclient, baseUri);
-            var productArchiveHttpController = new ProductArchiveHttpController(httpclient, baseUri);
+            var productHttpController = new ProductHttpRequestController(httpclient, baseUri);
+            var showcaseHttpController = new ShowcaseHttpRequestController(httpclient, baseUri);
+            var productArchiveHttpController = new ProductArchiveHttpRequestController(httpclient, baseUri);
             var clientApplication = new ClientApplication(productHttpController, productArchiveHttpController, showcaseHttpController,
-                                                            notifyService, checkService);
+                                                             checkService);
             clientApplication.Run();
         }
     }

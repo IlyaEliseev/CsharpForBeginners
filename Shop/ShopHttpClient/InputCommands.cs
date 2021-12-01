@@ -1,5 +1,4 @@
-﻿
-namespace Shop.ShopHttpClient
+﻿namespace Shop.ShopHttpClient
 {
     public enum InputCommands
     {

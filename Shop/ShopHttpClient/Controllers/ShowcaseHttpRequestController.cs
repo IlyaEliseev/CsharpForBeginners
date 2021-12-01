@@ -1,26 +1,24 @@
 ﻿using System;
 using System.Net.Http;
-//using Shop.ShopModels.Models;
+using Shop.ShopModels.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using Shop.ShopHttpServer.DAL;
 using System.Text;
 using Shop.ShopHttpServer.Models;
 
 namespace Shop.ShopHttpClient.Controllers
 {
-    public class ShowcaseHttpController : IShowcaseHttpController
+    public class ShowcaseHttpRequestController : IShowcaseHttpRequestController
     {
-        public ShowcaseHttpController(HttpClient httpClient, Uri baseUrl)
+        public ShowcaseHttpRequestController(HttpClient httpClient, Uri baseUrl)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = baseUrl;
         }
 
         private readonly HttpClient _httpClient;
-        private readonly string _showcaseUri; 
-        private readonly string _productOnShowcaseUri;
+        private readonly string _showcasPath = "app/showcase"; 
+        private readonly string _productOnShowcasePath = "app/showcase/product";
 
         public void CreateShowcase(string nameShowcase, double volumeShowcase)
         {
@@ -31,22 +29,14 @@ namespace Shop.ShopHttpClient.Controllers
             };
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
-            var stringResponce = new StringContent(jsonResponce, Encoding.UTF8, "application/string");
-            var responce = _httpClient.PostAsync("app/showcase", stringResponce).Result;
+            var stringResponce = new StringContent(jsonResponce, Encoding.UTF8, "application/json");
+            var responce = _httpClient.PostAsync(_showcasPath, stringResponce).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }
 
         public void DeleteProductOnShowcase(int showcaseId, int productId)
         {
-            var newResponce = new HttpResponce()
-            {
-                ShowcaseId = showcaseId,
-                ProductInShowcaseId = productId
-            };
-
-            var jsonResponce = JsonConvert.SerializeObject(newResponce);
-            var stringResponce = new StringContent(jsonResponce);
             var responce = _httpClient.DeleteAsync($"app/showcase/{showcaseId}/product/{productId}").Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
@@ -54,21 +44,14 @@ namespace Shop.ShopHttpClient.Controllers
 
         public void DeleteShowcase(int showcaseId)
         {
-            var newResponce = new HttpResponce()
-            {
-                ShowcaseId = showcaseId
-            };
-
-            var jsonResponce = JsonConvert.SerializeObject(newResponce);
-            var stringResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.DeleteAsync($"app/showcase/{showcaseId}").Result;
+            var responce = _httpClient.DeleteAsync(_showcasPath + $"/{showcaseId}").Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }
 
         public void EditeProductOnShowcase(int productId, int showcaseId, string productName, double productVolume)
         {
-            var newResponce = new HttpResponce()
+            var newResponce = new HttpResponceModel()
             {
                 ProductInShowcaseId = productId,
                 ShowcaseId = showcaseId,
@@ -78,7 +61,7 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.PutAsync("app/showcase/product", stringResponce).Result;
+            var responce = _httpClient.PutAsync(_productOnShowcasePath, stringResponce).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }
@@ -94,14 +77,14 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var responce = _httpClient.PutAsync("app/showcase", stringResponce).Result;
+            var responce = _httpClient.PutAsync(_showcasPath, stringResponce).Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }
 
         public void GetShowcaseInformation()
         {
-            var resopnce = _httpClient.GetAsync("app/showcase").Result;
+            var resopnce = _httpClient.GetAsync(_showcasPath).Result;
             var content = resopnce.Content.ReadAsStringAsync().Result;
             var showcases = JsonConvert.DeserializeObject<List<Showcase>>(content);
 
@@ -117,7 +100,7 @@ namespace Shop.ShopHttpClient.Controllers
 
         public void PlaceProductOnShowcase(int productId, int showcaseId)
         {
-            var newResponce = new HttpResponce()
+            var newResponce = new HttpResponceModel()
             {
                 ProductId = productId,
                 ShowcaseId = showcaseId
@@ -125,7 +108,7 @@ namespace Shop.ShopHttpClient.Controllers
 
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
             var stringResponce = new StringContent(jsonResponce);
-            var resopnce = _httpClient.PatchAsync("app/showcase", stringResponce).Result;
+            var resopnce = _httpClient.PatchAsync(_showcasPath, stringResponce).Result;
             var content = resopnce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
         }

@@ -2,7 +2,7 @@
 
 namespace Shop.ShopModels.Models
 {
-    public class Product 
+    public class ProductModel 
     {
         public int IdInProductList { get; set; }
         public int IdInShowcase { get; set; }
@@ -13,12 +13,12 @@ namespace Shop.ShopModels.Models
         public DateTime TimeToCreate { get; set; }
         public DateTime TimeToArchive { get; set; }
 
-        public Product()
+        public ProductModel()
         {
             
         }
         
-        public Product(string productName, double volume)
+        public ProductModel(string productName, double volume)
         {
             Name = productName;
             Volume = volume;
