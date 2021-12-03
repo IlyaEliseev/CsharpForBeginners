@@ -76,10 +76,11 @@ namespace Shop.Controllers
             if (CheckProductAvailability())
             {
                 Console.WriteLine("Product storage:");
-                foreach (var product in UnitOfWork.ProductRepository.GetAll())
+                var products = UnitOfWork.ProductRepository.GetAll().ToList();
+                products.ForEach(product => 
                 {
                     Console.WriteLine($"Id: {product.IdInProductList} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate}");
-                }
+                });
             }
         }
 
