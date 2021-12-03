@@ -12,15 +12,11 @@ namespace Shop.ShopHttpServer.HttpResponceControllers
         public ProductHttpController(IProductController productController, StreamDataController streamDataController, IPathController productPath)
         {
             ProductController = productController;
-            //StreamDataController = streamDataController;
             ProductPathController = productPath;
-
         }
 
-        private readonly HttpListener _httpListener;
         public IProductController ProductController { get; set; }
         public IPathController ProductPathController { get; set; }
-        //public StreamDataController StreamDataController { get; set; }
 
         public void StartController(HttpListenerContext context, string path)
         {
@@ -36,8 +32,6 @@ namespace Shop.ShopHttpServer.HttpResponceControllers
                         break;
                     case "PUT":
                         EditProduct(context);
-                        break;
-                    default:
                         break;
                 }
             }

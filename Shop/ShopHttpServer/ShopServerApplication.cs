@@ -25,6 +25,7 @@ namespace Shop.ShopHttpServer
             ProductOnShowcasePathController = productOnShowcasePathController;
             ProductArchivePathController = productArchivePathController;
             ProductHttpController = new ProductHttpController(productController, new StreamDataController(), productPathController);
+            ShowcasetHttpController = new ShowcaseHttpController(showcasePathController, productOnShowcasePathController, showcaseController);
         }
 
         private readonly HttpListener _httpListener;
@@ -32,6 +33,7 @@ namespace Shop.ShopHttpServer
         public IShowcaseController ShowcaseController { get; }
         public IProductArchiveController ProductArchiveController { get; }
         public ProductHttpController ProductHttpController { get; set; }
+        public ShowcaseHttpController ShowcasetHttpController { get; set; }
         public IPathController ProductPathController { get; }
         public IPathController ShowcasePathController { get; }
         public IPathController ProductOnShowcasePathController { get; }
@@ -57,107 +59,7 @@ namespace Shop.ShopHttpServer
                 var path = request.Url.PathAndQuery;
 
                 ProductHttpController.StartController(context, path);
-
-                //Showcases http methods
-                if (path == ShowcasePathController.Path)
-                {
-                    switch (request.HttpMethod)
-                    {
-                        case "GET":
-                            var showcases = ShowcaseController.GetShowcases();
-                            responceBody = JsonConvert.SerializeObject(showcases, Formatting.Indented);
-                            SetResponce(responceBody, context);
-                            responce.StatusCode = (int)HttpStatusCode.OK;
-                            break;
-                        case "POST":
-                            var showcasePostData = GetRequestDataBody<Showcase>(context);
-                            responce.StatusCode = (int)HttpStatusCode.OK;
-                            showcaseName = showcasePostData.Name;
-                            showcaseVolume = showcasePostData.Volume;
-                            ShowcaseController.CreateShowcase(showcaseName, showcaseVolume);
-                            ShowcasePathController.AddPath(ShowcasePathController.Path + $"/{ShowcaseController.GetShowcaseCount()}");
-                            responceBody = "Showcase is create";
-                            SetResponce(responceBody, context);
-                            Console.WriteLine(showcasePostData);
-                            break;
-                        case "PUT":
-                            var showcasePutData = GetRequestDataBody<Showcase>(context);
-                            responce.StatusCode = (int)HttpStatusCode.OK;
-                            showcaseId = showcasePutData.Id;
-                            showcaseName = showcasePutData.Name;
-                            showcaseVolume = showcasePutData.Volume;
-                            ShowcaseController.EditeShowcase(showcaseId, showcaseName, showcaseVolume);
-                            responceBody = "Showcase is edit";
-                            SetResponce(responceBody, context);
-                            Console.WriteLine(showcasePutData);
-                            break;
-                        case "PATCH":
-                            var showcasePatchData = GetRequestDataBody<HttpResponceModel>(context);
-                            responce.StatusCode = (int)HttpStatusCode.OK;
-                            showcaseId = showcasePatchData.ShowcaseId;
-                            productId = showcasePatchData.ProductId;
-                            ShowcaseController.PlaceProductOnShowcase(productId, showcaseId);
-                            ProductOnShowcasePathController.AddPath(ShowcasePathController.Path + $"/{showcaseId}" + $"/product/{ShowcaseController.GetProductCountOnShowcase(showcaseId)}");
-                            responceBody = "Product place on showcase";
-                            SetResponce(responceBody, context);
-                            Console.WriteLine(showcasePatchData);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                //Showcases http delete method
-                if (path == ShowcasePathController.FindPath(path))
-                {
-                    switch (request.HttpMethod)
-                    {
-                        case "DELETE":
-                            showcaseId = int.Parse(request.Url.Segments.Last());
-                            ShowcaseController.DeleteShowcase(showcaseId);
-                            responceBody = "Product is delete";
-                            SetResponce(responceBody, context);
-                            break;
-                    }
-                }
-
-                //Product on showcase http methods
-                if (path == ProductOnShowcasePathController.Path)
-                {
-                    switch (request.HttpMethod)
-                    {
-                        case "PUT": // edit prodduct on showcase
-                            var productOnShowcasePutData = GetRequestDataBody<HttpResponceModel>(context);
-                            responce.StatusCode = (int)HttpStatusCode.OK;
-                            showcaseId = productOnShowcasePutData.ShowcaseId;
-                            productId = productOnShowcasePutData.ProductInShowcaseId;
-                            productName = productOnShowcasePutData.ProductName;
-                            productVolume = productOnShowcasePutData.ProductVolume;
-                            ShowcaseController.EditeProductOnShowcase(productId, showcaseId, productName, productVolume);
-                            responceBody = "Product on showcase is edit";
-                            SetResponce(responceBody, context);
-                            Console.WriteLine(productOnShowcasePutData);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                //Product on showcase http delete method
-                if (path == ProductOnShowcasePathController.FindPath(path))
-                {
-                    switch (request.HttpMethod)
-                    {
-                        case "DELETE":
-                            string stringPAth = request.Url.Segments[3];
-                            showcaseId = int.Parse(stringPAth.TrimEnd('/'));
-                            productId = int.Parse(request.Url.Segments.Last());
-                            ShowcaseController.DeleteProductOnShowcase(showcaseId, productId);
-                            responceBody = "Product is delete";
-                            SetResponce(responceBody, context);
-                            break;
-                    }
-                }
+                ShowcasetHttpController.StartController(context, path);
 
                 //Archive http methods
                 if (path == ProductArchivePathController.Path)
