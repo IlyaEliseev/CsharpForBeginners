@@ -9,7 +9,7 @@ namespace Shop.ShopHttpServer.HttpResponceControllers
 {
     public class ProductHttpController
     {
-        public ProductHttpController(IProductController productController, StreamDataController streamDataController, IPathController productPath)
+        public ProductHttpController(IProductController productController, IPathController productPath)
         {
             ProductController = productController;
             ProductPathController = productPath;
@@ -36,14 +36,9 @@ namespace Shop.ShopHttpServer.HttpResponceControllers
                 }
             }
 
-            if (path == ProductPathController.FindPath(path))
+            if (path == ProductPathController.FindPath(path) && context.Request.HttpMethod == "DELETE")
             {
-                switch (context.Request.HttpMethod)
-                {
-                    case "DELETE":
-                        DeleteProduct(context);
-                        break;
-                }
+                DeleteProduct(context);
             }
         }
 
