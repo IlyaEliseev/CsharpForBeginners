@@ -35,6 +35,7 @@ namespace Shop.ShopHttpServer.Controllers
         {
             if (CheckProductAvailability() && UnitOfWork.ProductRepository.GetCount() >= productId)
             {
+                
                 var selectProduct = UnitOfWork.ProductRepository.GetById(productId);
                 selectProduct.Name = productName;
                 selectProduct.Volume = productVolume;
@@ -42,7 +43,8 @@ namespace Shop.ShopHttpServer.Controllers
             }
             else
             {
-                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+                throw new Exception("Id not found");
+                //NotifyService.RaiseSearchProductIdIsNotSuccessful();
             }
         }
         
@@ -63,28 +65,29 @@ namespace Shop.ShopHttpServer.Controllers
                 }
                 else
                 {
-                    NotifyService.RaiseSearchProductIdIsNotSuccessful();
+                    throw new Exception("Id not found");
+                    //NotifyService.RaiseSearchProductIdIsNotSuccessful();
                 }
             }
         }
 
-        public void GetProductInformation()
-        {
-            if (CheckProductAvailability())
-            {
-                Console.WriteLine("Product storage:");
-                foreach (var product in UnitOfWork.ProductRepository.GetAll())
-                {
-                    Console.WriteLine($"Id: {product.IdInProductList} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate}");
-                }
-            }
-        }
+        //public void GetProductInformation()
+        //{
+        //    if (CheckProductAvailability())
+        //    {
+        //        Console.WriteLine("Product storage:");
+        //        foreach (var product in UnitOfWork.ProductRepository.GetAll())
+        //        {
+        //            Console.WriteLine($"Id: {product.IdInProductList} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate}");
+        //        }
+        //    }
+        //}
 
         public bool CheckProductAvailability()
         {
             if (UnitOfWork.ProductRepository.GetCount() == 0)
             {
-                NotifyService.RaiseProductIsNotfound();
+                //NotifyService.RaiseProductIsNotfound();
                 return false;
             }
             else

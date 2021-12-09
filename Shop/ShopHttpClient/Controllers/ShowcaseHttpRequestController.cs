@@ -90,6 +90,7 @@ namespace Shop.ShopHttpClient.Controllers
 
             foreach (var showcase in showcases)
             {
+                Console.WriteLine("Showcases:");
                 Console.WriteLine($"Id: {showcase.Id} | Name: {showcase.Name} | Volume: {showcase.Volume} | Time to Create: {showcase.TimeToCreate} | Count Products: {showcase.UnitOfWork.ProductOnShowcaseRepository.GetCount()}| VolumeCount: {showcase.VolumeCount}");
                 foreach (var p in showcase.UnitOfWork.ProductOnShowcaseRepository.GetAll())
                 {

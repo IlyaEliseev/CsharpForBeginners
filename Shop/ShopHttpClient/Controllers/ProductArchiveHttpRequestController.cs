@@ -39,7 +39,6 @@ namespace Shop.ShopHttpClient.Controllers
                 ProductInArchiveId = productId
             };
             var jsonResponce = JsonConvert.SerializeObject(newResponce);
-            var sreingResponce = new StringContent(jsonResponce);
             var responce = _httpClient.DeleteAsync(_productArchivePath + $"/{productId}").Result;
             var content = responce.Content.ReadAsStringAsync().Result;
             Console.WriteLine(content);
@@ -53,6 +52,7 @@ namespace Shop.ShopHttpClient.Controllers
 
             foreach (var product in archiveProducts)
             {
+                Console.WriteLine("Archive:");
                 Console.WriteLine($"Id: {product.IdInArchive} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToArchive}");
             }
         }

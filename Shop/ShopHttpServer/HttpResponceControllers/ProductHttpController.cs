@@ -9,10 +9,10 @@ namespace Shop.ShopHttpServer.HttpResponceControllers
 {
     public class ProductHttpController
     {
-        public ProductHttpController(IProductController productController, IPathController productPath)
+        public ProductHttpController(IProductController productController, IPathController productPathController)
         {
             ProductController = productController;
-            ProductPathController = productPath;
+            ProductPathController = productPathController;
         }
 
         public IProductController ProductController { get; set; }
@@ -31,7 +31,14 @@ namespace Shop.ShopHttpServer.HttpResponceControllers
                         CreateProduct(context);
                         break;
                     case "PUT":
-                        EditProduct(context);
+                        try
+                        {
+                            EditProduct(context);
+                        }
+                        catch (Exception ex)
+                        {
+                            StreamDataController.SetResponce(ex.Message, context);
+                        }
                         break;
                 }
             }
@@ -44,10 +51,18 @@ namespace Shop.ShopHttpServer.HttpResponceControllers
 
         private void GetProductInformation(HttpListenerContext context)
         {
-            var products = ProductController.GetProducts();
-            var responceBody = JsonConvert.SerializeObject(products, Formatting.Indented);
-            StreamDataController.SetResponce(responceBody, context);
-            context.Response.StatusCode = (int)HttpStatusCode.OK;
+            if (ProductController.GetProductCount() > 0)
+            {
+                var products = ProductController.GetProducts();
+                var responceBody = JsonConvert.SerializeObject(products, Formatting.Indented);
+                StreamDataController.SetResponce(responceBody, context);
+                context.Response.StatusCode = (int)HttpStatusCode.OK;
+            }
+            else
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.NoContent;
+            }    
+            
         }
 
         private void CreateProduct(HttpListenerContext context)

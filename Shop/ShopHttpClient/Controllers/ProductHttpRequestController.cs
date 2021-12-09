@@ -4,6 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Shop.ShopModels.Models;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Shop.ShopHttpClient.Controllers
 {
@@ -59,13 +60,22 @@ namespace Shop.ShopHttpClient.Controllers
         public void GetProductInformation()
         {
             var responce = _httpClient.GetAsync(_productPath).Result;
-            var content = responce.Content.ReadAsStringAsync().Result;
-            var products = JsonConvert.DeserializeObject<List<ProductModel>>(content);
-
-            foreach (var product in products)
+            
+            if ((int)responce.StatusCode == 200)
             {
-                Console.WriteLine($"Id: {product.IdInProductList} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate}");
+                var content = responce.Content.ReadAsStringAsync().Result;
+                var products = JsonConvert.DeserializeObject<List<ProductModel>>(content);
+                foreach (var product in products)
+                {
+                    Console.WriteLine("Products:");
+                    Console.WriteLine($"Id: {product.IdInProductList} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate}");
+                }
             }
+            else
+            {
+                Console.WriteLine("Product list is empty");
+            }
+            
         }
     }
 }
