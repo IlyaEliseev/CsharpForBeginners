@@ -14,21 +14,18 @@ namespace Shop.ShopHttpServer.Controllers
             NotifyService = notifyService;
             CheckService = checkService;
             UnitOfWork = new UnitOfWork();
-            productUriPath = new List<string>();
         }
 
         public IUnitOfWork UnitOfWork { get; }
         public NotifyService NotifyService { get; }
         public CheckService CheckService { get; }
-        public List<string> productUriPath;
 
-        public bool CreateProduct(string productName, double productVolume)
+        public void CreateProduct(string productName, double productVolume)
         {
             Product product = new Product(productName, productVolume);
             UnitOfWork.ProductRepository.Add(product);
             product.IdInProductList = UnitOfWork.ProductRepository.GetCount();
             NotifyService.RaiseCreateProductIsDone();
-            return true;
         }
         
         public void EditProduct(int productId, string productName, double productVolume)
@@ -43,31 +40,28 @@ namespace Shop.ShopHttpServer.Controllers
             }
             else
             {
-                throw new Exception("Id not found");
+                throw new IdNotFoundException("Id not found");
                 //NotifyService.RaiseSearchProductIdIsNotSuccessful();
             }
         }
         
         public void DeleteProduct(int productId)
         {
-            if (CheckProductAvailability())
+            if (CheckProductAvailability() && UnitOfWork.ProductRepository.GetCount() >= productId)
             {
-                if (UnitOfWork.ProductRepository.GetCount() >= productId)
+                UnitOfWork.ProductRepository.DeleteById(productId);
+                NotifyService.RaiseDeleteProductIsDone();
+                var products = from p in UnitOfWork.ProductRepository.GetAll()
+                               select p;
+                for (int i = 0; i < UnitOfWork.ProductRepository.GetCount(); i++)
                 {
-                    UnitOfWork.ProductRepository.DeleteById(productId);
-                    NotifyService.RaiseDeleteProductIsDone();
-                    var products = from p in UnitOfWork.ProductRepository.GetAll()
-                                   select p;
-                    for (int i = 0; i < UnitOfWork.ProductRepository.GetCount(); i++)
-                    {
-                        products.ElementAtOrDefault(i).IdInProductList = i + 1;
-                    }
+                    products.ElementAtOrDefault(i).IdInProductList = i + 1;
                 }
-                else
-                {
-                    throw new Exception("Id not found");
-                    //NotifyService.RaiseSearchProductIdIsNotSuccessful();
-                }
+            }
+            else
+            {
+                throw new IdNotFoundException("Id not found");
+                //NotifyService.RaiseSearchProductIdIsNotSuccessful();
             }
         }
 
@@ -109,28 +103,6 @@ namespace Shop.ShopHttpServer.Controllers
         public IEnumerable<Product> GetProducts()
         {
             return UnitOfWork.ProductRepository.GetAll(); 
-        }
-
-        public void AddUri(string uri)
-        {
-            if (!productUriPath.Contains(uri) && productUriPath.Count <= UnitOfWork.ProductRepository.GetCount())
-            {
-                productUriPath.Add(uri);
-            }
-        }
-
-        public void DeleteUri(string uri)
-        {
-            productUriPath.Remove(uri);
-            for (int i = 0; i < productUriPath.Count; i++)
-            {
-                productUriPath[i] = $"/app/product/{i + 1}";
-            }
-        }
-
-        public string FindUri(string uri)
-        {
-            return productUriPath.Find(x => x == uri);
         }
     }
 }

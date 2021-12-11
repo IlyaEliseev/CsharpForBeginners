@@ -35,12 +35,13 @@ namespace Shop.ShopHttpServer.Controllers
                     selectProduct.IdInArchive = GetArchiveProductCount();
                     selectProduct.TimeToArchive = DateTime.Now;
                     ShowcaseController.DeleteProductOnShowcase(showcaseId, productId);
-                    NotifyService.RaiseArchivateProductIsDone();
+                    //NotifyService.RaiseArchivateProductIsDone();
                 }
             }
             else
             {
-                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+                throw new IdNotFoundException("Id not found");
+                //NotifyService.RaiseSearchProductIdIsNotSuccessful();
             }
         }
 
@@ -48,7 +49,7 @@ namespace Shop.ShopHttpServer.Controllers
         {
             if (GetArchiveProductCount() == 0)
             {
-                NotifyService.RaiseArchiveIsEmpty();
+                //NotifyService.RaiseArchiveIsEmpty();
                 return false;
             }
             else
@@ -62,7 +63,7 @@ namespace Shop.ShopHttpServer.Controllers
             if (CheckArchiveAvailability() && GetArchiveProductCount() >= productId)
             {
                 UnitOfWork.ArchiveRepository.DeleteById(productId);
-                NotifyService.RaiseDeleteArchiveProductIsDone();
+                //NotifyService.RaiseDeleteArchiveProductIsDone();
                 var products = from p in UnitOfWork.ArchiveRepository.GetAll()
                                select p;
                 for (int i = 0; i < UnitOfWork.ArchiveRepository.GetCount(); i++)
@@ -72,23 +73,24 @@ namespace Shop.ShopHttpServer.Controllers
             }
             else
             {
-                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+                throw new IdNotFoundException("Id not found");
+                //NotifyService.RaiseSearchProductIdIsNotSuccessful();
             }
         }
 
-        public void GetArchiveInformation()
-        {
-            if (CheckArchiveAvailability())
-            {
-                Console.WriteLine("Archive:");
-                var archive = from a in UnitOfWork.ArchiveRepository.GetAll()
-                              select a;
-                foreach (var product in archive)
-                {
-                    Console.WriteLine($"Id: {product.IdInArchive} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate} | Time to archive: {product.TimeToArchive}");
-                }
-            }
-        }
+        //public void GetArchiveInformation()
+        //{
+        //    if (CheckArchiveAvailability())
+        //    {
+        //        Console.WriteLine("Archive:");
+        //        var archive = from a in UnitOfWork.ArchiveRepository.GetAll()
+        //                      select a;
+        //        foreach (var product in archive)
+        //        {
+        //            Console.WriteLine($"Id: {product.IdInArchive} | Name product: {product.Name} | Volume product: {product.Volume} | Time to create: {product.TimeToCreate} | Time to archive: {product.TimeToArchive}");
+        //        }
+        //    }
+        //}
 
         public int GetArchiveProductCount()
         {
@@ -104,7 +106,7 @@ namespace Shop.ShopHttpServer.Controllers
                 selectShowcase.UnitOfWork.ProductOnShowcaseRepository.Add(selectProduct);
                 selectProduct.IdInShowcase = selectShowcase.GetProductCount();
                 UnitOfWork.ArchiveRepository.DeleteById(productId);
-                NotifyService.RaiseUnArchivateProductIsDone();
+                //NotifyService.RaiseUnArchivateProductIsDone();
                 var products = from p in UnitOfWork.ArchiveRepository.GetAll()
                                select p;
                 for (int i = 0; i < UnitOfWork.ArchiveRepository.GetCount(); i++)
@@ -114,7 +116,8 @@ namespace Shop.ShopHttpServer.Controllers
             }
             else
             {
-                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+                throw new IdNotFoundException("Id not found");
+                //NotifyService.RaiseSearchProductIdIsNotSuccessful();
             }
         }
 

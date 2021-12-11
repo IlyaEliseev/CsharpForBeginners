@@ -49,7 +49,8 @@ namespace Shop.ShopHttpServer.Controllers
             }
             else
             {
-                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+                throw new IdNotFoundException("Id not found");
+                //NotifyService.RaiseSearchProductIdIsNotSuccessful();
             }
         }
 
@@ -68,13 +69,14 @@ namespace Shop.ShopHttpServer.Controllers
                         ProductController.DeleteProduct(productId);
                         selectProduct.IdInShowcase = selectShowcase.GetProductCount();
                         selectProduct.IdShowcase = showcaseId;
-                        NotifyService.RaisePlaceProductIsDone();
+                        //NotifyService.RaisePlaceProductIsDone();
                     }
                 }
             }
             else
             {
-                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+                throw new IdNotFoundException("Id not found");
+                //NotifyService.RaiseSearchProductIdIsNotSuccessful();
             }
         }
 
@@ -100,7 +102,8 @@ namespace Shop.ShopHttpServer.Controllers
             }
             else
             {
-                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+                throw new IdNotFoundException("Id not found");
+                //NotifyService.RaiseSearchProductIdIsNotSuccessful();
             }
         }
 
@@ -212,7 +215,7 @@ namespace Shop.ShopHttpServer.Controllers
             var findShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId);
             if (findShowcase.UnitOfWork.ProductOnShowcaseRepository.GetCount() != 0)
             {
-                NotifyService.RaiseDeleteError();
+                //NotifyService.RaiseDeleteError();
                 return false;
             }
             else
@@ -229,7 +232,7 @@ namespace Shop.ShopHttpServer.Controllers
             {
                 return true;
             }
-            NotifyService.RaiseVolumeErrorMessage();
+            //NotifyService.RaiseVolumeErrorMessage();
             return false;
         }
 
@@ -238,7 +241,7 @@ namespace Shop.ShopHttpServer.Controllers
             var selectShowcase = UnitOfWork.ShowcaseRepository.GetById(showcaseId); 
             if (selectShowcase.UnitOfWork.ProductOnShowcaseRepository.GetCount() == 0)
             {
-                NotifyService.RaiseChekProductOnShowacse();
+                //NotifyService.RaiseChekProductOnShowacse();
                 return false;
             }
             else
