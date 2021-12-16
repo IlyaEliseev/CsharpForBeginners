@@ -59,6 +59,7 @@ namespace Shop.ShopHttpServer.HttpResponceControllers
             {
                 DeleteShowcase(context);
             }
+            
 
             if (path == ProductOnShowcasePathController.Path && context.Request.HttpMethod == "PUT")
             {
@@ -69,6 +70,7 @@ namespace Shop.ShopHttpServer.HttpResponceControllers
             {
                 DeleteProductOnShowcase(context);
             }
+            
         }
 
         private void  GetShowcaseInfotmation(HttpListenerContext context)

@@ -121,7 +121,7 @@ namespace Shop.ShopHttpServer.Controllers
                 {
                     selectShowcase.Name = showcaseName;
                     selectShowcase.Volume = showcaseVolume; 
-                    NotifyService.RaiseEditShowcaseIsDone();
+                    //NotifyService.RaiseEditShowcaseIsDone();
                 }
                 
             }
