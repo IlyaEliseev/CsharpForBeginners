@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Shop.ShopHttpServer.Controllers;
 using Shop.ShopHttpServer.Models;
+using Shop.ShopHttpServer.Services;
 using Shop.ShopModels.Models;
 using System;
 using System.Linq;
@@ -34,7 +35,19 @@ namespace Shop.ShopHttpServer.HttpResponceControllers
                         CreateShowcase(context);
                         break;
                     case "PUT":
-                        EditeShowcsae(context);
+                        try
+                        {
+                            EditeShowcsae(context);
+                        }
+                        catch (IdNotFoundException ex)
+                        {
+                            StreamDataController.SetResponce(ex.Message, context); 
+                        }
+                        catch (EmptyCollectionException ex)
+                        {
+                            StreamDataController.SetResponce(ex.Message, context);
+                        }
+
                         break;
                     case "PATCH":
                         PlaceProductOnShowcase(context);

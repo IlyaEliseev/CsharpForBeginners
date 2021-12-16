@@ -28,7 +28,6 @@ namespace Shop.ShopHttpServer.Controllers
             Showcase showcase = new Showcase(showcaseName, showcaseVolume);
             UnitOfWork.ShowcaseRepository.Add(showcase);
             showcase.Id = UnitOfWork.ShowcaseRepository.GetCount();
-            NotifyService.RaiseCreateShowcaseIsDone();
         }
 
         public void DeleteShowcase(int showcaseId)
@@ -116,7 +115,7 @@ namespace Shop.ShopHttpServer.Controllers
                                select p;
                 if (products.Count() != 0)
                 {
-                    NotifyService.RaiseDeleteError();
+                    throw new EmptyCollectionException("Showcases not empty");
                 }
                 else
                 {
@@ -128,7 +127,7 @@ namespace Shop.ShopHttpServer.Controllers
             }
             else
             {
-                NotifyService.RaiseSearchProductIdIsNotSuccessful();
+                throw new IdNotFoundException("Id not found");
             }
         }
 
